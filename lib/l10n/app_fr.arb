@@ -1,0 +1,21 @@
+{
+  "@@locale": "fr",
+  "counterPage": "Page Compteur",
+  "youHavePushedButton": "Vous avez appuyé sur le bouton ce nombre de fois:",
+  "error": "Erreur: {error}",
+  "@error": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "increment": "Incrémenter",
+  "decrement": "Décrémenter",
+  "reset": "Réinitialiser",
+  "installationCompleted": "Installation terminée",
+  "addOtherEquipment": "Ajouter d'autres équipements à ce réseau...",
+  "networkReady": "Votre réseau est prêt!",
+  "internet": "Internet",
+  "clickToEdit": "Cliquez pour modifier"
+}
