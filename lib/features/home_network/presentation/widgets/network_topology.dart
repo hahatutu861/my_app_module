@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -31,9 +29,7 @@ class _Dimensions {
 }
 
 class NetworkTopology extends HookConsumerWidget {
-  const NetworkTopology({super.key, this.onEditBubbleTap});
-
-  final VoidCallback? onEditBubbleTap;
+  const NetworkTopology({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -60,7 +56,7 @@ class NetworkTopology extends HookConsumerWidget {
         const _DeviceInfo(),
         _SecondLineAnimation(state: state, controller: secondLineController),
         const _AccountSection(),
-        _EditTitleBar(onEditBubbleTap: onEditBubbleTap),
+        const _EditTitleBar(),
       ],
     );
   }
@@ -370,9 +366,7 @@ class _AccountSection extends StatelessWidget {
 }
 
 class _EditTitleBar extends StatefulWidget {
-  const _EditTitleBar({this.onEditBubbleTap});
-
-  final VoidCallback? onEditBubbleTap;
+  const _EditTitleBar();
 
   @override
   State<_EditTitleBar> createState() => _EditTitleBarState();
@@ -383,40 +377,12 @@ class _EditTitleBarState extends State<_EditTitleBar> {
   Size? _editButtonSize;
   Size? _editTitleButtonSize;
   double? _rowHeight;
-  Timer? _hideTimer;
-  bool _showBubble = true;
 
   bool get _isMeasured =>
       _textSize != null &&
       _editButtonSize != null &&
       _editTitleButtonSize != null &&
       _rowHeight != null;
-
-  @override
-  void initState() {
-    super.initState();
-    _startAutoHideTimer();
-  }
-
-  @override
-  void dispose() {
-    _hideTimer?.cancel();
-    super.dispose();
-  }
-
-  void _startAutoHideTimer() {
-    _hideTimer = Timer(const Duration(seconds: 10), () {
-      if (mounted && _showBubble) {
-        setState(() => _showBubble = false);
-      }
-    });
-  }
-
-  void _hideBubble() {
-    if (_showBubble) {
-      setState(() => _showBubble = false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -515,7 +481,6 @@ class _MeasureLayout extends StatelessWidget {
               children: [
                 MeasureSize(
                   onChange: (size) {
-                    print('📐 Text 在 Row 中测量: ${size.width} x ${size.height}');
                     onTextSize(size);
                   },
                   child: Text(
@@ -530,18 +495,12 @@ class _MeasureLayout extends StatelessWidget {
                 SizedBox(width: spacing),
                 MeasureSize(
                   onChange: (size) {
-                    print(
-                      '📐 EditButton 在 Row 中测量: ${size.width} x ${size.height}',
-                    );
                     onEditButtonSize(size);
                   },
                   child: _EditButton(),
                 ),
                 MeasureSize(
                   onChange: (size) {
-                    print(
-                      '📐 EditTitleButton 在 Row 中测量: ${size.width} x ${size.height}',
-                    );
                     onEditTitleButtonSize(size);
                   },
                   child: _EditTitleButton(editButtonSize: Size(24, 24)),
@@ -550,7 +509,6 @@ class _MeasureLayout extends StatelessWidget {
             ),
             MeasureSize(
               onChange: (size) {
-                print('📐 正确的 Row 高度测量: ${size.width} x ${size.height}');
                 onRowHeight(size.height);
               },
               child: Row(
