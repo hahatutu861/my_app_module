@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_module/core/design/app_color_extension.dart';
+import 'package:my_app_module/core/design/app_spacing.dart';
+import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/shared/utils/build_context_extension.dart';
 
 class ProgressSection extends StatelessWidget {
@@ -8,12 +10,12 @@ class ProgressSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.pad16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _ProgressBar(),
-          const SizedBox(height: 24),
+          Spacing.v24,
           Text(
             context.l10n.networkReady,
             style: TextStyle(
@@ -38,10 +40,10 @@ class _ProgressBar extends StatelessWidget {
         final width = constraints.maxWidth;
         return Container(
           width: width,
-          height: 8,
+          height: AppSpacing.progressBarHeight,
           decoration: BoxDecoration(
             color: context.appColors.brand6Normal,
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(AppSpacing.radius4),
           ),
         );
       },

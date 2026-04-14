@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/design/app_color_extension.dart';
+import '../../../../core/design/app_spacing.dart';
+import '../../../../core/design/app_spacing_extension.dart';
 import '../../../../shared/bridges/pigeon_generated.dart';
 import '../../../../shared/ui/widgets/app_image.dart';
 
@@ -11,7 +13,7 @@ class CustomAppBar extends StatelessWidget {
     return Container(
       height: kToolbarHeight,
       color: context.appColors.fontWh1with100Opacity,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad16),
       child: Row(
         children: [
           Expanded(child: _buildBackButton(context)),
@@ -29,8 +31,8 @@ class CustomAppBar extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: AppImage(
           'chevron_left.png',
-          width: 24,
-          height: 24,
+          width: AppSpacing.icon24,
+          height: AppSpacing.icon24,
           color: context.appColors.fontGy1with90Opacity,
         ),
       ),
@@ -51,8 +53,8 @@ class CustomAppBar extends StatelessWidget {
         alignment: Alignment.centerRight,
         child: AppImage(
           'close.png',
-          width: 24,
-          height: 24,
+          width: AppSpacing.icon24,
+          height: AppSpacing.icon24,
           color: context.appColors.fontGy1with90Opacity,
         ),
       ),

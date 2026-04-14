@@ -43,4 +43,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clickToEdit => 'Click to Edit';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get addFloor => 'Add floor';
+
+  @override
+  String get wifiMap => 'Wi-Fi Map';
+
+  @override
+  String get noFloorsCreated => 'No floors created';
+
+  @override
+  String get addFloorHint =>
+      'Click the button on the top right corner to add a floor.';
 }

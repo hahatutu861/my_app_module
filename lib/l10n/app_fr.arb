@@ -17,5 +17,10 @@
   "addOtherEquipment": "Ajouter d'autres équipements à ce réseau...",
   "networkReady": "Votre réseau est prêt!",
   "internet": "Internet",
-  "clickToEdit": "Cliquez pour modifier"
+  "clickToEdit": "Cliquez pour modifier",
+  "back": "Retour",
+  "addFloor": "Ajouter un étage",
+  "wifiMap": "Carte Wi-Fi",
+  "noFloorsCreated": "Aucun étage créé",
+  "addFloorHint": "Cliquez sur le bouton en haut à droite pour ajouter un étage."
 }

@@ -5,6 +5,8 @@ import 'package:lottie/lottie.dart';
 import 'package:measure_size/measure_size.dart';
 
 import '../../../../core/design/app_color_extension.dart';
+import '../../../../core/design/app_spacing.dart';
+import '../../../../core/design/app_text_styles.dart';
 import '../../../../shared/ui/widgets/app_image.dart';
 import '../../../../shared/utils/build_context_extension.dart';
 import '../providers/network_topology_state.dart';
@@ -23,6 +25,7 @@ class _Dimensions {
   static const double indicatorOffset = -10;
   static const double indicatorBorderWidth = 4;
   static const double fontSize = 14;
+  static const double bubbleSpacing = 2;
 }
 
 class NetworkTopology extends HookConsumerWidget {
@@ -289,18 +292,18 @@ class _EditButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: 24,
-        height: 24,
-        decoration: BoxDecoration(
-          color: context.appColors.gray3,
-          shape: BoxShape.circle,
+        onTap: () {},
+        child: Container(
+          width: AppSpacing.icon24,
+          height: AppSpacing.icon24,
+          decoration: BoxDecoration(
+            color: context.appColors.gray3,
+            shape: BoxShape.circle,
+          ),
+          child: const Center(child: AppImage('edit.png', width: 14, height: 14)),
         ),
-        child: const Center(child: AppImage('edit.png', width: 14, height: 14)),
-      ),
     );
-  }
+}
 }
 
 class _SecondLineAnimation extends StatelessWidget {
@@ -362,6 +365,7 @@ class _AccountSection extends StatelessWidget {
   }
 }
 
+// ====================== 以下全部是已修改的完整代码 ======================
 class _EditTitleBar extends StatefulWidget {
   const _EditTitleBar();
 
@@ -376,8 +380,8 @@ class _EditTitleBarState extends State<_EditTitleBar> {
 
   bool get _isMeasured =>
       _textSize != null &&
-      _editButtonSize != null &&
-      _editTitleButtonSize != null;
+          _editButtonSize != null &&
+          _editTitleButtonSize != null;
 
   @override
   Widget build(BuildContext context) {
@@ -392,81 +396,39 @@ class _EditTitleBarState extends State<_EditTitleBar> {
           return _MeasureLayout(
             onTextSize: (size) => setState(() => _textSize = size),
             onEditButtonSize: (size) => setState(() => _editButtonSize = size),
-            onEditTitleButtonSize: (size) =>
-                setState(() => _editTitleButtonSize = size),
+            onEditTitleButtonSize: (size) => setState(() => _editTitleButtonSize = size),
             textContent: textContent,
             spacing: spacing,
           );
         }
-        final leftSectionWidth =
-            _textSize!.width + spacing + _editButtonSize!.width;
-        final totalWidth = leftSectionWidth + _editTitleButtonSize!.width;
-        double leftPosition = (parentWidth - leftSectionWidth) / 2;
-        bool useEllipsis = false;
-        final rightEdge = leftPosition + totalWidth;
-        if (rightEdge > parentWidth - safeMargin) {
-          leftPosition = parentWidth - totalWidth - safeMargin;
-          if (leftPosition < safeMargin) {
-            leftPosition = safeMargin;
-            useEllipsis = true;
-            final availableWidth =
-                parentWidth -
-                leftPosition -
-                _editButtonSize!.width -
-                _editTitleButtonSize!.width -
-                spacing -
-                safeMargin;
-            if (availableWidth < 50) {
-              leftPosition = safeMargin;
-            }
-          }
-        }
+        final leftSectionWidth = _textSize!.width + spacing + _editButtonSize!.width;
+        final leftPosition = (parentWidth - leftSectionWidth) / 2;
+        final editButtonLeft = leftPosition + _textSize!.width + spacing;
+        final bubbleLeft = editButtonLeft + _editButtonSize!.width - _editTitleButtonSize!.width;
 
         return SizedBox(
-          height: 23,
+          height: 40,
           child: Stack(
             clipBehavior: Clip.none,
             children: [
               Positioned(
                 left: leftPosition,
                 top: 0,
-                bottom: 0,
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      width: useEllipsis
-                          ? (parentWidth -
-                                leftPosition -
-                                _editButtonSize!.width -
-                                _editTitleButtonSize!.width -
-                                spacing -
-                                safeMargin * 2)
-                          : null,
-                      child: Text(
-                        textContent,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          color: context.appColors.fontGy1with90Opacity,
-                        ),
-                        maxLines: 1,
-                        overflow: useEllipsis
-                            ? TextOverflow.ellipsis
-                            : TextOverflow.visible,
-                      ),
+                    Text(
+                      textContent,
+                      style: context.appTextStyles.bodyLargeWith90Opacity,
                     ),
-                    const SizedBox(width: spacing),
+                    SizedBox(width: spacing),
                     _EditButton(),
                   ],
                 ),
               ),
               Positioned(
-                left: leftPosition + leftSectionWidth + 2,
-                top: -5,
-                bottom: -5,
-                child: const _EditTitleButton(),
+                left: bubbleLeft,
+                top: 26,
+                child: _EditTitleButton(editButtonSize: _editButtonSize!),
               ),
             ],
           ),
@@ -517,7 +479,7 @@ class _MeasureLayout extends StatelessWidget {
             ),
             MeasureSize(
               onChange: (size) => onEditTitleButtonSize(size),
-              child: const _EditTitleButton(),
+              child: _EditTitleButton(editButtonSize: Size(24,24)),
             ),
           ],
         ),
@@ -527,13 +489,16 @@ class _MeasureLayout extends StatelessWidget {
 }
 
 class _EditTitleButton extends StatelessWidget {
-  const _EditTitleButton();
+  final Size editButtonSize;
+
+  const _EditTitleButton({required this.editButtonSize});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {},
       child: _EditBubble(
+        editButtonSize: editButtonSize,
         text: context.l10n.clickToEdit,
         textStyle: TextStyle(
           fontSize: 14,
@@ -551,6 +516,7 @@ class _EditTitleButton extends StatelessWidget {
 }
 
 class _EditBubble extends StatelessWidget {
+  final Size editButtonSize;
   final String text;
   final TextStyle? textStyle;
   final Color bubbleColor;
@@ -559,6 +525,7 @@ class _EditBubble extends StatelessWidget {
   final BorderRadius borderRadius;
 
   const _EditBubble({
+    required this.editButtonSize,
     required this.text,
     this.textStyle,
     this.bubbleColor = Colors.black,
@@ -575,20 +542,14 @@ class _EditBubble extends StatelessWidget {
         arrowWidth: arrowWidth,
         arrowHeight: arrowHeight,
         borderRadius: borderRadius,
+        editButtonSize: editButtonSize,
       ),
       child: Padding(
-        padding: EdgeInsets.only(left: arrowWidth + 3, right: 10),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppImage(
-              'chevron_left.png',
-              width: 16,
-              height: 16,
-              color: context.appColors.fontWh1with100Opacity,
-            ),
-            Text(text, style: textStyle, textAlign: TextAlign.center),
-          ],
+        padding: EdgeInsets.only(top: arrowHeight + 4, left: 10, right: 10, bottom: 4),
+        child: Text(
+          text,
+          style: textStyle,
+          textAlign: TextAlign.center,
         ),
       ),
     );
@@ -600,12 +561,14 @@ class _BubblePainter extends CustomPainter {
   final double arrowWidth;
   final double arrowHeight;
   final BorderRadius borderRadius;
+  final Size editButtonSize;
 
   _BubblePainter({
     required this.color,
     required this.arrowWidth,
     required this.arrowHeight,
     required this.borderRadius,
+    required this.editButtonSize,
   });
 
   @override
@@ -615,20 +578,17 @@ class _BubblePainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..isAntiAlias = true;
 
-    final rect = Rect.fromLTWH(
-      arrowWidth,
-      0,
-      size.width - arrowWidth,
-      size.height,
-    );
-
-    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(5));
+    final rect = Rect.fromLTWH(0, arrowHeight, size.width, size.height - arrowHeight);
+    final rrect = RRect.fromRectAndRadius(rect, Radius.circular(5));
     canvas.drawRRect(rrect, paint);
 
+    // 箭头自动对准编辑按钮正中心
+    final arrowX = size.width - editButtonSize.width / 2;
+
     final arrowPath = Path()
-      ..moveTo(0, size.height / 2)
-      ..lineTo(arrowWidth, size.height / 2 - arrowHeight / 2)
-      ..lineTo(arrowWidth, size.height / 2 + arrowHeight / 2)
+      ..moveTo(arrowX, 0)
+      ..lineTo(arrowX - arrowWidth / 2, arrowHeight)
+      ..lineTo(arrowX + arrowWidth / 2, arrowHeight)
       ..close();
 
     canvas.drawPath(arrowPath, paint);
@@ -639,6 +599,7 @@ class _BubblePainter extends CustomPainter {
     return oldDelegate.color != color ||
         oldDelegate.arrowWidth != arrowWidth ||
         oldDelegate.arrowHeight != arrowHeight ||
-        oldDelegate.borderRadius != borderRadius;
+        oldDelegate.borderRadius != borderRadius ||
+        oldDelegate.editButtonSize != editButtonSize;
   }
 }

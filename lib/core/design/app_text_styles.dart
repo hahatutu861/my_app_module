@@ -1,0 +1,61 @@
+import 'package:flutter/material.dart';
+import 'app_color_extension.dart';
+
+/// 主题文本样式扩展
+///
+/// 使用方式：`Theme.of(context).appTextStyles.bodyLargeWith90Opacity`
+extension AppTextStylesThemeExtension on ThemeData {
+  AppThemeTextStyles get appTextStyles => AppThemeTextStyles(this);
+}
+
+/// BuildContext 扩展，快捷访问文本样式
+///
+/// 使用方式：`context.appTextStyles.bodyLargeWith90Opacity`
+extension AppTextStylesContextExtension on BuildContext {
+  AppThemeTextStyles get appTextStyles => Theme.of(this).appTextStyles;
+}
+
+/// 主题文本样式数据类
+///
+/// 包含所有应用常用文本样式，自动适配 light/dark 模式
+/// 基于项目中的实际使用情况提取
+class AppThemeTextStyles {
+  final ThemeData theme;
+
+  AppThemeTextStyles(this.theme);
+
+  /// 获取主题颜色
+  AppThemeColors get _colors => theme.appColors;
+
+  // ============== 常用文本样式 ==============
+
+  /// 正文大号 + 90% 不透明度灰色
+  ///
+  /// 用于：正文文本、说明文字、节点名称等
+  /// fontSize: 16, fontWeight: w400, color: fontGy1with90Opacity
+  TextStyle get bodyLargeWith90Opacity => TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
+        color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 正文中号 + 90% 不透明度灰色
+  ///
+  /// 用于：次要说明文字
+  /// fontSize: 14, fontWeight: w400, color: fontGy1with90Opacity
+  TextStyle get bodyMediumWith90Opacity => TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 标题 + 90% 不透明度灰色
+  ///
+  /// 用于：页面标题
+  /// fontSize: 20, fontWeight: w500, color: fontGy1with90Opacity
+  TextStyle get titleWith90Opacity => TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: _colors.fontGy1with90Opacity,
+      );
+}

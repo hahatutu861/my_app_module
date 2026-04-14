@@ -10,6 +10,7 @@ library;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/design/app_colors.dart';
+import '../../../../core/design/app_spacing.dart';
 
 /// 应用主题配置
 class AppTheme {
@@ -79,7 +80,7 @@ class AppTheme {
       // 卡片主题
       cardTheme: CardThemeData(
         elevation: 0,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         color: _c(AppColors.white),
         surfaceTintColor: Colors.transparent,
       ),
@@ -90,15 +91,15 @@ class AppTheme {
           backgroundColor: _c(AppColors.brand6Normal),
           foregroundColor: _c(AppColors.white),
           elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad24, vertical: AppSpacing.s12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         ),
       ),
 
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: _c(AppColors.brand6Normal),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad16, vertical: AppSpacing.s8),
         ),
       ),
 
@@ -106,8 +107,8 @@ class AppTheme {
         style: OutlinedButton.styleFrom(
           foregroundColor: _c(AppColors.brand6Normal),
           side: BorderSide(color: _c(AppColors.brand6Normal)),
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad24, vertical: AppSpacing.s12),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         ),
       ),
 
@@ -116,28 +117,28 @@ class AppTheme {
         filled: true,
         fillColor: _c(AppColors.gray1),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.radius4),
           borderSide: BorderSide(color: _c(AppColors.gray4)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.radius4),
           borderSide: BorderSide(color: _c(AppColors.gray4)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.radius4),
           borderSide: BorderSide(color: _c(AppColors.brand6Normal), width: 2),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.radius4),
           borderSide: BorderSide(color: _c(AppColors.error6Normal)),
         ),
         focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(AppSpacing.radius4),
           borderSide: BorderSide(color: _c(AppColors.error6Normal), width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 12,
+          horizontal: AppSpacing.pad16,
+          vertical: AppSpacing.s12,
         ),
       ),
 
@@ -149,7 +150,7 @@ class AppTheme {
       ),
 
       // 图标主题
-      iconTheme: IconThemeData(color: _c(AppColors.gray7), size: 24),
+      iconTheme: IconThemeData(color: _c(AppColors.gray7), size: AppSpacing.icon24),
 
       // 文本主题
       textTheme: TextTheme(
@@ -215,14 +216,14 @@ class AppTheme {
 
       // 对话框主题
       dialogTheme: DialogThemeData(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         backgroundColor: _c(AppColors.white),
       ),
 
       // 底部弹出层主题
       bottomSheetTheme: BottomSheetThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.s16)),
         ),
         backgroundColor: _c(AppColors.white),
       ),
@@ -230,7 +231,7 @@ class AppTheme {
       // SnackBar 主题
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         backgroundColor: _c(AppColors.gray14),
         contentTextStyle: TextStyle(color: _c(AppColors.fontWh1with100Opacity)),
       ),
@@ -252,7 +253,7 @@ class AppTheme {
         backgroundColor: _c(AppColors.gray1),
         selectedColor: _c(AppColors.brand1Light),
         labelStyle: TextStyle(color: _c(AppColors.fontGy)),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius4)),
         side: BorderSide(color: _c(AppColors.gray4)),
       ),
     );

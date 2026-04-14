@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_module/core/design/app_color_extension.dart';
+import 'package:my_app_module/core/design/app_spacing.dart';
+import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/shared/utils/build_context_extension.dart';
 
 class ActionSection extends StatelessWidget {
@@ -9,16 +11,16 @@ class ActionSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(
-        left: 16,
-        right: 16,
-        top: 20,
-        bottom: MediaQuery.of(context).padding.bottom + 20,
+        left: AppSpacing.pad16,
+        right: AppSpacing.pad16,
+        top: AppSpacing.pad20,
+        bottom: MediaQuery.of(context).padding.bottom + AppSpacing.pad20,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildCompletionButton(context),
-          const SizedBox(height: 12),
+          Spacing.v12,
           _buildAddDeviceText(context),
         ],
       ),
@@ -27,17 +29,17 @@ class ActionSection extends StatelessWidget {
 
   Widget _buildCompletionButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad24),
       child: SizedBox(
         width: double.infinity,
-        height: 48,
+        height: AppSpacing.buttonHeight,
         child: ElevatedButton(
           onPressed: () {},
           style: ElevatedButton.styleFrom(
             backgroundColor: context.appColors.brand6Normal,
             foregroundColor: context.appColors.fontWh1with100Opacity,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
             ),
           ),
           child: Text(

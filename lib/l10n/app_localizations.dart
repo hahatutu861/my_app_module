@@ -163,6 +163,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Click to Edit'**
   String get clickToEdit;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @addFloor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add floor'**
+  String get addFloor;
+
+  /// No description provided for @wifiMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi Map'**
+  String get wifiMap;
+
+  /// No description provided for @noFloorsCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'No floors created'**
+  String get noFloorsCreated;
+
+  /// No description provided for @addFloorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Click the button on the top right corner to add a floor.'**
+  String get addFloorHint;
 }
 
 class _AppLocalizationsDelegate

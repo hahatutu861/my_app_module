@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/features/counter/presentation/providers/counter_viewmodel_provider.dart';
 import 'package:my_app_module/shared/utils/build_context_extension.dart';
 
@@ -26,7 +27,7 @@ class CounterPage extends ConsumerWidget {
                 context.l10n.youHavePushedButton,
                 style: const TextStyle(fontSize: 16),
               ),
-              const SizedBox(height: 8),
+              Spacing.v8,
               Text(
                 '${counter.value}',
                 style: Theme.of(context).textTheme.headlineMedium,
@@ -50,7 +51,7 @@ class CounterPage extends ConsumerWidget {
             tooltip: context.l10n.increment,
             child: const Icon(Icons.add),
           ),
-          const SizedBox(height: 8),
+          Spacing.v8,
           FloatingActionButton(
             heroTag: 'decrement',
             onPressed: () =>
@@ -58,7 +59,7 @@ class CounterPage extends ConsumerWidget {
             tooltip: context.l10n.decrement,
             child: const Icon(Icons.remove),
           ),
-          const SizedBox(height: 8),
+          Spacing.v8,
           FloatingActionButton(
             heroTag: 'reset',
             onPressed: () =>

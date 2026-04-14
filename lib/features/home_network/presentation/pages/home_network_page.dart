@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:my_app_module/core/design/app_color_extension.dart';
+import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import '../widgets/custom_app_bar.dart';
 import '../widgets/progress_section.dart';
 import '../widgets/network_topology.dart';
@@ -23,7 +24,7 @@ class HomeNetworkPage extends StatelessWidget {
             child: Column(
               children: [
                 ProgressSection(),
-                SizedBox(height: 30),
+                Spacing.v30,
                 Expanded(child: NetworkTopology()),
               ],
             ),

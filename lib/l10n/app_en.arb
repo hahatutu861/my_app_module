@@ -17,5 +17,10 @@
   "addOtherEquipment": "Add other equipment to this network...",
   "networkReady": "Your network is ready to go!",
   "internet": "Internet",
-  "clickToEdit": "Click to Edit"
+  "clickToEdit": "Click to Edit",
+  "back": "Back",
+  "addFloor": "Add floor",
+  "wifiMap": "Wi-Fi Map",
+  "noFloorsCreated": "No floors created",
+  "addFloorHint": "Click the button on the top right corner to add a floor."
 }

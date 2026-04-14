@@ -44,4 +44,20 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get clickToEdit => 'Cliquez pour modifier';
+
+  @override
+  String get back => 'Retour';
+
+  @override
+  String get addFloor => 'Ajouter un étage';
+
+  @override
+  String get wifiMap => 'Carte Wi-Fi';
+
+  @override
+  String get noFloorsCreated => 'Aucun étage créé';
+
+  @override
+  String get addFloorHint =>
+      'Cliquez sur le bouton en haut à droite pour ajouter un étage.';
 }
