@@ -29,8 +29,6 @@ class WifiMapPage extends StatelessWidget {
           SizedBox(height: statusBarHeight),
           _buildBackButton(context),
           _buildFloorTitle(context),
-
-          // 🔥 核心：自适应宽高的网格区域（严丝合缝）
           _buildAutoSizeGrid(context),
 
           // 统计信息
@@ -40,36 +38,24 @@ class WifiMapPage extends StatelessWidget {
     );
   }
 
-  /// 🔥 自动计算宽高的网格（你要的核心逻辑在这里）
   Widget _buildAutoSizeGrid(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        // 1. 获取屏幕可用宽度
         final double totalWidth = constraints.maxWidth;
-
-        // 2. 计算所有间距占用的宽度
         final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
-
-        // 3. 剩余宽度平均分给10个子项 = 正方形的边长（宽=高）
         final double squareSize = (totalWidth - totalSpacingWidth) / crossAxisCount;
-
-        // 4. 计算总行数 110个 / 10列 = 11行
         const int totalItemCount = 110;
         final int rowCount = (totalItemCount / crossAxisCount).ceil();
-
-        // 5. 计算网格总高度（正方形高度 × 行数 + 行间距）
         final double totalGridHeight =
             rowCount * squareSize + (rowCount - 1) * spacing;
-
-        // 6. 用计算好的 总高度 包裹 InteractiveViewer
         return Container(
           color: Colors.red,
           width: double.infinity,
-          height: totalGridHeight, // 🔥 高度完全匹配网格，无空白
+          height: totalGridHeight,
           child: InteractiveViewer(
-            alignment: Alignment.topLeft, // 强制左上角对齐，消除空白
-            minScale: 0.5,
-            maxScale: 3.0,
+            alignment: Alignment.topLeft,
+            minScale: 1.0,
+            maxScale: 2.0,
             boundaryMargin: EdgeInsets.zero,
             child: _buildGrid(context, squareSize),
           ),
