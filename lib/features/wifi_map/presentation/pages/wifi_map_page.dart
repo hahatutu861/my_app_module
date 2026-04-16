@@ -29,6 +29,7 @@ class WifiMapPage extends StatelessWidget {
           SizedBox(height: statusBarHeight),
           _buildBackButton(context),
           _buildFloorTitle(context),
+          SizedBox(height: 16),
           _buildAutoSizeGrid(context),
 
           // 统计信息
