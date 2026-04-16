@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:my_app_module/core/design/app_color_extension.dart';
 import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/core/design/app_text_styles.dart';
@@ -10,14 +13,22 @@ import '../../../../shared/utils/build_context_extension.dart';
 
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
-class WifiMapPage extends StatelessWidget {
+class WifiMapPage extends HookConsumerWidget {
   const WifiMapPage({super.key});
 
   static const int crossAxisCount = 10;
   static const double spacing = 4;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final transformationController = useMemoized(
+      () {
+        final controller = TransformationController();
+        controller.value = Matrix4.identity()..scaleByDouble(1.5, 1.5, 1.0, 1.0);
+        return controller;
+      },
+    );
+
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
@@ -29,14 +40,14 @@ class WifiMapPage extends StatelessWidget {
           _buildBackButton(context),
           _buildFloorTitle(context),
           SizedBox(height: 16),
-          _buildAutoSizeGrid(context),
+          _buildAutoSizeGrid(context, transformationController),
           _buildStats(context),
         ],
       ),
     );
   }
 
-  Widget _buildAutoSizeGrid(BuildContext context) {
+  Widget _buildAutoSizeGrid(BuildContext context, TransformationController transformationController) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
@@ -56,6 +67,7 @@ class WifiMapPage extends StatelessWidget {
             minScale: 1.0,
             maxScale: 2.0,
             boundaryMargin: EdgeInsets.zero,
+            transformationController: transformationController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
               child: _buildGrid(context, squareSize),
