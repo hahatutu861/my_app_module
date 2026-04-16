@@ -48,8 +48,7 @@ class WifiMapPage extends StatelessWidget {
         final int rowCount = (totalItemCount / crossAxisCount).ceil();
         final double totalGridHeight =
             rowCount * squareSize + (rowCount - 1) * spacing;
-        return Container(
-          color: Colors.red,
+        return SizedBox(
           width: double.infinity,
           height: totalGridHeight,
           child: InteractiveViewer(
