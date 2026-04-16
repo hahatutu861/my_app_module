@@ -211,6 +211,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} zones'**
   String zonesCount(int count);
+
+  /// No description provided for @wifiMapPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi Map'**
+  String get wifiMapPage;
+
+  /// No description provided for @noZones.
+  ///
+  /// In en, this message translates to:
+  /// **'0 zones'**
+  String get noZones;
 }
 
 class _AppLocalizationsDelegate

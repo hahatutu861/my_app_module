@@ -70,4 +70,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String zonesCount(int count) {
     return '$count zones';
   }
+
+  @override
+  String get wifiMapPage => 'Wi-Fi Map';
+
+  @override
+  String get noZones => '0 zones';
 }

@@ -13,9 +13,8 @@ import '../../../../shared/utils/build_context_extension.dart';
 class WifiMapPage extends StatelessWidget {
   const WifiMapPage({super.key});
 
-  // 🔴 只需要配置列数 + 间距，其他全部自动计算
-  static const int crossAxisCount = 10;    // 固定10列
-  static const double spacing = 8;        // 间距
+  static const int crossAxisCount = 10;
+  static const double spacing = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +30,6 @@ class WifiMapPage extends StatelessWidget {
           _buildFloorTitle(context),
           SizedBox(height: 16),
           _buildAutoSizeGrid(context),
-
-          // 统计信息
           _buildStats(context),
         ],
       ),
@@ -42,9 +39,11 @@ class WifiMapPage extends StatelessWidget {
   Widget _buildAutoSizeGrid(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final double totalWidth = constraints.maxWidth;
+        final double screenWidth = constraints.maxWidth;
+        const double minHorizontalPadding = 16;
+        final double availableWidth = screenWidth - minHorizontalPadding * 2;
         final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
-        final double squareSize = (totalWidth - totalSpacingWidth) / crossAxisCount;
+        final double squareSize = (availableWidth - totalSpacingWidth) / crossAxisCount;
         const int totalItemCount = 110;
         final int rowCount = (totalItemCount / crossAxisCount).ceil();
         final double totalGridHeight =
@@ -57,14 +56,16 @@ class WifiMapPage extends StatelessWidget {
             minScale: 1.0,
             maxScale: 2.0,
             boundaryMargin: EdgeInsets.zero,
-            child: _buildGrid(context, squareSize),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
+              child: _buildGrid(context, squareSize),
+            ),
           ),
         );
       },
     );
   }
 
-  /// 网格内容（正方形子项）
   Widget _buildGrid(BuildContext context, double squareSize) {
     return GridView.builder(
       shrinkWrap: true,
@@ -74,14 +75,14 @@ class WifiMapPage extends StatelessWidget {
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: spacing,
         mainAxisSpacing: spacing,
-        childAspectRatio: 1, // 🔥 强制正方形
+        childAspectRatio: 1,
       ),
       itemCount: 110,
       itemBuilder: (context, index) {
         return Container(
           decoration: BoxDecoration(
             color: context.appColors.gray1,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(6),
           ),
         );
       },
@@ -94,7 +95,7 @@ class WifiMapPage extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            'First floor',
+            context.l10n.firstFloor,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -141,12 +142,10 @@ class WifiMapPage extends StatelessWidget {
   }
 
   Widget _buildStats(BuildContext context) {
-    return Container(
-      height: 43,
-      padding: const EdgeInsets.only(left: AppSpacing.pad16),
-      alignment: Alignment.centerLeft,
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.pad16, left: AppSpacing.pad16),
       child: Text(
-        '0 zones',
+        context.l10n.noZones,
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
