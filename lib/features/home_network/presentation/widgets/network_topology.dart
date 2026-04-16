@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +13,7 @@ import '../../../../shared/ui/widgets/app_image.dart';
 import '../../../../shared/utils/build_context_extension.dart';
 import '../providers/network_topology_state.dart';
 import '../providers/network_topology_viewmodel_provider.dart';
+import 'edit_button.dart';
 
 class _Dimensions {
   static const double deviceSize = 78;
@@ -25,7 +28,6 @@ class _Dimensions {
   static const double indicatorOffset = -10;
   static const double indicatorBorderWidth = 4;
   static const double fontSize = 14;
-  static const double bubbleSpacing = 2;
 }
 
 class NetworkTopology extends HookConsumerWidget {
@@ -282,26 +284,8 @@ class _DeviceInfo extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4),
-        _EditButton(),
+        EditButton(onTap: () {}),
       ],
-    );
-  }
-}
-
-class _EditButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: AppSpacing.icon24,
-        height: AppSpacing.icon24,
-        decoration: BoxDecoration(
-          color: context.appColors.gray3,
-          shape: BoxShape.circle,
-        ),
-        child: const Center(child: AppImage('edit.png', width: 14, height: 14)),
-      ),
     );
   }
 }
@@ -434,7 +418,7 @@ class _EditTitleBarState extends State<_EditTitleBar> {
                       style: context.appTextStyles.bodyLargeWith90Opacity,
                     ),
                     SizedBox(width: spacing),
-                    _EditButton(),
+                    EditButton(onTap: () {}),
                   ],
                 ),
               ),
@@ -497,7 +481,7 @@ class _MeasureLayout extends StatelessWidget {
                   onChange: (size) {
                     onEditButtonSize(size);
                   },
-                  child: _EditButton(),
+                  child: EditButton(onTap: () {}),
                 ),
                 MeasureSize(
                   onChange: (size) {
@@ -523,7 +507,7 @@ class _MeasureLayout extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: spacing),
-                  _EditButton(),
+                  EditButton(onTap: () {}),
                 ],
               ),
             ),
@@ -534,28 +518,58 @@ class _MeasureLayout extends StatelessWidget {
   }
 }
 
-class _EditTitleButton extends StatelessWidget {
+class _EditTitleButton extends HookConsumerWidget {
   final Size editButtonSize;
+  static const _autoHideDuration = Duration(seconds: 2);
 
-  const _EditTitleButton({required this.editButtonSize});
+  const _EditTitleButton({
+    required this.editButtonSize
+  });
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: _EditBubble(
-        editButtonSize: editButtonSize,
-        text: context.l10n.clickToEdit,
-        textStyle: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: context.appColors.fontWh1with100Opacity,
-          height: 1,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fadeController = useAnimationController(
+      duration: const Duration(milliseconds: 300),
+    );
+
+    final fadeAnimation = useMemoized(
+      () => Tween<double>(begin: 1.0, end: 0.0).animate(
+        CurvedAnimation(parent: fadeController, curve: Curves.easeInOut),
+      ),
+      [fadeController],
+    );
+
+    useEffect(() {
+      final timer = Timer(_autoHideDuration, () {
+        if (fadeController.status == AnimationStatus.dismissed) {
+          fadeController.forward();
+        }
+      });
+      return () => timer.cancel();
+    }, [_autoHideDuration]);
+
+    return FadeTransition(
+      opacity: fadeAnimation,
+      child: GestureDetector(
+        onTap: () {
+          if (fadeController.status == AnimationStatus.dismissed) {
+            fadeController.forward();
+          }
+        },
+        child: _EditBubble(
+          editButtonSize: editButtonSize,
+          text: context.l10n.clickToEdit,
+          textStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: context.appColors.fontWh1with100Opacity,
+            height: 1,
+          ),
+          bubbleColor: context.appColors.fontGy1with90Opacity,
+          arrowWidth: 8,
+          arrowHeight: 6,
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
-        bubbleColor: context.appColors.fontGy1with90Opacity,
-        arrowWidth: 8,
-        arrowHeight: 6,
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
     );
   }

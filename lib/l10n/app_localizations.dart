@@ -193,6 +193,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Click the button on the top right corner to add a floor.'**
   String get addFloorHint;
+
+  /// No description provided for @firstFloor.
+  ///
+  /// In en, this message translates to:
+  /// **'First floor'**
+  String get firstFloor;
+
+  /// No description provided for @edit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get edit;
+
+  /// No description provided for @zonesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} zones'**
+  String zonesCount(int count);
 }
 
 class _AppLocalizationsDelegate

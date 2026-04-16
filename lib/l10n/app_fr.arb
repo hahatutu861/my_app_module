@@ -22,5 +22,15 @@
   "addFloor": "Ajouter un étage",
   "wifiMap": "Carte Wi-Fi",
   "noFloorsCreated": "Aucun étage créé",
-  "addFloorHint": "Cliquez sur le bouton en haut à droite pour ajouter un étage."
+  "addFloorHint": "Cliquez sur le bouton en haut à droite pour ajouter un étage.",
+  "firstFloor": "Premier étage",
+  "edit": "Modifier",
+  "zonesCount": "{count} zones",
+  "@zonesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

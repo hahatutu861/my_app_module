@@ -19,6 +19,10 @@ class AppSpacing {
   AppSpacing._();
 
   // ============== 基础间距令牌 ==============
+  /// 极小间距 - 2pt
+  /// 用于：极小元素间距
+  static const double s2 = 2.0;
+
   /// 极小间距 - 4pt
   /// 用于：小元素间距（图标与文字、编辑按钮与文本）
   static const double s4 = 4.0;

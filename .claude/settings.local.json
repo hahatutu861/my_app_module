@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv ~/.claude/skills/git-commit/skill.md ~/.claude/skills/git-commit/SKILL.md)",
+      "Read(//Users/tulei/.claude/skills/git-commit/**)"
+    ]
+  }
+}

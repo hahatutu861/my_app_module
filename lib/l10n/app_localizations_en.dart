@@ -59,4 +59,15 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get addFloorHint =>
       'Click the button on the top right corner to add a floor.';
+
+  @override
+  String get firstFloor => 'First floor';
+
+  @override
+  String get edit => 'Edit';
+
+  @override
+  String zonesCount(int count) {
+    return '$count zones';
+  }
 }

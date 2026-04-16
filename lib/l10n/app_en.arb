@@ -22,5 +22,15 @@
   "addFloor": "Add floor",
   "wifiMap": "Wi-Fi Map",
   "noFloorsCreated": "No floors created",
-  "addFloorHint": "Click the button on the top right corner to add a floor."
+  "addFloorHint": "Click the button on the top right corner to add a floor.",
+  "firstFloor": "First floor",
+  "edit": "Edit",
+  "zonesCount": "{count} zones",
+  "@zonesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

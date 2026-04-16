@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_app_module/core/design/app_color_extension.dart';
 import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/core/design/app_text_styles.dart';
@@ -16,6 +17,9 @@ class WifiMapEmptyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusBarHeight = MediaQuery.of(context).padding.top;
+    
+    debugPrint('=== WifiMapEmptyPage MediaQuery ===');
+    debugPrint('statusBarHeight: $statusBarHeight');
 
     return Scaffold(
       backgroundColor: context.appColors.fontWh1with100Opacity,
@@ -129,7 +133,7 @@ Widget _buildBackButton(BuildContext context) {
 Widget _buildAddFloorButton(BuildContext context) {
   return GestureDetector(
     onTap: () {
-      debugPrint('Add floor tapped');
+      context.push('/wifi-map');
     },
     behavior: HitTestBehavior.opaque,
     child: Align(

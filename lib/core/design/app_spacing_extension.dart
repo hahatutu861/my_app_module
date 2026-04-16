@@ -298,6 +298,9 @@ class Spacing {
   /// 极小水平间距 (4pt)
   static const Widget h4 = SizedBox(width: AppSpacing.s4);
 
+  /// 极小水平间距 (2pt)
+  static const Widget h2 = SizedBox(width: AppSpacing.s2);
+
   /// 小水平间距 (8pt)
   static const Widget h8 = SizedBox(width: AppSpacing.s8);
 

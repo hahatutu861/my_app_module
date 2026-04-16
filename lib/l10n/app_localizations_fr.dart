@@ -60,4 +60,15 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get addFloorHint =>
       'Cliquez sur le bouton en haut à droite pour ajouter un étage.';
+
+  @override
+  String get firstFloor => 'Premier étage';
+
+  @override
+  String get edit => 'Modifier';
+
+  @override
+  String zonesCount(int count) {
+    return '$count zones';
+  }
 }
