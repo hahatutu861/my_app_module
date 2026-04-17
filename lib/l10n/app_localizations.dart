@@ -223,6 +223,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'0 zones'**
   String get noZones;
+
+  /// No description provided for @wifiMapDialogTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips'**
+  String get wifiMapDialogTips;
+
+  /// No description provided for @wifiMapDialogSelectTile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a tile to start a zone/room.'**
+  String get wifiMapDialogSelectTile;
+
+  /// No description provided for @wifiMapDialogNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get wifiMapDialogNext;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
 }
 
 class _AppLocalizationsDelegate

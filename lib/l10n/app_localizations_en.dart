@@ -76,4 +76,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noZones => '0 zones';
+
+  @override
+  String get wifiMapDialogTips => 'Tips';
+
+  @override
+  String get wifiMapDialogSelectTile => 'Select a tile to start a zone/room.';
+
+  @override
+  String get wifiMapDialogNext => 'Next';
+
+  @override
+  String get ok => 'OK';
 }

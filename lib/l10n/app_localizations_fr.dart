@@ -77,4 +77,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noZones => '0 zones';
+
+  @override
+  String get wifiMapDialogTips => 'Conseils';
+
+  @override
+  String get wifiMapDialogSelectTile =>
+      'Sélectionnez une tuile pour commencer une zone/salle.';
+
+  @override
+  String get wifiMapDialogNext => 'Suivant';
+
+  @override
+  String get ok => 'OK';
 }

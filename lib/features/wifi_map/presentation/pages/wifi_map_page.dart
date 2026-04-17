@@ -10,6 +10,7 @@ import 'package:my_app_module/shared/ui/widgets/app_image.dart';
 import '../../../../core/design/app_spacing.dart';
 import '../../../../features/home_network/presentation/widgets/edit_button.dart';
 import '../../../../shared/utils/build_context_extension.dart';
+import '../widgets/wifi_map_dialog.dart';
 
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
@@ -21,6 +22,20 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(
+      () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const WifiMapDialog(),
+          );
+        });
+        return null;
+      },
+      [],
+    );
+
     final transformationController = useMemoized(
       () {
         final controller = TransformationController();

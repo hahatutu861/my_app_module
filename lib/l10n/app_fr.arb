@@ -34,5 +34,9 @@
     }
   },
   "wifiMapPage": "Carte Wi-Fi",
-  "noZones": "0 zones"
+  "noZones": "0 zones",
+  "wifiMapDialogTips": "Conseils",
+  "wifiMapDialogSelectTile": "Sélectionnez une tuile pour commencer une zone/salle.",
+  "wifiMapDialogNext": "Suivant",
+  "ok": "OK"
 }
