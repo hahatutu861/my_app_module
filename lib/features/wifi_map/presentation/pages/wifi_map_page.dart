@@ -6,6 +6,7 @@ import 'package:my_app_module/core/design/app_color_extension.dart';
 import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/core/design/app_text_styles.dart';
 import 'package:my_app_module/shared/ui/widgets/app_image.dart';
+import 'package:my_app_module/shared/providers/shared_preferences_provider.dart';
 
 import '../../../../core/design/app_spacing.dart';
 import '../../../../features/home_network/presentation/widgets/edit_button.dart';
@@ -24,13 +25,7 @@ class WifiMapPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     useEffect(
       () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (context) => const WifiMapDialog(),
-          );
-        });
+        _checkAndShowDialog(context, ref);
         return null;
       },
       [],
@@ -180,5 +175,20 @@ class WifiMapPage extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _checkAndShowDialog(BuildContext context, WidgetRef ref) async {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final hasShown = prefs.getBool('has_shown_wifi_map_dialog') ?? false;
+    if (!hasShown) {
+      await prefs.setBool('has_shown_wifi_map_dialog', true);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => const WifiMapDialog(),
+        );
+      });
+    }
   }
 }

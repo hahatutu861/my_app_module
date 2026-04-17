@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_app_module/l10n/app_localizations.dart';
 import 'package:my_app_module/core/routing/app_router.dart';
 import 'package:my_app_module/shared/ui/theme/app_theme.dart';
 import 'package:my_app_module/shared/providers/theme_provider.dart';
+import 'package:my_app_module/shared/providers/shared_preferences_provider.dart';
 
 /// Flutter Module 主入口
 /// 用于嵌入到原生应用中
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const ProviderScope(child: MyAppModule()));
+  final prefs = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferencesProvider.overrideWithValue(prefs),
+      ],
+      child: MyAppModule(),
+    ),
+  );
 }
 
-/// Module 根 Widget
+/// Flutter Module 根 Widget
 class MyAppModule extends ConsumerWidget {
   const MyAppModule({super.key});
 
