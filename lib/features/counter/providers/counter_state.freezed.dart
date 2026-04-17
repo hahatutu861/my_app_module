@@ -21,21 +21,21 @@ mixin _$CounterState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Counter counter) loaded,
+    required TResult Function(CounterModel counter) loaded,
     required TResult Function(String message) error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Counter counter)? loaded,
+    TResult? Function(CounterModel counter)? loaded,
     TResult? Function(String message)? error,
   }) => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Counter counter)? loaded,
+    TResult Function(CounterModel counter)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) => throw _privateConstructorUsedError;
@@ -130,7 +130,7 @@ class _$InitialImpl implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Counter counter) loaded,
+    required TResult Function(CounterModel counter) loaded,
     required TResult Function(String message) error,
   }) {
     return initial();
@@ -141,7 +141,7 @@ class _$InitialImpl implements _Initial {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Counter counter)? loaded,
+    TResult? Function(CounterModel counter)? loaded,
     TResult? Function(String message)? error,
   }) {
     return initial?.call();
@@ -152,7 +152,7 @@ class _$InitialImpl implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Counter counter)? loaded,
+    TResult Function(CounterModel counter)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -249,7 +249,7 @@ class _$LoadingImpl implements _Loading {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Counter counter) loaded,
+    required TResult Function(CounterModel counter) loaded,
     required TResult Function(String message) error,
   }) {
     return loading();
@@ -260,7 +260,7 @@ class _$LoadingImpl implements _Loading {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Counter counter)? loaded,
+    TResult? Function(CounterModel counter)? loaded,
     TResult? Function(String message)? error,
   }) {
     return loading?.call();
@@ -271,7 +271,7 @@ class _$LoadingImpl implements _Loading {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Counter counter)? loaded,
+    TResult Function(CounterModel counter)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -330,9 +330,9 @@ abstract class _$$LoadedImplCopyWith<$Res> {
     $Res Function(_$LoadedImpl) then,
   ) = __$$LoadedImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Counter counter});
+  $Res call({CounterModel counter});
 
-  $CounterCopyWith<$Res> get counter;
+  $CounterModelCopyWith<$Res> get counter;
 }
 
 /// @nodoc
@@ -354,7 +354,7 @@ class __$$LoadedImplCopyWithImpl<$Res>
         counter: null == counter
             ? _value.counter
             : counter // ignore: cast_nullable_to_non_nullable
-                  as Counter,
+                  as CounterModel,
       ),
     );
   }
@@ -363,8 +363,8 @@ class __$$LoadedImplCopyWithImpl<$Res>
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $CounterCopyWith<$Res> get counter {
-    return $CounterCopyWith<$Res>(_value.counter, (value) {
+  $CounterModelCopyWith<$Res> get counter {
+    return $CounterModelCopyWith<$Res>(_value.counter, (value) {
       return _then(_value.copyWith(counter: value));
     });
   }
@@ -376,7 +376,7 @@ class _$LoadedImpl implements _Loaded {
   const _$LoadedImpl({required this.counter});
 
   @override
-  final Counter counter;
+  final CounterModel counter;
 
   @override
   String toString() {
@@ -407,7 +407,7 @@ class _$LoadedImpl implements _Loaded {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Counter counter) loaded,
+    required TResult Function(CounterModel counter) loaded,
     required TResult Function(String message) error,
   }) {
     return loaded(counter);
@@ -418,7 +418,7 @@ class _$LoadedImpl implements _Loaded {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Counter counter)? loaded,
+    TResult? Function(CounterModel counter)? loaded,
     TResult? Function(String message)? error,
   }) {
     return loaded?.call(counter);
@@ -429,7 +429,7 @@ class _$LoadedImpl implements _Loaded {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Counter counter)? loaded,
+    TResult Function(CounterModel counter)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {
@@ -478,9 +478,9 @@ class _$LoadedImpl implements _Loaded {
 }
 
 abstract class _Loaded implements CounterState {
-  const factory _Loaded({required final Counter counter}) = _$LoadedImpl;
+  const factory _Loaded({required final CounterModel counter}) = _$LoadedImpl;
 
-  Counter get counter;
+  CounterModel get counter;
 
   /// Create a copy of CounterState
   /// with the given fields replaced by the non-null parameter values.
@@ -561,7 +561,7 @@ class _$ErrorImpl implements _Error {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(Counter counter) loaded,
+    required TResult Function(CounterModel counter) loaded,
     required TResult Function(String message) error,
   }) {
     return error(message);
@@ -572,7 +572,7 @@ class _$ErrorImpl implements _Error {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(Counter counter)? loaded,
+    TResult? Function(CounterModel counter)? loaded,
     TResult? Function(String message)? error,
   }) {
     return error?.call(message);
@@ -583,7 +583,7 @@ class _$ErrorImpl implements _Error {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(Counter counter)? loaded,
+    TResult Function(CounterModel counter)? loaded,
     TResult Function(String message)? error,
     required TResult orElse(),
   }) {

@@ -20,12 +20,12 @@ class HomeNetworkPage extends StatelessWidget {
         children: [
           SizedBox(height: statusBarHeight),
           const CustomAppBar(),
-          const Expanded(
+          Expanded(
             child: Column(
               children: [
-                ProgressSection(),
-                Spacing.v30,
-                Expanded(child: NetworkTopology()),
+                const ProgressSection(),
+                const SizedBox(height: 30),
+                Expanded(child: const NetworkTopology()),
               ],
             ),
           ),

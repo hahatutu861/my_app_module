@@ -11,8 +11,8 @@ import '../../../../core/design/app_spacing.dart';
 import '../../../../core/design/app_text_styles.dart';
 import '../../../../shared/ui/widgets/app_image.dart';
 import '../../../../shared/utils/build_context_extension.dart';
-import '../providers/network_topology_state.dart';
-import '../providers/network_topology_viewmodel_provider.dart';
+import '../models/network_topology_state.dart';
+import '../models/network_topology_viewmodel_provider.dart';
 import 'edit_button.dart';
 
 class _Dimensions {
@@ -364,9 +364,9 @@ class _EditTitleBarState extends State<_EditTitleBar> {
 
   bool get _isMeasured =>
       _textSize != null &&
-      _editButtonSize != null &&
-      _editTitleButtonSize != null &&
-      _rowHeight != null;
+          _editButtonSize != null &&
+          _editTitleButtonSize != null &&
+          _rowHeight != null;
 
   @override
   Widget build(BuildContext context) {
@@ -400,8 +400,8 @@ class _EditTitleBarState extends State<_EditTitleBar> {
         final editButtonLeft = leftPosition + _textSize!.width + spacing;
         final bubbleLeft =
             editButtonLeft +
-            _editButtonSize!.width -
-            _editTitleButtonSize!.width;
+                _editButtonSize!.width -
+                _editTitleButtonSize!.width;
 
         return SizedBox(
           height: 45,
@@ -533,7 +533,7 @@ class _EditTitleButton extends HookConsumerWidget {
     );
 
     final fadeAnimation = useMemoized(
-      () => Tween<double>(begin: 1.0, end: 0.0).animate(
+          () => Tween<double>(begin: 1.0, end: 0.0).animate(
         CurvedAnimation(parent: fadeController, curve: Curves.easeInOut),
       ),
       [fadeController],

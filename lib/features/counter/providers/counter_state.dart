@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:my_app_module/features/counter/domain/entities/counter.dart';
+import 'package:my_app_module/features/counter/models/counter_model.dart';
 
 part 'counter_state.freezed.dart';
 
@@ -7,6 +7,6 @@ part 'counter_state.freezed.dart';
 class CounterState with _$CounterState {
   const factory CounterState.initial() = _Initial;
   const factory CounterState.loading() = _Loading;
-  const factory CounterState.loaded({required Counter counter}) = _Loaded;
+  const factory CounterState.loaded({required CounterModel counter}) = _Loaded;
   const factory CounterState.error({required String message}) = _Error;
 }

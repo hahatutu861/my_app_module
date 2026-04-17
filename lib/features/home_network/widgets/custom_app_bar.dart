@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/design/app_color_extension.dart';
 import '../../../../core/design/app_spacing.dart';
-import '../../../../core/design/app_spacing_extension.dart';
 import '../../../../shared/bridges/pigeon_generated.dart';
 import '../../../../shared/ui/widgets/app_image.dart';
 

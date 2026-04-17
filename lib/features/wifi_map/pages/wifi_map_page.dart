@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import 'package:my_app_module/core/design/app_color_extension.dart';
 import 'package:my_app_module/core/design/app_spacing_extension.dart';
 import 'package:my_app_module/core/design/app_text_styles.dart';
-import 'package:my_app_module/shared/ui/widgets/app_image.dart';
 import 'package:my_app_module/shared/providers/shared_preferences_provider.dart';
+import 'package:my_app_module/shared/ui/widgets/app_image.dart';
 
 import '../../../../core/design/app_spacing.dart';
-import '../../../../features/home_network/presentation/widgets/edit_button.dart';
 import '../../../../shared/utils/build_context_extension.dart';
+import '../../home_network/widgets/edit_button.dart';
 import '../widgets/wifi_map_dialog.dart';
 
 /// Wi-Fi 地图页面
@@ -24,21 +23,16 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    useEffect(
-      () {
-        _checkAndShowDialog(context, ref);
-        return null;
-      },
-      [],
-    );
+    useEffect(() {
+      _checkAndShowDialog(context, ref);
+      return null;
+    }, []);
 
-    final transformationController = useMemoized(
-      () {
-        final controller = TransformationController();
-        controller.value = Matrix4.identity()..scaleByDouble(1.5, 1.5, 1.0, 1.0);
-        return controller;
-      },
-    );
+    final transformationController = useMemoized(() {
+      final controller = TransformationController();
+      controller.value = Matrix4.identity()..scaleByDouble(1.5, 1.5, 1.0, 1.0);
+      return controller;
+    });
 
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
@@ -58,14 +52,18 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAutoSizeGrid(BuildContext context, TransformationController transformationController) {
+  Widget _buildAutoSizeGrid(
+    BuildContext context,
+    TransformationController transformationController,
+  ) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
         const double minHorizontalPadding = 16;
         final double availableWidth = screenWidth - minHorizontalPadding * 2;
         final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
-        final double squareSize = (availableWidth - totalSpacingWidth) / crossAxisCount;
+        final double squareSize =
+            (availableWidth - totalSpacingWidth) / crossAxisCount;
         const int totalItemCount = 110;
         final int rowCount = (totalItemCount / crossAxisCount).ceil();
         final double totalGridHeight =
@@ -159,14 +157,19 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildEditButton(BuildContext context) {
-    return EditButton(onTap: () {
-      debugPrint('Edit button tapped');
-    });
+    return EditButton(
+      onTap: () {
+        debugPrint('Edit button tapped');
+      },
+    );
   }
 
   Widget _buildStats(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: AppSpacing.pad16, left: AppSpacing.pad16),
+      padding: const EdgeInsets.only(
+        top: AppSpacing.pad16,
+        left: AppSpacing.pad16,
+      ),
       child: Text(
         context.l10n.noZones,
         style: TextStyle(

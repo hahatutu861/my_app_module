@@ -15,16 +15,9 @@ final _privateConstructorUsedError = UnsupportedError(
   'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
 );
 
-CounterModel _$CounterModelFromJson(Map<String, dynamic> json) {
-  return _CounterModel.fromJson(json);
-}
-
 /// @nodoc
 mixin _$CounterModel {
   int get value => throw _privateConstructorUsedError;
-
-  /// Serializes this CounterModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
 
   /// Create a copy of CounterModel
   /// with the given fields replaced by the non-null parameter values.
@@ -109,12 +102,8 @@ class __$$CounterModelImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-@JsonSerializable()
 class _$CounterModelImpl implements _CounterModel {
   const _$CounterModelImpl({required this.value});
-
-  factory _$CounterModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$CounterModelImplFromJson(json);
 
   @override
   final int value;
@@ -132,7 +121,6 @@ class _$CounterModelImpl implements _CounterModel {
             (identical(other.value, value) || other.value == value));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, value);
 
@@ -143,18 +131,10 @@ class _$CounterModelImpl implements _CounterModel {
   @pragma('vm:prefer-inline')
   _$$CounterModelImplCopyWith<_$CounterModelImpl> get copyWith =>
       __$$CounterModelImplCopyWithImpl<_$CounterModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$CounterModelImplToJson(this);
-  }
 }
 
 abstract class _CounterModel implements CounterModel {
   const factory _CounterModel({required final int value}) = _$CounterModelImpl;
-
-  factory _CounterModel.fromJson(Map<String, dynamic> json) =
-      _$CounterModelImpl.fromJson;
 
   @override
   int get value;
