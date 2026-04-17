@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_app_module/features/home_network/models/network_topology_state.dart';
+import 'package:my_app_module/features/home_network/vm/network_topology_state.dart';
 
 final networkTopologyViewModelProvider =
     StateNotifierProvider<NetworkTopologyViewModel, NetworkTopologyState>((ref) {

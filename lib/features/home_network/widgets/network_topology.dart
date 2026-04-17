@@ -11,8 +11,8 @@ import '../../../../core/design/app_spacing.dart';
 import '../../../../core/design/app_text_styles.dart';
 import '../../../../shared/ui/widgets/app_image.dart';
 import '../../../../shared/utils/build_context_extension.dart';
-import '../models/network_topology_state.dart';
-import '../models/network_topology_viewmodel_provider.dart';
+import '../vm/network_topology_state.dart';
+import '../vm/network_topology_viewmodel_provider.dart';
 import 'edit_button.dart';
 
 class _Dimensions {

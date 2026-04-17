@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_app_module/features/counter/providers/counter_state.dart';
-import 'package:my_app_module/features/counter/models/counter_repository.dart';
+import 'package:my_app_module/features/counter/data/repositories/counter_repository.dart';
+
+import 'counter_state.dart';
 
 final counterRepositoryProvider = Provider<CounterRepository>((ref) {
   return CounterRepository();

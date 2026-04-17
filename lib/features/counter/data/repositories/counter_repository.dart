@@ -1,4 +1,4 @@
-import 'package:my_app_module/features/counter/models/counter_model.dart';
+import 'package:my_app_module/features/counter/data/models/counter_model.dart';
 
 class CounterRepository {
   int _counterValue = 0;

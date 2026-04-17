@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:my_app_module/features/counter/models/counter_model.dart';
+import 'package:my_app_module/features/counter/data/models/counter_model.dart';
 
 part 'counter_state.freezed.dart';
 
