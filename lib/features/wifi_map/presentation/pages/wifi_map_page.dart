@@ -20,6 +20,7 @@ class WifiMapPage extends HookConsumerWidget {
 
   static const int crossAxisCount = 10;
   static const double spacing = 4;
+  static const String _dialogShownKey = 'has_shown_wifi_map_dialog';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -179,9 +180,9 @@ class WifiMapPage extends HookConsumerWidget {
 
   Future<void> _checkAndShowDialog(BuildContext context, WidgetRef ref) async {
     final prefs = ref.read(sharedPreferencesProvider);
-    final hasShown = prefs.getBool('has_shown_wifi_map_dialog') ?? false;
+    final hasShown = prefs.getBool(_dialogShownKey) ?? false;
     if (!hasShown) {
-      await prefs.setBool('has_shown_wifi_map_dialog', true);
+      await prefs.setBool(_dialogShownKey, true);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,

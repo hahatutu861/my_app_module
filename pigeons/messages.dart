@@ -17,10 +17,8 @@ abstract class AndroidNativeApi {
   /// 关闭 Flutter Activity
   void closeFlutterActivity();
 
-  // 在这里添加其他 API 方法
-  // 示例：
-  // String getDeviceName();
-  // void openPage(String url);
+  /// 获取访问令牌
+  String getAccessToken();
 }
 
 /// Flutter 回调 API
