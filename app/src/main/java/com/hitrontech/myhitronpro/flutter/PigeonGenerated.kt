@@ -2,7 +2,6 @@
 // See also: https://pub.dev/packages/pigeon
 @file:Suppress("UNCHECKED_CAST", "ArrayInDataClass")
 
-package com.hitrontech.myhitronpro.flutter
 
 import android.util.Log
 import io.flutter.plugin.common.BasicMessageChannel
@@ -84,30 +83,82 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
 }
 
 /**
- * Android 原生 API
- * 由 Android 端实现，Flutter 端调用
+ * 原生平台 API
+ * 由原生端实现，Flutter 端调用
  *
  * Generated interface from Pigeon that represents a handler of messages from Flutter.
  */
-interface AndroidNativeApi {
+interface NativeApi {
   /** 获取当前主题模式 */
   fun getThemeMode(): ThemeModeEnum
+  /** 关闭 Flutter Activity */
+  fun closeFlutterActivity()
+  /** 获取访问令牌 */
+  fun getAccessToken(): String
+  /** 获取设备ID */
+  fun getDeviceId(): String
 
   companion object {
-    /** The codec used by AndroidNativeApi. */
+    /** The codec used by NativeApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
     }
-    /** Sets up an instance of `AndroidNativeApi` to handle messages through the `binaryMessenger`. */
+    /** Sets up an instance of `NativeApi` to handle messages through the `binaryMessenger`. */
     @JvmOverloads
-    fun setUp(binaryMessenger: BinaryMessenger, api: AndroidNativeApi?, messageChannelSuffix: String = "") {
+    fun setUp(binaryMessenger: BinaryMessenger, api: NativeApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.AndroidNativeApi.getThemeMode$separatedMessageChannelSuffix", codec)
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getThemeMode$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.getThemeMode())
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.closeFlutterActivity$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.closeFlutterActivity()
+              listOf(null)
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getAccessToken$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getAccessToken())
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getDeviceId$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getDeviceId())
             } catch (exception: Throwable) {
               wrapError(exception)
             }
@@ -122,13 +173,13 @@ interface AndroidNativeApi {
 }
 /**
  * Flutter 回调 API
- * 由 Flutter 端实现，Android 端调用
+ * 由 Flutter 端实现，原生端调用
  *
  * Generated class from Pigeon that represents Flutter messages that can be called from Kotlin.
  */
-class AndroidFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
+class NativeFlutterApi(private val binaryMessenger: BinaryMessenger, private val messageChannelSuffix: String = "") {
   companion object {
-    /** The codec used by AndroidFlutterApi. */
+    /** The codec used by NativeFlutterApi. */
     val codec: MessageCodec<Any?> by lazy {
       PigeonGeneratedPigeonCodec()
     }
