@@ -22,6 +22,10 @@ abstract class NativeApi {
 
   /// 获取设备ID
   String getDeviceId();
+
+  /// 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
+  /// 返回空字符串表示不使用代理
+  String getProxyAddress();
 }
 
 /// Flutter 回调 API

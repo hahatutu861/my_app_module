@@ -19,7 +19,7 @@ class WifiMapDialog extends HookConsumerWidget {
       insetPadding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
       child: Container(
-        width: context.screenWidth * 0.85,
+        width: context.dialogWidth,
         decoration: BoxDecoration(
           color: context.appColors.fontWh1with100Opacity,
           borderRadius: BorderRadius.circular(12),

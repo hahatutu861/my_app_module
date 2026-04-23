@@ -27,4 +27,7 @@ extension MediaQueryContextExtension on BuildContext {
 
   /// 大边距（通常为 24pt）
   double get largePadding => 24.0;
+
+  /// 对话框宽度（屏幕宽度的 85%）
+  double get dialogWidth => screenWidth * 0.85;
 }

@@ -181,6 +181,35 @@ class NativeApi {
       return (pigeonVar_replyList[0] as String?)!;
     }
   }
+
+  /// 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
+  /// 返回空字符串表示不使用代理
+  Future<String> getProxyAddress() async {
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getProxyAddress$pigeonVar_messageChannelSuffix';
+    final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final List<Object?>? pigeonVar_replyList =
+        await pigeonVar_channel.send(null) as List<Object?>?;
+    if (pigeonVar_replyList == null) {
+      throw _createConnectionError(pigeonVar_channelName);
+    } else if (pigeonVar_replyList.length > 1) {
+      throw PlatformException(
+        code: pigeonVar_replyList[0]! as String,
+        message: pigeonVar_replyList[1] as String?,
+        details: pigeonVar_replyList[2],
+      );
+    } else if (pigeonVar_replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (pigeonVar_replyList[0] as String?)!;
+    }
+  }
 }
 
 /// Flutter 回调 API

@@ -68,7 +68,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String zonesCount(int count) {
-    return '$count zones';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zones',
+      one: '1 zone',
+      zero: 'No zones',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -88,4 +95,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get editFloorName => 'Edit floor name';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get floorNameHint => 'Floor name';
 }

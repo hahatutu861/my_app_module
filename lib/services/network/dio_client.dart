@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/services/network/error_interceptor.dart';
@@ -16,6 +18,8 @@ final dioClientProvider = Provider<Dio>((ref) {
       },
     ),
   );
+
+  _setupProxy(dio);
 
   dio.interceptors.add(
     InterceptorsWrapper(
@@ -40,3 +44,19 @@ final dioClientProvider = Provider<Dio>((ref) {
 
   return dio;
 });
+
+void _setupProxy(Dio dio) {
+  NativeApi().getProxyAddress().then((proxyAddress) {
+    if (proxyAddress.isNotEmpty) {
+      final adapter = dio.httpClientAdapter as IOHttpClientAdapter;
+      adapter.createHttpClient = () {
+        final client = HttpClient();
+        client.findProxy = (uri) {
+          return 'PROXY $proxyAddress';
+        };
+        client.badCertificateCallback = (cert, host, port) => true;
+        return client;
+      };
+    }
+  });
+}

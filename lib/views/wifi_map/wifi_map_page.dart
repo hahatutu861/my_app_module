@@ -10,8 +10,8 @@ import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
-import 'package:my_app_module/repositories/host_repository.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
+import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
 
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
@@ -24,9 +24,13 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final wifiMapState = ref.watch(wifiMapViewModelProvider);
+
     useEffect(() {
       _checkAndShowDialog(context, ref);
-      _loadHosts(ref);
+      Future.microtask(() {
+        ref.read(wifiMapViewModelProvider.notifier).loadHosts();
+      });
       return null;
     }, []);
 
@@ -48,7 +52,7 @@ class WifiMapPage extends HookConsumerWidget {
           _buildFloorTitle(context),
           SizedBox(height: 16),
           _buildAutoSizeGrid(context, transformationController),
-          _buildStats(context),
+          _buildStats(context, wifiMapState.hostsCount),
         ],
       ),
     );
@@ -166,14 +170,14 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context) {
+  Widget _buildStats(BuildContext context, int hostsCount) {
     return Padding(
       padding: const EdgeInsets.only(
         top: AppSpacing.pad16,
         left: AppSpacing.pad16,
       ),
       child: Text(
-        context.l10n.noZones,
+        context.l10n.zonesCount(hostsCount),
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
@@ -181,16 +185,6 @@ class WifiMapPage extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _loadHosts(WidgetRef ref) async {
-    try {
-      final repository = ref.read(hostRepositoryProvider);
-      final response = await repository.getHosts();
-      debugPrint('getHosts 返回结果: $response');
-    } catch (e) {
-      debugPrint('getHosts 请求失败: $e');
-    }
   }
 
   Future<void> _checkAndShowDialog(BuildContext context, WidgetRef ref) async {

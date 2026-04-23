@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/widgets/app_image.dart';
+import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
@@ -132,8 +132,15 @@ Widget _buildBackButton(BuildContext context) {
 /// 使用 Expanded 包裹，点击区域为右侧半屏，最大化可点击范围
 Widget _buildAddFloorButton(BuildContext context) {
   return GestureDetector(
-    onTap: () {
-      context.push('/wifi-map');
+    onTap: () async {
+      final floorName = await showDialog<String>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const EditFloorNameDialog(),
+      );
+      if (floorName != null && floorName.isNotEmpty) {
+        debugPrint('Floor name: $floorName');
+      }
     },
     behavior: HitTestBehavior.opaque,
     child: Align(

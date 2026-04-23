@@ -209,7 +209,7 @@ abstract class AppLocalizations {
   /// No description provided for @zonesCount.
   ///
   /// In en, this message translates to:
-  /// **'{count} zones'**
+  /// **'{count, plural, =0{No zones} =1{1 zone} other{{count} zones}}'**
   String zonesCount(int count);
 
   /// No description provided for @wifiMapPage.
@@ -247,6 +247,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'OK'**
   String get ok;
+
+  /// No description provided for @editFloorName.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit floor name'**
+  String get editFloorName;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @floorNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Floor name'**
+  String get floorNameHint;
 }
 
 class _AppLocalizationsDelegate

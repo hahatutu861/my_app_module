@@ -25,7 +25,7 @@
   "addFloorHint": "Cliquez sur le bouton en haut à droite pour ajouter un étage.",
   "firstFloor": "Premier étage",
   "edit": "Modifier",
-  "zonesCount": "{count} zones",
+  "zonesCount": "{count, plural, =0{Aucune zone} =1{1 zone} other{{count} zones}}",
   "@zonesCount": {
     "placeholders": {
       "count": {
@@ -38,5 +38,9 @@
   "wifiMapDialogTips": "Conseils",
   "wifiMapDialogSelectTile": "Sélectionnez une tuile pour commencer une zone/salle.",
   "wifiMapDialogNext": "Suivant",
-  "ok": "OK"
+  "ok": "OK",
+  "editFloorName": "Modifier le nom de l'étage",
+  "cancel": "Annuler",
+  "save": "Enregistrer",
+  "floorNameHint": "Nom de l'étage"
 }

@@ -69,7 +69,14 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String zonesCount(int count) {
-    return '$count zones';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count zones',
+      one: '1 zone',
+      zero: 'Aucune zone',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -90,4 +97,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get ok => 'OK';
+
+  @override
+  String get editFloorName => 'Modifier le nom de l\'étage';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get save => 'Enregistrer';
+
+  @override
+  String get floorNameHint => 'Nom de l\'étage';
 }

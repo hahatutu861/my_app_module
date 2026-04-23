@@ -97,6 +97,11 @@ interface NativeApi {
   fun getAccessToken(): String
   /** 获取设备ID */
   fun getDeviceId(): String
+  /**
+   * 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
+   * 返回空字符串表示不使用代理
+   */
+  fun getProxyAddress(): String
 
   companion object {
     /** The codec used by NativeApi. */
@@ -159,6 +164,21 @@ interface NativeApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.getDeviceId())
+            } catch (exception: Throwable) {
+              wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getProxyAddress$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getProxyAddress())
             } catch (exception: Throwable) {
               wrapError(exception)
             }
