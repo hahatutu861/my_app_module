@@ -166,7 +166,6 @@ class _PageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: 添加翻译 context.l10n.wifiMap
     return Text(
       context.l10n.wifiMap,
       style: TextStyle(

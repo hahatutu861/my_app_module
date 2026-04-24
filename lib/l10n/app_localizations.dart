@@ -271,6 +271,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Floor name'**
   String get floorNameHint;
+
+  /// No description provided for @roomBackyard.
+  ///
+  /// In en, this message translates to:
+  /// **'Backyard'**
+  String get roomBackyard;
+
+  /// No description provided for @roomBathroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom'**
+  String get roomBathroom;
+
+  /// No description provided for @roomBedroom.
+  ///
+  /// In en, this message translates to:
+  /// **'Bedroom'**
+  String get roomBedroom;
+
+  /// No description provided for @roomDiningRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Dining Room'**
+  String get roomDiningRoom;
+
+  /// No description provided for @roomDressingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Dressing Room'**
+  String get roomDressingRoom;
+
+  /// No description provided for @roomGames.
+  ///
+  /// In en, this message translates to:
+  /// **'Games'**
+  String get roomGames;
+
+  /// No description provided for @roomGarage.
+  ///
+  /// In en, this message translates to:
+  /// **'Garage'**
+  String get roomGarage;
+
+  /// No description provided for @roomGym.
+  ///
+  /// In en, this message translates to:
+  /// **'Gym'**
+  String get roomGym;
+
+  /// No description provided for @roomHomeTheater.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Theater'**
+  String get roomHomeTheater;
+
+  /// No description provided for @roomKitchen.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen'**
+  String get roomKitchen;
+
+  /// No description provided for @roomLivingRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Living Room'**
+  String get roomLivingRoom;
+
+  /// No description provided for @roomLobby.
+  ///
+  /// In en, this message translates to:
+  /// **'Lobby'**
+  String get roomLobby;
+
+  /// No description provided for @roomOffice.
+  ///
+  /// In en, this message translates to:
+  /// **'Office'**
+  String get roomOffice;
+
+  /// No description provided for @roomPatio.
+  ///
+  /// In en, this message translates to:
+  /// **'Patio'**
+  String get roomPatio;
+
+  /// No description provided for @roomPool.
+  ///
+  /// In en, this message translates to:
+  /// **'Pool'**
+  String get roomPool;
+
+  /// No description provided for @roomStairs.
+  ///
+  /// In en, this message translates to:
+  /// **'Stairs'**
+  String get roomStairs;
+
+  /// No description provided for @roomStorage.
+  ///
+  /// In en, this message translates to:
+  /// **'Storage'**
+  String get roomStorage;
+
+  /// No description provided for @roomUtility.
+  ///
+  /// In en, this message translates to:
+  /// **'Utility'**
+  String get roomUtility;
 }
 
 class _AppLocalizationsDelegate

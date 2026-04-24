@@ -11,6 +11,7 @@ import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
+import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
@@ -110,10 +111,13 @@ class WifiMapPage extends HookConsumerWidget {
       ),
       itemCount: 110,
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            color: context.appColors.gray1,
-            borderRadius: BorderRadius.circular(6),
+        return GestureDetector(
+          onTap: () => EditRoomBottomSheet.show(context),
+          child: Container(
+            decoration: BoxDecoration(
+              color: context.appColors.gray1,
+              borderRadius: BorderRadius.circular(6),
+            ),
           ),
         );
       },

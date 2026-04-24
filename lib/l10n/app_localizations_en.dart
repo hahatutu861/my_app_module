@@ -107,4 +107,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get floorNameHint => 'Floor name';
+
+  @override
+  String get roomBackyard => 'Backyard';
+
+  @override
+  String get roomBathroom => 'Bathroom';
+
+  @override
+  String get roomBedroom => 'Bedroom';
+
+  @override
+  String get roomDiningRoom => 'Dining Room';
+
+  @override
+  String get roomDressingRoom => 'Dressing Room';
+
+  @override
+  String get roomGames => 'Games';
+
+  @override
+  String get roomGarage => 'Garage';
+
+  @override
+  String get roomGym => 'Gym';
+
+  @override
+  String get roomHomeTheater => 'Home Theater';
+
+  @override
+  String get roomKitchen => 'Kitchen';
+
+  @override
+  String get roomLivingRoom => 'Living Room';
+
+  @override
+  String get roomLobby => 'Lobby';
+
+  @override
+  String get roomOffice => 'Office';
+
+  @override
+  String get roomPatio => 'Patio';
+
+  @override
+  String get roomPool => 'Pool';
+
+  @override
+  String get roomStairs => 'Stairs';
+
+  @override
+  String get roomStorage => 'Storage';
+
+  @override
+  String get roomUtility => 'Utility';
 }
