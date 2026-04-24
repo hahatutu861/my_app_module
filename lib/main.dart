@@ -8,12 +8,17 @@ import 'routes/app_router.dart';
 import 'shared/ui/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
+import 'services/database/database_service.dart';
 
 /// Flutter Module 主入口
 /// 用于嵌入到原生应用中
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
+
+  // 初始化数据库
+  await DatabaseService.instance.database;
+
   runApp(
     ProviderScope(
       overrides: [

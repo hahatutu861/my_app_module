@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:my_app_module/utils/design/app_button_style.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 
-class EditFloorNameDialog extends StatefulWidget {
+class EditFloorNameDialog extends HookConsumerWidget {
   final String? initialFloorName;
 
   const EditFloorNameDialog({
@@ -13,26 +16,9 @@ class EditFloorNameDialog extends StatefulWidget {
   });
 
   @override
-  State<EditFloorNameDialog> createState() => _EditFloorNameDialogState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controller = useTextEditingController(text: initialFloorName ?? '');
 
-class _EditFloorNameDialogState extends State<EditFloorNameDialog> {
-  late TextEditingController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.initialFloorName ?? '');
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Dialog(
       insetPadding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
@@ -70,7 +56,7 @@ class _EditFloorNameDialogState extends State<EditFloorNameDialog> {
                   vertical: 12,
                 ),
                 child: TextField(
-                  controller: _controller,
+                  controller: controller,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -99,72 +85,48 @@ class _EditFloorNameDialogState extends State<EditFloorNameDialog> {
                   ),
                 ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      style: ButtonStyle(
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
+              child: IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        style: AppDialogButtonStyle.create(context),
+                        child: Text(
+                          context.l10n.cancel,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: context.appColors.fontGy1with90Opacity,
                           ),
-                        ),
-                        backgroundColor: WidgetStateProperty.all(
-                          context.appColors.fontWh1with100Opacity,
-                        ),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
-                        elevation: WidgetStateProperty.all(0),
-                        shadowColor: WidgetStateProperty.all(Colors.transparent),
-                      ),
-                      child: Text(
-                        context.l10n.cancel,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: context.appColors.fontGy1with90Opacity,
                         ),
                       ),
                     ),
-                  ),
-                  Container(
-                    width: 0.5,
-                    height: 51,
-                    color: context.appColors.gray3,
-                  ),
-                  Expanded(
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(_controller.text.trim());
-                      },
-                      style: ButtonStyle(
-                        padding: WidgetStateProperty.all(
-                          const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 16,
+                    VerticalDivider(
+                      width: 0.5,
+                      thickness: 0.5,
+                      color: context.appColors.gray3,
+                    ),
+                    Expanded(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(controller.text.trim());
+                        },
+                        style: AppDialogButtonStyle.create(context),
+                        child: Text(
+                          context.l10n.save,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: context.appColors.brand6Normal,
                           ),
-                        ),
-                        backgroundColor: WidgetStateProperty.all(
-                          context.appColors.fontWh1with100Opacity,
-                        ),
-                        overlayColor: WidgetStateProperty.all(Colors.transparent),
-                        elevation: WidgetStateProperty.all(0),
-                        shadowColor: WidgetStateProperty.all(Colors.transparent),
-                      ),
-                      child: Text(
-                        context.l10n.save,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: context.appColors.brand6Normal,
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

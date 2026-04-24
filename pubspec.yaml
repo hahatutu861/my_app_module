@@ -31,6 +31,8 @@ dependencies:
   # 本地存储
   path_provider: ^2.1.5
   shared_preferences: ^2.3.4
+  sqflite: ^2.4.1
+  path: ^1.9.0
 
   # 工具类
   logger: ^2.5.0
@@ -51,7 +53,6 @@ dev_dependencies:
   # 代码生成
   build_runner: ^2.4.13
   freezed: ^2.5.7
-  json_serializable: ^6.9.2
 
   # 平台通信 - Pigeon
   pigeon: ^22.0.0

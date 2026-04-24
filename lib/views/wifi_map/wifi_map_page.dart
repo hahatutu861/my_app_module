@@ -12,6 +12,8 @@ import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
@@ -24,12 +26,13 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final wifiMapState = ref.watch(wifiMapViewModelProvider);
+    final floorState = ref.watch(floorViewModelProvider);
 
     useEffect(() {
       _checkAndShowDialog(context, ref);
       Future.microtask(() {
         ref.read(wifiMapViewModelProvider.notifier).loadHosts();
+        ref.read(floorViewModelProvider.notifier).loadActiveFloor();
       });
       return null;
     }, []);
@@ -43,16 +46,17 @@ class WifiMapPage extends HookConsumerWidget {
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: context.appColors.fontWh1with100Opacity,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
           _buildBackButton(context),
-          _buildFloorTitle(context),
+          _buildFloorTitle(context, floorState),
           SizedBox(height: 16),
           _buildAutoSizeGrid(context, transformationController),
-          _buildStats(context, wifiMapState.hostsCount),
+          _buildStats(context, floorState),
         ],
       ),
     );
@@ -116,13 +120,18 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFloorTitle(BuildContext context) {
+  Widget _buildFloorTitle(BuildContext context, FloorState floorState) {
+    final floorName = floorState.maybeWhen(
+      loaded: (floor) => floor?.floorName ?? context.l10n.firstFloor,
+      orElse: () => context.l10n.firstFloor,
+    );
+
     return Padding(
       padding: const EdgeInsets.only(left: 16),
       child: Row(
         children: [
           Text(
-            context.l10n.firstFloor,
+            floorName,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w500,
@@ -170,14 +179,19 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context, int hostsCount) {
+  Widget _buildStats(BuildContext context, FloorState floorState) {
+    final zoneCount = floorState.maybeWhen(
+      loaded: (floor) => floor?.zoneCount ?? 0,
+      orElse: () => 0,
+    );
+
     return Padding(
       padding: const EdgeInsets.only(
         top: AppSpacing.pad16,
         left: AppSpacing.pad16,
       ),
       child: Text(
-        context.l10n.zonesCount(hostsCount),
+        context.l10n.zonesCount(zoneCount),
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'package:my_app_module/utils/design/app_button_style.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 import 'package:my_app_module/widgets/app_image.dart';
@@ -115,19 +116,12 @@ class WifiMapDialog extends HookConsumerWidget {
                       Navigator.of(context).pop();
                     }
                   },
-                  style: ButtonStyle(
-                    padding: WidgetStateProperty.all(
-                      const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 16,
-                      ),
+                  style: AppDialogButtonStyle.create(
+                    context,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
                     ),
-                    backgroundColor: WidgetStateProperty.all(
-                      context.appColors.fontWh1with100Opacity,
-                    ),
-                    overlayColor: WidgetStateProperty.all(Colors.transparent),
-                    elevation: WidgetStateProperty.all(0),
-                    shadowColor: WidgetStateProperty.all(Colors.transparent),
                   ),
                   child: Text(
                     currentPage.value == 2

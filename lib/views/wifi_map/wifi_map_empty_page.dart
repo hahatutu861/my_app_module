@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
@@ -11,15 +14,12 @@ import 'package:my_app_module/utils/build_context_extension.dart';
 /// Wi-Fi 地图空状态页面
 ///
 /// 显示"暂无楼层"的提示，引导用户添加楼层
-class WifiMapEmptyPage extends StatelessWidget {
+class WifiMapEmptyPage extends HookConsumerWidget {
   const WifiMapEmptyPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final statusBarHeight = MediaQuery.of(context).padding.top;
-    
-    debugPrint('=== WifiMapEmptyPage MediaQuery ===');
-    debugPrint('statusBarHeight: $statusBarHeight');
 
     return Scaffold(
       backgroundColor: context.appColors.fontWh1with100Opacity,
@@ -41,7 +41,7 @@ class WifiMapEmptyPage extends StatelessWidget {
 
                 // 右侧："Add floor" 按钮
                 // 使用 Expanded 让点击区域最大化
-                Expanded(child: _buildAddFloorButton(context)),
+                Expanded(child: _buildAddFloorButton(context, ref)),
               ],
             ),
           ),
@@ -130,7 +130,7 @@ Widget _buildBackButton(BuildContext context) {
 /// 构建 "Add floor" 按钮
 ///
 /// 使用 Expanded 包裹，点击区域为右侧半屏，最大化可点击范围
-Widget _buildAddFloorButton(BuildContext context) {
+Widget _buildAddFloorButton(BuildContext context, WidgetRef ref) {
   return GestureDetector(
     onTap: () async {
       final floorName = await showDialog<String>(
@@ -139,7 +139,10 @@ Widget _buildAddFloorButton(BuildContext context) {
         builder: (context) => const EditFloorNameDialog(),
       );
       if (floorName != null && floorName.isNotEmpty) {
-        debugPrint('Floor name: $floorName');
+        await ref.read(floorViewModelProvider.notifier).createFloor(floorName);
+        if (context.mounted) {
+          context.push('/wifi-map');
+        }
       }
     },
     behavior: HitTestBehavior.opaque,
