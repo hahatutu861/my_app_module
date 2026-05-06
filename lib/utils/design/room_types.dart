@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_module/l10n/app_localizations.dart';
 
+import '../build_context_extension.dart';
+
 enum RoomType {
   backyard,
   bathroom,
@@ -62,7 +64,7 @@ enum RoomType {
     }
   }
 
-  String get imagePath => 'assets/images/$imageName.png';
+  String get imagePath => '$imageName.png';
 
   String getLocalizationKey() {
     switch (this) {
@@ -106,88 +108,43 @@ enum RoomType {
   }
 
   String getDisplayName(BuildContext context) {
-    final l10n = Localizations.of<AppLocalizations>(context, AppLocalizations);
-    if (l10n == null) {
-      return _defaultName;
-    }
     switch (this) {
       case RoomType.backyard:
-        return l10n.roomBackyard;
+        return context.l10n.roomBackyard;
       case RoomType.bathroom:
-        return l10n.roomBathroom;
+        return context.l10n.roomBathroom;
       case RoomType.bedroom:
-        return l10n.roomBedroom;
+        return context.l10n.roomBedroom;
       case RoomType.diningRoom:
-        return l10n.roomDiningRoom;
+        return context.l10n.roomDiningRoom;
       case RoomType.dressingRoom:
-        return l10n.roomDressingRoom;
+        return context.l10n.roomDressingRoom;
       case RoomType.games:
-        return l10n.roomGames;
+        return context.l10n.roomGames;
       case RoomType.garage:
-        return l10n.roomGarage;
+        return context.l10n.roomGarage;
       case RoomType.gym:
-        return l10n.roomGym;
+        return context.l10n.roomGym;
       case RoomType.homeTheater:
-        return l10n.roomHomeTheater;
+        return context.l10n.roomHomeTheater;
       case RoomType.kitchen:
-        return l10n.roomKitchen;
+        return context.l10n.roomKitchen;
       case RoomType.livingRoom:
-        return l10n.roomLivingRoom;
+        return context.l10n.roomLivingRoom;
       case RoomType.lobby:
-        return l10n.roomLobby;
+        return context.l10n.roomLobby;
       case RoomType.office:
-        return l10n.roomOffice;
+        return context.l10n.roomOffice;
       case RoomType.patio:
-        return l10n.roomPatio;
+        return context.l10n.roomPatio;
       case RoomType.pool:
-        return l10n.roomPool;
+        return context.l10n.roomPool;
       case RoomType.stairs:
-        return l10n.roomStairs;
+        return context.l10n.roomStairs;
       case RoomType.storage:
-        return l10n.roomStorage;
+        return context.l10n.roomStorage;
       case RoomType.utility:
-        return l10n.roomUtility;
-    }
-  }
-
-  String get _defaultName {
-    switch (this) {
-      case RoomType.backyard:
-        return 'Backyard';
-      case RoomType.bathroom:
-        return 'Bathroom';
-      case RoomType.bedroom:
-        return 'Bedroom';
-      case RoomType.diningRoom:
-        return 'Dining Room';
-      case RoomType.dressingRoom:
-        return 'Dressing Room';
-      case RoomType.games:
-        return 'Games';
-      case RoomType.garage:
-        return 'Garage';
-      case RoomType.gym:
-        return 'Gym';
-      case RoomType.homeTheater:
-        return 'Home Theater';
-      case RoomType.kitchen:
-        return 'Kitchen';
-      case RoomType.livingRoom:
-        return 'Living Room';
-      case RoomType.lobby:
-        return 'Lobby';
-      case RoomType.office:
-        return 'Office';
-      case RoomType.patio:
-        return 'Patio';
-      case RoomType.pool:
-        return 'Pool';
-      case RoomType.stairs:
-        return 'Stairs';
-      case RoomType.storage:
-        return 'Storage';
-      case RoomType.utility:
-        return 'Utility';
+        return context.l10n.roomUtility;
     }
   }
 }

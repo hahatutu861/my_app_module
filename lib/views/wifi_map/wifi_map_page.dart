@@ -19,7 +19,9 @@ import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
 class WifiMapPage extends HookConsumerWidget {
-  const WifiMapPage({super.key});
+  final String? floorId;
+
+  const WifiMapPage({super.key, this.floorId});
 
   static const int crossAxisCount = 10;
   static const double spacing = 4;
@@ -33,10 +35,14 @@ class WifiMapPage extends HookConsumerWidget {
       _checkAndShowDialog(context, ref);
       Future.microtask(() {
         ref.read(wifiMapViewModelProvider.notifier).loadHosts();
-        ref.read(floorViewModelProvider.notifier).loadActiveFloor();
+        if (floorId != null && floorId!.isNotEmpty) {
+          ref.read(floorViewModelProvider.notifier).loadFloorById(floorId!);
+        } else {
+          ref.read(floorViewModelProvider.notifier).loadActiveFloor();
+        }
       });
       return null;
-    }, []);
+    }, [floorId]);
 
     final transformationController = useMemoized(() {
       final controller = TransformationController();

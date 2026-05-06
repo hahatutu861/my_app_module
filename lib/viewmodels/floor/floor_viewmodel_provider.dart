@@ -29,6 +29,19 @@ class FloorViewModel extends StateNotifier<FloorState> {
     }
   }
 
+  void loadFloorById(String id) {
+    state = const FloorState.loading();
+    try {
+      _repository.getFloorById(id).then((floor) {
+        state = FloorState.loaded(floor: floor);
+      }).catchError((e) {
+        state = FloorState.error(message: e.toString());
+      });
+    } catch (e) {
+      state = FloorState.error(message: e.toString());
+    }
+  }
+
   Future<FloorModel?> createFloor(String floorName) async {
     try {
       final floor = await _repository.createFloor(floorName);

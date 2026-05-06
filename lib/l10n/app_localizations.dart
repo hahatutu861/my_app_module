@@ -379,6 +379,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Utility'**
   String get roomUtility;
+
+  /// No description provided for @editNameAndType.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit name and type'**
+  String get editNameAndType;
+
+  /// No description provided for @addNameAndIconHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a name and icon so you can find your room later on.'**
+  String get addNameAndIconHint;
+
+  /// No description provided for @roomNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomNameLabel;
+
+  /// No description provided for @roomNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. \'For Web Server\''**
+  String get roomNameHint;
+
+  /// No description provided for @roomTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room type'**
+  String get roomTypeLabel;
+
+  /// No description provided for @wifiAccessPointQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Is there a Wi-Fi access point?'**
+  String get wifiAccessPointQuestion;
+
+  /// No description provided for @gateway.
+  ///
+  /// In en, this message translates to:
+  /// **'Gateway'**
+  String get gateway;
+
+  /// No description provided for @extender.
+  ///
+  /// In en, this message translates to:
+  /// **'Extender'**
+  String get extender;
+
+  /// No description provided for @deleteZoneRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this zone/room'**
+  String get deleteZoneRoom;
 }
 
 class _AppLocalizationsDelegate

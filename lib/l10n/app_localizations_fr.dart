@@ -163,4 +163,32 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get roomUtility => 'Buanderie';
+
+  @override
+  String get editNameAndType => 'Modifier le nom et le type';
+
+  @override
+  String get addNameAndIconHint =>
+      'Ajoutez un nom et une icône pour retrouver votre pièce plus tard.';
+
+  @override
+  String get roomNameLabel => 'Nom de la pièce';
+
+  @override
+  String get roomNameHint => 'ex. \'Pour serveur web\'';
+
+  @override
+  String get roomTypeLabel => 'Type de pièce';
+
+  @override
+  String get wifiAccessPointQuestion => 'Y a-t-il un point d\'accès Wi-Fi ?';
+
+  @override
+  String get gateway => 'Passerelle';
+
+  @override
+  String get extender => 'Extender';
+
+  @override
+  String get deleteZoneRoom => 'Supprimer cette zone/pièce';
 }

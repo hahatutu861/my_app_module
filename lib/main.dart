@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'routes/app_router.dart';
@@ -58,23 +59,30 @@ class MyAppModule extends ConsumerWidget {
         return const Locale('en');
       },
       builder: (context, child) {
-        final brightness = MediaQuery.of(context).platformBrightness;
-        final isDark = brightness == Brightness.dark;
-        return AnnotatedRegion<SystemUiOverlayStyle>(
-          value: isDark
-              ? const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: Brightness.light,
-                  systemNavigationBarColor: Color(0xFF1C1C1E),
-                  systemNavigationBarIconBrightness: Brightness.light,
-                )
-              : const SystemUiOverlayStyle(
-                  statusBarColor: Colors.transparent,
-                  statusBarIconBrightness: Brightness.dark,
-                  systemNavigationBarColor: Colors.white,
-                  systemNavigationBarIconBrightness: Brightness.dark,
-                ),
-          child: child!,
+        return ScreenUtilInit(
+          designSize: const Size(375, 812),
+          child: Builder(
+            builder: (context) {
+              final brightness = MediaQuery.of(context).platformBrightness;
+              final isDark = brightness == Brightness.dark;
+              return AnnotatedRegion<SystemUiOverlayStyle>(
+                value: isDark
+                    ? const SystemUiOverlayStyle(
+                        statusBarColor: Colors.transparent,
+                        statusBarIconBrightness: Brightness.light,
+                        systemNavigationBarColor: Color(0xFF1C1C1E),
+                        systemNavigationBarIconBrightness: Brightness.light,
+                      )
+                    : const SystemUiOverlayStyle(
+                        statusBarColor: Colors.transparent,
+                        statusBarIconBrightness: Brightness.dark,
+                        systemNavigationBarColor: Colors.white,
+                        systemNavigationBarIconBrightness: Brightness.dark,
+                      ),
+                child: child!,
+              );
+            },
+          ),
         );
       },
       routerConfig: router,

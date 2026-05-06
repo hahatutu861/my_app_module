@@ -6,6 +6,7 @@ import 'package:my_app_module/utils/design/app_button_style.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/widgets/hint_text_field.dart';
 
 class EditFloorNameDialog extends HookConsumerWidget {
   final String? initialFloorName;
@@ -55,23 +56,18 @@ class EditFloorNameDialog extends HookConsumerWidget {
                   horizontal: 16,
                   vertical: 12,
                 ),
-                child: TextField(
+                child: HintTextField(
                   controller: controller,
-                  style: TextStyle(
+                  hintText: context.l10n.floorNameHint,
+                  textStyle: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
                     color: context.appColors.fontGy1with90Opacity,
                   ),
-                  decoration: InputDecoration(
-                    hintText: context.l10n.floorNameHint,
-                    hintStyle: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: context.appColors.fontGy2with60Opacity,
-                    ),
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
+                  hintStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: context.appColors.fontGy2with60Opacity,
                   ),
                 ),
               ),

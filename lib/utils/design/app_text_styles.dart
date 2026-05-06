@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'app_color_extension.dart';
 
 /// 主题文本样式扩展
@@ -34,7 +35,7 @@ class AppThemeTextStyles {
   /// 用于：正文文本、说明文字、节点名称等
   /// fontSize: 16, fontWeight: w400, color: fontGy1with90Opacity
   TextStyle get bodyLargeWith90Opacity => TextStyle(
-        fontSize: 16,
+        fontSize: 16.sp,
         fontWeight: FontWeight.w400,
         color: _colors.fontGy1with90Opacity,
       );
@@ -44,7 +45,7 @@ class AppThemeTextStyles {
   /// 用于：次要说明文字
   /// fontSize: 14, fontWeight: w400, color: fontGy1with90Opacity
   TextStyle get bodyMediumWith90Opacity => TextStyle(
-        fontSize: 14,
+        fontSize: 14.sp,
         fontWeight: FontWeight.w400,
         color: _colors.fontGy1with90Opacity,
       );
@@ -54,8 +55,56 @@ class AppThemeTextStyles {
   /// 用于：页面标题
   /// fontSize: 20, fontWeight: w500, color: fontGy1with90Opacity
   TextStyle get titleWith90Opacity => TextStyle(
-        fontSize: 20,
+        fontSize: 20.sp,
         fontWeight: FontWeight.w500,
         color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 副标题 + 60% 不透明度灰色
+  ///
+  /// 用于：提示文字、说明文字
+  /// fontSize: 14, fontWeight: w400, color: fontGy2with60Opacity
+  TextStyle get subtitleWith60Opacity => TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w400,
+        color: _colors.fontGy2with60Opacity,
+      );
+
+  /// 标签 + 90% 不透明度灰色
+  ///
+  /// 用于：表单标签、列表项标题
+  /// fontSize: 16, fontWeight: w500, color: fontGy1with90Opacity
+  TextStyle get labelWith90Opacity => TextStyle(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w500,
+        color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 辅助文字 + 90% 不透明度灰色
+  ///
+  /// 用于：房间类型名称、列表项
+  /// fontSize: 11, color: fontGy1with90Opacity
+  TextStyle get captionWith90Opacity => TextStyle(
+        fontSize: 11.sp,
+        color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 正文 + 90% 不透明度灰色
+  ///
+  /// 用于：正文文字
+  /// fontSize: 14, color: fontGy1with90Opacity
+  TextStyle get bodyWith90Opacity => TextStyle(
+        fontSize: 14.sp,
+        color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 按钮文字 + 白色
+  ///
+  /// 用于：主按钮文字
+  /// fontSize: 16, fontWeight: w500, color: white
+  TextStyle get buttonPrimary => TextStyle(
+        fontSize: 16.sp,
+        fontWeight: FontWeight.w500,
+        color: Colors.white,
       );
 }

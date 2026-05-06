@@ -1,216 +1,184 @@
 import 'package:flutter/material.dart';
-import 'package:my_app_module/utils/design/app_colors.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
+import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/utils/design/room_types.dart';
+import 'package:my_app_module/widgets/hint_text_field.dart';
 import 'package:my_app_module/widgets/app_image.dart';
+import 'package:my_app_module/viewmodels/wifi_map/edit_room_bottom_sheet_provider.dart';
 
-class EditRoomBottomSheet extends StatefulWidget {
+import '../../utils/build_context_extension.dart';
+
+class EditRoomBottomSheet extends ConsumerWidget {
   const EditRoomBottomSheet({super.key});
 
   static Future<void> show(BuildContext context) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      elevation: 10,
+      backgroundColor: context.appColors.fontWh1with100Opacity,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
+      ),
       builder: (context) => const EditRoomBottomSheet(),
     );
   }
 
   @override
-  State<EditRoomBottomSheet> createState() => _EditRoomBottomSheetState();
-}
-
-class _EditRoomBottomSheetState extends State<EditRoomBottomSheet> {
-  RoomType? _selectedRoom;
-  bool _isZone = true;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(editRoomBottomSheetProvider);
+    final viewModel = ref.read(editRoomBottomSheetProvider.notifier);
     final sheetHeight = context.screenHeight * 0.95;
 
-    return Container(
+    return SizedBox(
       height: sheetHeight,
-      decoration: BoxDecoration(
-        color: context.appColors.fontWh1with100Opacity,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 15,
-            spreadRadius: 2,
-            offset: Offset(0, -3),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _buildNavBar(),
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: AppSpacing.pad16),
-                  Text(
-                    'Edit Zone/Room',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: context.appColors.fontWh1with100Opacity,
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.pad16),
-                  _buildInputField(),
-                  const SizedBox(height: AppSpacing.pad24),
-                  _buildRoomGrid(),
-                  const SizedBox(height: AppSpacing.pad24),
-                  _buildRadioGroup(),
-                  const SizedBox(height: AppSpacing.pad24),
-                  _buildButtons(),
-                  const SizedBox(height: AppSpacing.pad16),
-                ],
-              ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pad16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildNavBar(context),
+            _buildTitle(context),
+            _buildSubtitle(context),
+            _buildRoomNameLabel(context),
+            _buildInputField(context),
+            _buildRoomTypeLabel(context),
+            Expanded(
+              child: _buildRoomGrid(context, state, viewModel),
             ),
-          ),
-        ],
+            _buildWifiApTitle(context),
+            SizedBox(height: AppSpacing.pad24.w),
+            _buildRadioGroup(context, state, viewModel),
+            SizedBox(height: AppSpacing.pad24.w),
+            _buildButtons(context),
+            SizedBox(height: AppSpacing.pad16.w),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildNavBar() {
+  Widget _buildNavBar(BuildContext context) {
     return Container(
-      height: kToolbarHeight,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad16),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: AppImage(
-              'close.png',
-              width: 24,
-              height: 24,
-            ),
-          ),
-          const Spacer(),
-          Text(
-            'Title text',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w600,
-              color: context.appColors.fontWh1with100Opacity,
-            ),
-          ),
-          const Spacer(),
-          const SizedBox(width: 24),
-        ],
+      padding: EdgeInsets.symmetric(vertical: 16.w),
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () => Navigator.of(context).pop(),
+        child: AppImage(
+          'close.png',
+          width: 24.w,
+          height: 24.w,
+        ),
       ),
     );
   }
 
-  Widget _buildInputField() {
+  Widget _buildTitle(BuildContext context) {
+    return Text(
+      context.l10n.editNameAndType,
+      style: context.appTextStyles.titleWith90Opacity,
+    );
+  }
+
+  Widget _buildSubtitle(BuildContext context) {
+    return Text(
+      context.l10n.addNameAndIconHint,
+      style: context.appTextStyles.subtitleWith60Opacity,
+    );
+  }
+
+  Widget _buildRoomNameLabel(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 32.w),
+      child: Text(
+        context.l10n.roomNameLabel,
+        style: context.appTextStyles.labelWith90Opacity,
+      ),
+    );
+  }
+
+  Widget _buildInputField(BuildContext context) {
     return Container(
-      height: 56,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pad16),
+      margin: EdgeInsets.only(top: 8.w),
+      padding: EdgeInsets.all(AppSpacing.pad16.w),
       decoration: BoxDecoration(
         border: Border.all(
-          color: const Color(AppColors.gray5),
-          width: 1,
+          color: context.appColors.gray3,
+          width: 1.w,
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.r),
       ),
       child: Center(
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: "e.g. 'For Web Server'",
-            hintStyle: TextStyle(
-              color: context.appColors.fontGy2with60Opacity,
-              fontSize: 14,
-            ),
-            border: InputBorder.none,
-            isDense: true,
-            contentPadding: EdgeInsets.zero,
-          ),
+        child: HintTextField(
+          hintText: context.l10n.roomNameHint,
         ),
       ),
     );
   }
 
-  Widget _buildRoomGrid() {
-    return Column(
-      children: [
-        _buildGridRow(RoomType.values.sublist(0, 4)),
-        const SizedBox(height: AppSpacing.gap8),
-        _buildGridRow(RoomType.values.sublist(4, 8)),
-        const SizedBox(height: AppSpacing.gap8),
-        _buildGridRow(RoomType.values.sublist(8, 12)),
-        const SizedBox(height: AppSpacing.gap8),
-        _buildGridRow(RoomType.values.sublist(12, 16)),
-        const SizedBox(height: AppSpacing.gap8),
-        _buildGridRow(RoomType.values.sublist(16, 18)),
-      ],
+  Widget _buildRoomTypeLabel(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 40.w),
+      child: Text(
+        context.l10n.roomTypeLabel,
+        style: context.appTextStyles.labelWith90Opacity,
+      ),
     );
   }
 
-  Widget _buildGridRow(List<RoomType> rooms) {
-    return Row(
-      children: rooms.map((room) => Expanded(child: _buildRoomItem(room))).toList(),
+  Widget _buildRoomGrid(BuildContext context, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
+    return Container(
+      width: double.infinity,
+      margin: EdgeInsets.only(top: 8.w, bottom: 20.w),
+      child: GridView.count(
+        crossAxisCount: 4,
+        childAspectRatio: 0.85,
+        shrinkWrap: true,
+        children: RoomType.values.map((room) => _buildRoomItem(context, room, state, viewModel)).toList(),
+      ),
     );
   }
 
-  Widget _buildRoomItem(RoomType room) {
-    final isSelected = _selectedRoom == room;
-    final isOffice = room == RoomType.office;
+  Widget _buildWifiApTitle(BuildContext context) {
+    return Text(
+      context.l10n.wifiAccessPointQuestion,
+      style: context.appTextStyles.labelWith90Opacity,
+    );
+  }
+
+  Widget _buildRoomItem(BuildContext context, RoomType room, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
+    final isSelected = state.selectedRoom == room;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _selectedRoom = room;
-        });
+        viewModel.selectRoom(room);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 8,
-          vertical: 16,
+        padding: EdgeInsets.only(
+          left: 8.w,
+          right: 8.w
         ),
         decoration: BoxDecoration(
-          color: isOffice && isSelected
-              ? const Color(AppColors.brand1Light)
-              : const Color(AppColors.white),
-          borderRadius: BorderRadius.circular(6),
+          color: isSelected
+              ? context.appColors.brand1Light
+              : context.appColors.fontWh1with100Opacity,
+          borderRadius: BorderRadius.circular(6.r),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Stack(
-              children: [
-                AppImage(
-                  room.imagePath,
-                  width: 32,
-                  height: 32,
-                ),
-                if (isSelected)
-                  const Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: AppImage(
-                      'assets/images/check_filled.png',
-                      width: 12,
-                      height: 12,
-                    ),
-                  ),
-              ],
+            AppImage(
+              room.imagePath,
+              width: 32.w,
+              height: 32.w,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: 8.w),
             Text(
               room.getDisplayName(context),
-              style: TextStyle(
-                fontSize: 11,
-                color: context.appColors.fontWh1with100Opacity,
-              ),
+              style: context.appTextStyles.captionWith90Opacity,
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -221,61 +189,53 @@ class _EditRoomBottomSheetState extends State<EditRoomBottomSheet> {
     );
   }
 
-  Widget _buildRadioGroup() {
+  Widget _buildRadioGroup(BuildContext context, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
     return Row(
       children: [
-        _buildRadioItem(true, 'Zone'),
-        const SizedBox(width: 12),
-        _buildRadioItem(false, 'Room'),
+        _buildRadioItem(context, true, context.l10n.gateway, state, viewModel),
+        SizedBox(width: 12.w),
+        _buildRadioItem(context, false, context.l10n.extender, state, viewModel),
       ],
     );
   }
 
-  Widget _buildRadioItem(bool value, String label) {
-    final isSelected = _isZone == value;
+  Widget _buildRadioItem(BuildContext context, bool value, String label, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
+    final isSelected = state.isGateway == value;
 
     return GestureDetector(
       onTap: () {
-        setState(() {
-          _isZone = value;
-        });
+        viewModel.setIsGateway(value);
       },
       child: Container(
-        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected
-                ? const Color(AppColors.brand6Normal)
-                : const Color(AppColors.gray5),
-            width: 1.5,
+                ? context.appColors.brand6Normal
+                : Colors.transparent,
+            width: 1.5.w,
           ),
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(8.r),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: Stack(
           children: [
-            Container(
-              width: 12,
-              height: 12,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: isSelected
-                    ? const Color(AppColors.brand6Normal)
-                    : Colors.transparent,
-                border: Border.all(
-                  color: isSelected
-                      ? const Color(AppColors.brand6Normal)
-                      : const Color(AppColors.gray5),
-                  width: 1.5,
+            if (isSelected)
+              Positioned(
+                left: 0,
+                top: 0,
+                child: AppImage(
+                  'check_filled.png',
+                  width: 28.w,
+                  height: 28.w,
+                  color: context.appColors.brand6Normal,
                 ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 14,
-                color: context.appColors.fontWh1with100Opacity,
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Text(
+                  label,
+                  style: context.appTextStyles.bodyWith90Opacity,
+                ),
               ),
             ),
           ],
@@ -284,61 +244,58 @@ class _EditRoomBottomSheetState extends State<EditRoomBottomSheet> {
     );
   }
 
-  Widget _buildButtons() {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(AppColors.brand6Normal),
-              foregroundColor: const Color(AppColors.white),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
+  Widget _buildButtons(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Column(
+        children: [
+          SizedBox(
+            width: double.infinity,
+            height: 48.w,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.appColors.brand6Normal,
+                foregroundColor: context.appColors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100.r),
+                ),
+                elevation: 0,
               ),
-              elevation: 0,
-            ),
-            child: const Text(
-              'Save',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(height: AppSpacing.gap8),
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: OutlinedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: OutlinedButton.styleFrom(
-              foregroundColor: const Color(AppColors.error6Normal),
-              side: const BorderSide(
-                color: Color(AppColors.error6Normal),
-                width: 1,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(100),
-              ),
-            ),
-            child: const Text(
-              'Delete this zone/room',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+              child: Text(
+                context.l10n.save,
+                style: context.appTextStyles.buttonPrimary,
               ),
             ),
           ),
-        ),
-      ],
+          SizedBox(height: AppSpacing.gap8.w),
+          SizedBox(
+            width: double.infinity,
+            height: 48.w,
+            child: OutlinedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: context.appColors.error6Normal,
+                side: BorderSide(
+                  color: context.appColors.error6Normal,
+                  width: 1.w,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100.r),
+                ),
+              ),
+              child: Text(
+                context.l10n.deleteZoneRoom,
+                style: context.appTextStyles.buttonPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -60,5 +60,14 @@
   "roomPool": "Pool",
   "roomStairs": "Stairs",
   "roomStorage": "Storage",
-  "roomUtility": "Utility"
+  "roomUtility": "Utility",
+  "editNameAndType": "Edit name and type",
+  "addNameAndIconHint": "Add a name and icon so you can find your room later on.",
+  "roomNameLabel": "Room name",
+  "roomNameHint": "e.g. 'For Web Server'",
+  "roomTypeLabel": "Room type",
+  "wifiAccessPointQuestion": "Is there a Wi-Fi access point?",
+  "gateway": "Gateway",
+  "extender": "Extender",
+  "deleteZoneRoom": "Delete this zone/room"
 }

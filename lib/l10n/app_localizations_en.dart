@@ -161,4 +161,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get roomUtility => 'Utility';
+
+  @override
+  String get editNameAndType => 'Edit name and type';
+
+  @override
+  String get addNameAndIconHint =>
+      'Add a name and icon so you can find your room later on.';
+
+  @override
+  String get roomNameLabel => 'Room name';
+
+  @override
+  String get roomNameHint => 'e.g. \'For Web Server\'';
+
+  @override
+  String get roomTypeLabel => 'Room type';
+
+  @override
+  String get wifiAccessPointQuestion => 'Is there a Wi-Fi access point?';
+
+  @override
+  String get gateway => 'Gateway';
+
+  @override
+  String get extender => 'Extender';
+
+  @override
+  String get deleteZoneRoom => 'Delete this zone/room';
 }

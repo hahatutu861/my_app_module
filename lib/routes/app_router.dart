@@ -25,7 +25,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/wifi-map',
         name: 'wifiMap',
-        builder: (context, state) => const WifiMapPage(),
+        builder: (context, state) {
+          final floorId = state.uri.queryParameters['floorId'];
+          return WifiMapPage(floorId: floorId);
+        },
       ),
       GoRoute(
         path: '/wifi-map-empty',

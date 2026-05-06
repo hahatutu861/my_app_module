@@ -56,6 +56,18 @@ class FloorRepository {
     return _fromDbMap(results.first);
   }
 
+  Future<FloorModel?> getFloorById(String id) async {
+    final db = await _database;
+    final results = await db.query(
+      _table,
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
+    if (results.isEmpty) return null;
+    return _fromDbMap(results.first);
+  }
+
   Future<FloorModel?> updateFloorName(String id, String newName) async {
     final db = await _database;
     final existing = await db.query(_table, where: 'id = ?', whereArgs: [id]);

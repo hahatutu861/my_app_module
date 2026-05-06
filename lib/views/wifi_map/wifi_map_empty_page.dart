@@ -139,9 +139,9 @@ Widget _buildAddFloorButton(BuildContext context, WidgetRef ref) {
         builder: (context) => const EditFloorNameDialog(),
       );
       if (floorName != null && floorName.isNotEmpty) {
-        await ref.read(floorViewModelProvider.notifier).createFloor(floorName);
-        if (context.mounted) {
-          context.push('/wifi-map');
+        final floor = await ref.read(floorViewModelProvider.notifier).createFloor(floorName);
+        if (context.mounted && floor != null) {
+          context.push('/wifi-map?floorId=${floor.id}');
         }
       }
     },

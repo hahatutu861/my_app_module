@@ -60,5 +60,14 @@
   "roomPool": "Piscine",
   "roomStairs": "Escalier",
   "roomStorage": "Rangement",
-  "roomUtility": "Buanderie"
+  "roomUtility": "Buanderie",
+  "editNameAndType": "Modifier le nom et le type",
+  "addNameAndIconHint": "Ajoutez un nom et une icône pour retrouver votre pièce plus tard.",
+  "roomNameLabel": "Nom de la pièce",
+  "roomNameHint": "ex. 'Pour serveur web'",
+  "roomTypeLabel": "Type de pièce",
+  "wifiAccessPointQuestion": "Y a-t-il un point d'accès Wi-Fi ?",
+  "gateway": "Passerelle",
+  "extender": "Extender",
+  "deleteZoneRoom": "Supprimer cette zone/pièce"
 }
