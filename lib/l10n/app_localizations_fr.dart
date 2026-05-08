@@ -187,6 +187,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get gateway => 'Passerelle';
 
   @override
+  String get router => 'Routeur';
+
+  @override
   String get extender => 'Extender';
 
   @override

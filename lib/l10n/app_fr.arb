@@ -68,6 +68,7 @@
   "roomTypeLabel": "Type de pièce",
   "wifiAccessPointQuestion": "Y a-t-il un point d'accès Wi-Fi ?",
   "gateway": "Passerelle",
+  "router": "Routeur",
   "extender": "Extender",
   "deleteZoneRoom": "Supprimer cette zone/pièce"
 }

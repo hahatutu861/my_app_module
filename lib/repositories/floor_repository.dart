@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
 import 'package:my_app_module/models/floor_model.dart';
+import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/services/database/database_service.dart';
 
 final floorRepositoryProvider = Provider<FloorRepository>((ref) {
@@ -17,20 +19,13 @@ class FloorRepository {
   }
 
   Future<FloorModel> createFloor(String floorName) async {
-    debugPrint('=== FloorRepository.createFloor ===');
-    debugPrint('floorName: $floorName');
-
     final db = await _database;
-    debugPrint('Database ready: ${db.path}');
-
     final floor = FloorModel(
       id: const Uuid().v4(),
       floorName: floorName,
       zoneCount: 0,
       createdAt: DateTime.now(),
     );
-
-    debugPrint('FloorModel created: ${floor.toJson()}');
 
     try {
       final result = await db.insert(_table, _toDbMap(floor));
@@ -96,12 +91,27 @@ class FloorRepository {
     return updated;
   }
 
+  Future<FloorModel?> updateRooms(String id, List<RoomModel> rooms) async {
+    final db = await _database;
+    final existing = await db.query(_table, where: 'id = ?', whereArgs: [id]);
+    if (existing.isEmpty) return null;
+
+    final floor = _fromDbMap(existing.first);
+    final updated = floor.copyWith(
+      rooms: rooms,
+      updatedAt: DateTime.now(),
+    );
+    await db.update(_table, _toDbMap(updated), where: 'id = ?', whereArgs: [id]);
+    return updated;
+  }
+
   Map<String, dynamic> _toDbMap(FloorModel floor) => {
         'id': floor.id,
         'floor_name': floor.floorName,
         'zone_count': floor.zoneCount,
         'created_at': floor.createdAt.toIso8601String(),
         'updated_at': floor.updatedAt?.toIso8601String(),
+        'rooms': jsonEncode(floor.rooms.map((r) => r.toJson()).toList()),
       };
 
   FloorModel _fromDbMap(Map<String, dynamic> map) => FloorModel(
@@ -112,5 +122,10 @@ class FloorRepository {
         updatedAt: map['updated_at'] != null
             ? DateTime.parse(map['updated_at'] as String)
             : null,
+        rooms: map['rooms'] != null && (map['rooms'] as String).isNotEmpty
+            ? (jsonDecode(map['rooms'] as String) as List)
+                .map((r) => RoomModel.fromJson(r as Map<String, dynamic>))
+                .toList()
+            : [],
       );
 }

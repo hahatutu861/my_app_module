@@ -185,6 +185,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get gateway => 'Gateway';
 
   @override
+  String get router => 'Router';
+
+  @override
   String get extender => 'Extender';
 
   @override

@@ -68,6 +68,7 @@
   "roomTypeLabel": "Room type",
   "wifiAccessPointQuestion": "Is there a Wi-Fi access point?",
   "gateway": "Gateway",
+  "router": "Router",
   "extender": "Extender",
   "deleteZoneRoom": "Delete this zone/room"
 }

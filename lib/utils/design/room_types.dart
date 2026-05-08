@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_app_module/l10n/app_localizations.dart';
 
 import '../build_context_extension.dart';
 

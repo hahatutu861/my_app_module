@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:my_app_module/models/room_model.dart';
 
 part 'floor_model.freezed.dart';
 part 'floor_model.g.dart';
@@ -11,6 +12,7 @@ class FloorModel with _$FloorModel {
     @Default(0) int zoneCount,
     required DateTime createdAt,
     DateTime? updatedAt,
+    @Default([]) List<RoomModel> rooms,
   }) = _FloorModel;
 
   factory FloorModel.fromJson(Map<String, dynamic> json) =>

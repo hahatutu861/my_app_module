@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/floor_model.dart';
+import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/repositories/floor_repository.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
@@ -64,6 +64,53 @@ class FloorViewModel extends StateNotifier<FloorState> {
     try {
       final updatedFloor =
           await _repository.updateFloorName(currentFloor.id, newName);
+      if (updatedFloor != null) {
+        state = FloorState.loaded(floor: updatedFloor);
+      }
+    } catch (e) {
+      state = FloorState.error(message: e.toString());
+    }
+  }
+
+  Future<void> updateRoom(int index, RoomModel room) async {
+    final currentFloor = state.maybeWhen(
+      loaded: (floor) => floor,
+      orElse: () => null,
+    );
+
+    if (currentFloor == null) return;
+
+    try {
+      final rooms = List<RoomModel>.from(currentFloor.rooms);
+      final existingIndex = rooms.indexWhere((r) => r.index == index);
+      if (existingIndex >= 0) {
+        rooms[existingIndex] = room;
+      } else {
+        rooms.add(room);
+      }
+      final updatedFloor =
+          await _repository.updateRooms(currentFloor.id, rooms);
+      if (updatedFloor != null) {
+        state = FloorState.loaded(floor: updatedFloor);
+      }
+    } catch (e) {
+      state = FloorState.error(message: e.toString());
+    }
+  }
+
+  Future<void> deleteRoom(int index) async {
+    final currentFloor = state.maybeWhen(
+      loaded: (floor) => floor,
+      orElse: () => null,
+    );
+
+    if (currentFloor == null) return;
+
+    try {
+      final rooms = List<RoomModel>.from(currentFloor.rooms);
+      rooms.removeWhere((r) => r.index == index);
+      final updatedFloor =
+          await _repository.updateRooms(currentFloor.id, rooms);
       if (updatedFloor != null) {
         state = FloorState.loaded(floor: updatedFloor);
       }

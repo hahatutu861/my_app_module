@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
@@ -9,13 +10,17 @@ import 'package:my_app_module/utils/design/room_types.dart';
 import 'package:my_app_module/widgets/hint_text_field.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/viewmodels/wifi_map/edit_room_bottom_sheet_provider.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/models/room_model.dart';
 
 import '../../utils/build_context_extension.dart';
 
-class EditRoomBottomSheet extends ConsumerWidget {
-  const EditRoomBottomSheet({super.key});
+class EditRoomBottomSheet extends HookConsumerWidget {
+  final int? index;
 
-  static Future<void> show(BuildContext context) {
+  const EditRoomBottomSheet({super.key, this.index});
+
+  static Future<void> show(BuildContext context, int index) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -23,7 +28,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
       ),
-      builder: (context) => const EditRoomBottomSheet(),
+      builder: (context) => EditRoomBottomSheet(index: index),
     );
   }
 
@@ -32,6 +37,12 @@ class EditRoomBottomSheet extends ConsumerWidget {
     final state = ref.watch(editRoomBottomSheetProvider);
     final viewModel = ref.read(editRoomBottomSheetProvider.notifier);
     final sheetHeight = context.screenHeight * 0.95;
+    final roomNameController = useTextEditingController();
+    if (roomNameController.text != state.roomName && state.roomName.isNotEmpty) {
+      roomNameController.text = state.roomName;
+    } else if (state.selectedRoom != null && roomNameController.text.isEmpty) {
+      roomNameController.text = state.selectedRoom!.getDisplayName(context);
+    }
 
     return SizedBox(
       height: sheetHeight,
@@ -44,7 +55,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
             _buildTitle(context),
             _buildSubtitle(context),
             _buildRoomNameLabel(context),
-            _buildInputField(context),
+            _buildInputField(context, roomNameController, ref),
             _buildRoomTypeLabel(context),
             Expanded(
               child: _buildRoomGrid(context, state, viewModel),
@@ -53,7 +64,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
             SizedBox(height: AppSpacing.pad24.w),
             _buildRadioGroup(context, state, viewModel),
             SizedBox(height: AppSpacing.pad24.w),
-            _buildButtons(context),
+            _buildButtons(context, ref, state),
             SizedBox(height: AppSpacing.pad16.w),
           ],
         ),
@@ -100,7 +111,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildInputField(BuildContext context) {
+  Widget _buildInputField(BuildContext context, TextEditingController roomNameController, WidgetRef ref) {
     return Container(
       margin: EdgeInsets.only(top: 8.w),
       padding: EdgeInsets.all(AppSpacing.pad16.w),
@@ -114,6 +125,10 @@ class EditRoomBottomSheet extends ConsumerWidget {
       child: Center(
         child: HintTextField(
           hintText: context.l10n.roomNameHint,
+          controller: roomNameController,
+          onChanged: (value) {
+            ref.read(editRoomBottomSheetProvider.notifier).updateRoomName(value);
+          },
         ),
       ),
     );
@@ -154,7 +169,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        viewModel.selectRoom(room);
+        viewModel.selectRoom(room, context);
       },
       child: Container(
         padding: EdgeInsets.only(
@@ -244,7 +259,7 @@ class EditRoomBottomSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildButtons(BuildContext context) {
+  Widget _buildButtons(BuildContext context, WidgetRef ref, EditRoomBottomSheetState state) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -254,6 +269,19 @@ class EditRoomBottomSheet extends ConsumerWidget {
             height: 48.w,
             child: ElevatedButton(
               onPressed: () {
+                if (index != null && state.selectedRoom != null) {
+                  final roomName = state.roomName.isNotEmpty
+                      ? state.roomName
+                      : state.selectedRoom!.getDisplayName(context);
+
+                  final room = RoomModel(
+                    index: index!,
+                    roomType: state.selectedRoom!.name,
+                    roomName: roomName,
+                    isGateway: state.isGateway,
+                  );
+                  ref.read(floorViewModelProvider.notifier).updateRoom(index!, room);
+                }
                 Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
@@ -276,10 +304,12 @@ class EditRoomBottomSheet extends ConsumerWidget {
             height: 48.w,
             child: OutlinedButton(
               onPressed: () {
+                if (index != null) {
+                  ref.read(floorViewModelProvider.notifier).deleteRoom(index!);
+                }
                 Navigator.of(context).pop();
               },
               style: OutlinedButton.styleFrom(
-                foregroundColor: context.appColors.error6Normal,
                 side: BorderSide(
                   color: context.appColors.error6Normal,
                   width: 1.w,
@@ -290,7 +320,9 @@ class EditRoomBottomSheet extends ConsumerWidget {
               ),
               child: Text(
                 context.l10n.deleteZoneRoom,
-                style: context.appTextStyles.buttonPrimary,
+                style: context.appTextStyles.buttonPrimary.copyWith(
+                  color: context.appColors.error6Normal,
+                ),
               ),
             ),
           ),

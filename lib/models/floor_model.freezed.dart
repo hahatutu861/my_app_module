@@ -26,6 +26,7 @@ mixin _$FloorModel {
   int get zoneCount => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime? get updatedAt => throw _privateConstructorUsedError;
+  List<RoomModel> get rooms => throw _privateConstructorUsedError;
 
   /// Serializes this FloorModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -50,6 +51,7 @@ abstract class $FloorModelCopyWith<$Res> {
     int zoneCount,
     DateTime createdAt,
     DateTime? updatedAt,
+    List<RoomModel> rooms,
   });
 }
 
@@ -73,6 +75,7 @@ class _$FloorModelCopyWithImpl<$Res, $Val extends FloorModel>
     Object? zoneCount = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? rooms = null,
   }) {
     return _then(
       _value.copyWith(
@@ -96,6 +99,10 @@ class _$FloorModelCopyWithImpl<$Res, $Val extends FloorModel>
                 ? _value.updatedAt
                 : updatedAt // ignore: cast_nullable_to_non_nullable
                       as DateTime?,
+            rooms: null == rooms
+                ? _value.rooms
+                : rooms // ignore: cast_nullable_to_non_nullable
+                      as List<RoomModel>,
           )
           as $Val,
     );
@@ -117,6 +124,7 @@ abstract class _$$FloorModelImplCopyWith<$Res>
     int zoneCount,
     DateTime createdAt,
     DateTime? updatedAt,
+    List<RoomModel> rooms,
   });
 }
 
@@ -139,6 +147,7 @@ class __$$FloorModelImplCopyWithImpl<$Res>
     Object? zoneCount = null,
     Object? createdAt = null,
     Object? updatedAt = freezed,
+    Object? rooms = null,
   }) {
     return _then(
       _$FloorModelImpl(
@@ -162,6 +171,10 @@ class __$$FloorModelImplCopyWithImpl<$Res>
             ? _value.updatedAt
             : updatedAt // ignore: cast_nullable_to_non_nullable
                   as DateTime?,
+        rooms: null == rooms
+            ? _value._rooms
+            : rooms // ignore: cast_nullable_to_non_nullable
+                  as List<RoomModel>,
       ),
     );
   }
@@ -176,7 +189,8 @@ class _$FloorModelImpl implements _FloorModel {
     this.zoneCount = 0,
     required this.createdAt,
     this.updatedAt,
-  });
+    final List<RoomModel> rooms = const [],
+  }) : _rooms = rooms;
 
   factory _$FloorModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$FloorModelImplFromJson(json);
@@ -192,10 +206,18 @@ class _$FloorModelImpl implements _FloorModel {
   final DateTime createdAt;
   @override
   final DateTime? updatedAt;
+  final List<RoomModel> _rooms;
+  @override
+  @JsonKey()
+  List<RoomModel> get rooms {
+    if (_rooms is EqualUnmodifiableListView) return _rooms;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_rooms);
+  }
 
   @override
   String toString() {
-    return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
   }
 
   @override
@@ -211,13 +233,21 @@ class _$FloorModelImpl implements _FloorModel {
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt));
+                other.updatedAt == updatedAt) &&
+            const DeepCollectionEquality().equals(other._rooms, _rooms));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, floorName, zoneCount, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    floorName,
+    zoneCount,
+    createdAt,
+    updatedAt,
+    const DeepCollectionEquality().hash(_rooms),
+  );
 
   /// Create a copy of FloorModel
   /// with the given fields replaced by the non-null parameter values.
@@ -240,6 +270,7 @@ abstract class _FloorModel implements FloorModel {
     final int zoneCount,
     required final DateTime createdAt,
     final DateTime? updatedAt,
+    final List<RoomModel> rooms,
   }) = _$FloorModelImpl;
 
   factory _FloorModel.fromJson(Map<String, dynamic> json) =
@@ -255,6 +286,8 @@ abstract class _FloorModel implements FloorModel {
   DateTime get createdAt;
   @override
   DateTime? get updatedAt;
+  @override
+  List<RoomModel> get rooms;
 
   /// Create a copy of FloorModel
   /// with the given fields replaced by the non-null parameter values.

@@ -422,6 +422,12 @@ abstract class AppLocalizations {
   /// **'Gateway'**
   String get gateway;
 
+  /// No description provided for @router.
+  ///
+  /// In en, this message translates to:
+  /// **'Router'**
+  String get router;
+
   /// No description provided for @extender.
   ///
   /// In en, this message translates to:

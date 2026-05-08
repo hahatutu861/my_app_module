@@ -15,6 +15,11 @@ _$FloorModelImpl _$$FloorModelImplFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      rooms:
+          (json['rooms'] as List<dynamic>?)
+              ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$FloorModelImplToJson(_$FloorModelImpl instance) =>
@@ -24,4 +29,5 @@ Map<String, dynamic> _$$FloorModelImplToJson(_$FloorModelImpl instance) =>
       'zoneCount': instance.zoneCount,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'rooms': instance.rooms,
     };

@@ -40,7 +40,8 @@ class DatabaseService {
         floor_name TEXT NOT NULL,
         zone_count INTEGER NOT NULL DEFAULT 0,
         created_at TEXT NOT NULL,
-        updated_at TEXT
+        updated_at TEXT,
+        rooms TEXT
       )
     ''');
 

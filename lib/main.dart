@@ -17,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final prefs = await SharedPreferences.getInstance();
 
-  // 初始化数据库
   await DatabaseService.instance.database;
 
   runApp(

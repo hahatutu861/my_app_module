@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:my_app_module/models/room_model.dart';
+import 'package:my_app_module/providers/shared_preferences_provider.dart';
+import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
+import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
-import 'package:my_app_module/providers/shared_preferences_provider.dart';
+import 'package:my_app_module/utils/design/room_types.dart';
+import 'package:my_app_module/viewmodels/floor/floor_state.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
+import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/widgets/app_image.dart';
-
-import 'package:my_app_module/utils/design/app_spacing.dart';
-import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
-import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
-import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
-import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
-import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
@@ -62,7 +65,7 @@ class WifiMapPage extends HookConsumerWidget {
           _buildBackButton(context),
           _buildFloorTitle(context, floorState),
           SizedBox(height: 16),
-          _buildAutoSizeGrid(context, transformationController),
+          _buildAutoSizeGrid(context, transformationController, floorState),
           _buildStats(context, floorState),
         ],
       ),
@@ -72,6 +75,7 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildAutoSizeGrid(
     BuildContext context,
     TransformationController transformationController,
+    FloorState floorState,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -96,7 +100,7 @@ class WifiMapPage extends HookConsumerWidget {
             transformationController: transformationController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
-              child: _buildGrid(context, squareSize),
+              child: _buildGrid(context, squareSize, floorState),
             ),
           ),
         );
@@ -104,7 +108,16 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildGrid(BuildContext context, double squareSize) {
+  Widget _buildGrid(
+    BuildContext context,
+    double squareSize,
+    FloorState floorState,
+  ) {
+    final rooms = floorState.maybeWhen(
+      loaded: (floor) => floor?.rooms ?? [],
+      orElse: () => <RoomModel>[],
+    );
+
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -117,16 +130,81 @@ class WifiMapPage extends HookConsumerWidget {
       ),
       itemCount: 110,
       itemBuilder: (context, index) {
+        final room = rooms.where((r) => r.index == index).firstOrNull;
         return GestureDetector(
-          onTap: () => EditRoomBottomSheet.show(context),
-          child: Container(
-            decoration: BoxDecoration(
-              color: context.appColors.gray1,
-              borderRadius: BorderRadius.circular(6),
-            ),
-          ),
+          onTap: () => EditRoomBottomSheet.show(context, index),
+          child: room != null
+              ? _buildRoomCell(context, room)
+              : _buildEmptyCell(context),
         );
       },
+    );
+  }
+
+  Widget _buildRoomCell(BuildContext context, RoomModel room) {
+    final roomType = RoomType.values.firstWhere(
+      (e) => e.name == room.roomType,
+      orElse: () => RoomType.backyard,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: context.appColors.gray4,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment(0, 0.3),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: SizedBox(
+                width: 80.w,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    AppImage(roomType.imagePath, width: 24.w, height: 24.w),
+                    SizedBox(height: 4.w),
+                    Text(
+                      room.roomName,
+                      style: TextStyle(
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.w400,
+                        color: context.appColors.fontGy1with90Opacity,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          if (room.isGateway != null)
+            Align(
+              alignment: Alignment.topRight,
+              child: FractionallySizedBox(
+                heightFactor: 0.25,
+                child: AppBadge(
+                  label: room.isGateway == true
+                      ? context.l10n.router
+                      : context.l10n.extender,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyCell(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.appColors.gray1,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
     );
   }
 
@@ -190,8 +268,8 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildStats(BuildContext context, FloorState floorState) {
-    final zoneCount = floorState.maybeWhen(
-      loaded: (floor) => floor?.zoneCount ?? 0,
+    final roomCount = floorState.maybeWhen(
+      loaded: (floor) => floor?.rooms.length ?? 0,
       orElse: () => 0,
     );
 
@@ -201,7 +279,7 @@ class WifiMapPage extends HookConsumerWidget {
         left: AppSpacing.pad16,
       ),
       child: Text(
-        context.l10n.zonesCount(zoneCount),
+        context.l10n.zonesCount(roomCount),
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w400,
