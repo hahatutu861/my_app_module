@@ -23,11 +23,12 @@ class EditRoomBottomSheetState {
   EditRoomBottomSheetState copyWith({
     RoomType? selectedRoom,
     bool? isGateway,
+    bool clearIsGateway = false,
     String? roomName,
   }) {
     return EditRoomBottomSheetState(
       selectedRoom: selectedRoom ?? this.selectedRoom,
-      isGateway: isGateway ?? this.isGateway,
+      isGateway: clearIsGateway ? null : (isGateway ?? this.isGateway),
       roomName: roomName ?? this.roomName,
     );
   }
@@ -67,7 +68,10 @@ class EditRoomBottomSheetViewModel
     state = state.copyWith(roomName: name);
   }
 
-  void setIsGateway(bool isGateway) {
-    state = state.copyWith(isGateway: isGateway);
+  void setIsGateway(bool? isGateway) {
+    state = state.copyWith(
+      isGateway: isGateway,
+      clearIsGateway: isGateway == null,
+    );
   }
 }

@@ -39,6 +39,11 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     final sheetHeight = context.screenHeight * 0.95;
     final roomNameController = useTextEditingController();
     final floorState = ref.watch(floorViewModelProvider);
+    final hasRoom = floorState.maybeWhen(
+      loaded: (floor) => floor?.rooms.any((r) => r.index == index),
+      orElse: () => false,
+    );
+
     useEffect(() {
       Future.microtask(() {
         if (index != null) {
@@ -81,7 +86,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
             SizedBox(height: AppSpacing.pad24.w),
             _buildRadioGroup(context, state, viewModel),
             SizedBox(height: AppSpacing.pad24.w),
-            _buildButtons(context, ref, state),
+            _buildButtons(context, ref, state, hasRoom!),
             SizedBox(height: AppSpacing.pad16.w),
           ],
         ),
@@ -236,7 +241,11 @@ class EditRoomBottomSheet extends HookConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        viewModel.setIsGateway(value);
+        if (isSelected) {
+          viewModel.setIsGateway(null);
+        } else {
+          viewModel.setIsGateway(value);
+        }
       },
       child: Container(
         decoration: BoxDecoration(
@@ -276,7 +285,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     );
   }
 
-  Widget _buildButtons(BuildContext context, WidgetRef ref, EditRoomBottomSheetState state) {
+  Widget _buildButtons(BuildContext context, WidgetRef ref, EditRoomBottomSheetState state, bool hasRoom) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -316,33 +325,32 @@ class EditRoomBottomSheet extends HookConsumerWidget {
             ),
           ),
           SizedBox(height: AppSpacing.gap8.w),
-          SizedBox(
-            width: double.infinity,
-            height: 48.w,
-            child: OutlinedButton(
-              onPressed: () {
-                if (index != null) {
+          if (hasRoom)
+            SizedBox(
+              width: double.infinity,
+              height: 48.w,
+              child: OutlinedButton(
+                onPressed: () {
                   ref.read(floorViewModelProvider.notifier).deleteRoom(index!);
-                }
-                Navigator.of(context).pop();
-              },
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: context.appColors.error6Normal,
-                  width: 1.w,
+                  Navigator.of(context).pop();
+                },
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: context.appColors.error6Normal,
+                    width: 1.w,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(100.r),
+                  ),
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100.r),
-                ),
-              ),
-              child: Text(
-                context.l10n.deleteZoneRoom,
-                style: context.appTextStyles.buttonPrimary.copyWith(
-                  color: context.appColors.error6Normal,
+                child: Text(
+                  context.l10n.deleteZoneRoom,
+                  style: context.appTextStyles.buttonPrimary.copyWith(
+                    color: context.appColors.error6Normal,
+                  ),
                 ),
               ),
             ),
-          ),
         ],
       ),
     );
