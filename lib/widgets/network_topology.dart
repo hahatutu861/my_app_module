@@ -284,7 +284,7 @@ class _DeviceInfo extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 4),
-        EditButton(onTap: () {}),
+        EditButton(),
       ],
     );
   }
@@ -418,7 +418,7 @@ class _EditTitleBarState extends State<_EditTitleBar> {
                       style: context.appTextStyles.bodyLargeWith90Opacity,
                     ),
                     SizedBox(width: spacing),
-                    EditButton(onTap: () {}),
+                    EditButton(),
                   ],
                 ),
               ),
@@ -481,7 +481,7 @@ class _MeasureLayout extends StatelessWidget {
                   onChange: (size) {
                     onEditButtonSize(size);
                   },
-                  child: EditButton(onTap: () {}),
+                  child: EditButton(),
                 ),
                 MeasureSize(
                   onChange: (size) {
@@ -507,7 +507,7 @@ class _MeasureLayout extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: spacing),
-                  EditButton(onTap: () {}),
+                  EditButton(),
                 ],
               ),
             ),

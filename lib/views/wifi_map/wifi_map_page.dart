@@ -318,7 +318,7 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildEditButton(BuildContext context) {
-    return EditButton(onTap: () {});
+    return EditButton();
   }
 
   Widget _buildBottomBar(
