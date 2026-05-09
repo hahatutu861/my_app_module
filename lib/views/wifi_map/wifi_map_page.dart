@@ -170,65 +170,68 @@ class WifiMapPage extends HookConsumerWidget {
         borderRadius: BorderRadius.circular(6.r),
       ),
       clipBehavior: Clip.antiAlias,
-      child: Stack(
-        children: [
-          if (isSelected)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(6.r),
-                  border: Border.all(
-                    color: context.appColors.fontGy1with90Opacity,
-                    width: 1.2.w,
-                  ),
-                ),
-              ),
-            ),
-          Align(
-            alignment: const Alignment(0, 0.3),
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: SizedBox(
-                width: 80.w,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppImage(roomType.imagePath, width: 24.w, height: 24.w),
-                    SizedBox(height: 4.w),
-                    Text(
-                      room.roomName,
-                      style: TextStyle(
-                        fontSize: 10.sp,
-                        fontWeight: FontWeight.w400,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cellHeight = constraints.maxHeight;
+          final badgeHeight = cellHeight * 0.25;
+          return Stack(
+            children: [
+              if (isSelected)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      border: Border.all(
                         color: context.appColors.fontGy1with90Opacity,
+                        width: 1.2.w,
                       ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-          if (room.isGateway != null)
-            Positioned(
-              top: isSelected ? 0.2.w : null,
-              right: isSelected ? 0.2.w : null,
-              child: Align(
-                alignment: Alignment.topRight,
-                child: FractionallySizedBox(
-                  heightFactor: 0.25,
-                  child: AppBadge(
-                    label: room.isGateway == true
-                        ? context.l10n.router
-                        : context.l10n.extender,
+              Align(
+                alignment: const Alignment(0, 0.3),
+                child: FittedBox(
+                  fit: BoxFit.contain,
+                  child: SizedBox(
+                    width: 80.w,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppImage(roomType.imagePath, width: 24.w, height: 24.w),
+                        SizedBox(height: 4.w),
+                        Text(
+                          room.roomName,
+                          style: TextStyle(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w400,
+                            color: context.appColors.fontGy1with90Opacity,
+                          ),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+              if (room.isGateway != null)
+                Positioned(
+                  top: isSelected ? 0.2.w : 0,
+                  right: isSelected ? 0.2.w : 0,
+                  child: SizedBox(
+                    height: badgeHeight,
+                    child: AppBadge(
+                      label: room.isGateway == true
+                          ? context.l10n.router
+                          : context.l10n.extender,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
       ),
     );
   }
