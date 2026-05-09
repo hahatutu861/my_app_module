@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/utils/design/room_types.dart';
+import 'package:my_app_module/models/room_model.dart';
 
 final editRoomBottomSheetProvider =
     StateNotifierProvider.autoDispose<EditRoomBottomSheetViewModel,
@@ -35,7 +36,27 @@ class EditRoomBottomSheetState {
 class EditRoomBottomSheetViewModel
     extends StateNotifier<EditRoomBottomSheetState> {
   EditRoomBottomSheetViewModel()
-      : super(EditRoomBottomSheetState(selectedRoom: RoomType.values.first));
+      : super(const EditRoomBottomSheetState());
+
+  void initWithRoom(RoomModel? room) {
+    if (room == null) {
+      state = EditRoomBottomSheetState(
+        selectedRoom: RoomType.values.first
+      );
+      return;
+    }
+
+    final roomType = RoomType.values.firstWhere(
+      (e) => e.name == room.roomType,
+      orElse: () => RoomType.values.first,
+    );
+
+    state = EditRoomBottomSheetState(
+      selectedRoom: roomType,
+      isGateway: room.isGateway,
+      roomName: room.roomName,
+    );
+  }
 
   void selectRoom(RoomType room, BuildContext context) {
     final roomName = room.getDisplayName(context);

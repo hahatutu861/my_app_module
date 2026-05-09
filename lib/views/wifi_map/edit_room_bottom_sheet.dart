@@ -38,6 +38,23 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     final viewModel = ref.read(editRoomBottomSheetProvider.notifier);
     final sheetHeight = context.screenHeight * 0.95;
     final roomNameController = useTextEditingController();
+    final floorState = ref.watch(floorViewModelProvider);
+    useEffect(() {
+      Future.microtask(() {
+        if (index != null) {
+          final floor = floorState.maybeWhen(
+            loaded: (floor) => floor,
+            orElse: () => null,
+          );
+          if (floor != null) {
+            final room = floor.rooms.where((r) => r.index == index).firstOrNull;
+            viewModel.initWithRoom(room);
+          }
+        }
+      });
+      return null;
+    }, [index]);
+
     if (roomNameController.text != state.roomName && state.roomName.isNotEmpty) {
       roomNameController.text = state.roomName;
     } else if (state.selectedRoom != null && roomNameController.text.isEmpty) {

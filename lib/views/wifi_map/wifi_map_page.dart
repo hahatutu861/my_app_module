@@ -100,11 +100,11 @@ class WifiMapPage extends HookConsumerWidget {
             rowCount * squareSize + (rowCount - 1) * spacing;
         return SizedBox(
           width: double.infinity,
-          height: totalGridHeight.h,
+          height: totalGridHeight,
           child: InteractiveViewer(
             alignment: Alignment.topLeft,
             minScale: 1.0,
-            maxScale: 2.0,
+            maxScale: 2.5,
             boundaryMargin: EdgeInsets.zero,
             transformationController: transformationController,
             child: Padding(
@@ -168,16 +168,22 @@ class WifiMapPage extends HookConsumerWidget {
       decoration: BoxDecoration(
         color: context.appColors.gray4,
         borderRadius: BorderRadius.circular(6.r),
-        border: isSelected
-            ? Border.all(
-                color: context.appColors.fontGy1with90Opacity,
-                width: 1.2.w,
-              )
-            : null,
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
+          if (isSelected)
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(6.r),
+                  border: Border.all(
+                    color: context.appColors.fontGy1with90Opacity,
+                    width: 1.2.w,
+                  ),
+                ),
+              ),
+            ),
           Align(
             alignment: const Alignment(0, 0.3),
             child: FittedBox(
@@ -207,14 +213,18 @@ class WifiMapPage extends HookConsumerWidget {
             ),
           ),
           if (room.isGateway != null)
-            Align(
-              alignment: Alignment.topRight,
-              child: FractionallySizedBox(
-                heightFactor: 0.25,
-                child: AppBadge(
-                  label: room.isGateway == true
-                      ? context.l10n.router
-                      : context.l10n.extender,
+            Positioned(
+              top: isSelected ? 0.2.w : null,
+              right: isSelected ? 0.2.w : null,
+              child: Align(
+                alignment: Alignment.topRight,
+                child: FractionallySizedBox(
+                  heightFactor: 0.25,
+                  child: AppBadge(
+                    label: room.isGateway == true
+                        ? context.l10n.router
+                        : context.l10n.extender,
+                  ),
                 ),
               ),
             ),
@@ -329,34 +339,38 @@ class WifiMapPage extends HookConsumerWidget {
       if (room == null) {
         return _buildStats(context, floorState);
       }
-      return _buildSelectedRoomBar(context, room);
+      return _buildSelectedRoomBar(context, room, selectedIdx.value!);
     } else {
       return _buildStats(context, floorState);
     }
   }
 
-  Widget _buildSelectedRoomBar(BuildContext context, RoomModel room) {
+  Widget _buildSelectedRoomBar(BuildContext context, RoomModel room, int index) {
     final RoomType roomType = RoomType.values.firstWhere(
       (e) => e.name == room.roomType,
       orElse: () => RoomType.backyard,
     );
 
-    return Padding(
-      padding: EdgeInsets.all(AppSpacing.pad16.w),
-      child: Row(
-        children: [
-          AppImage(roomType.imagePath, width: 20.w, height: 20.w),
-          SizedBox(width: 4.w),
-          Text(
-            room.roomName,
-            style: context.appTextStyles.titleWith90Opacity.copyWith(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w400,
+    return GestureDetector(
+      onTap: () => EditRoomBottomSheet.show(context, index),
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: EdgeInsets.all(AppSpacing.pad16.w),
+        child: Row(
+          children: [
+            AppImage(roomType.imagePath, width: 20.w, height: 20.w),
+            SizedBox(width: 4.w),
+            Text(
+              room.roomName,
+              style: context.appTextStyles.titleWith90Opacity.copyWith(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+              ),
             ),
-          ),
-          SizedBox(width: 4.w),
-          _buildEditButton(context),
-        ],
+            SizedBox(width: 4.w),
+            _buildEditButton(context),
+          ],
+        ),
       ),
     );
   }

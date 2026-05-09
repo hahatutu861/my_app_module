@@ -13,12 +13,12 @@ class AppBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 1.8),
       decoration: BoxDecoration(
         color: context.appColors.fontGy4with26Opacity,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(0),
-          topRight: Radius.circular(6),
+          topRight: Radius.circular(0),
           bottomLeft: Radius.circular(2),
           bottomRight: Radius.circular(0),
         ),
