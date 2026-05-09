@@ -17,6 +17,7 @@ import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
+import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
 /// Wi-Fi 地图页面
@@ -55,6 +56,8 @@ class WifiMapPage extends HookConsumerWidget {
 
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
+    final selectedIdx = useState<int?>(null);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.appColors.fontWh1with100Opacity,
@@ -63,9 +66,9 @@ class WifiMapPage extends HookConsumerWidget {
         children: [
           SizedBox(height: statusBarHeight),
           _buildBackButton(context),
-          _buildFloorTitle(context, floorState),
+          _buildFloorTitle(context, floorState, ref),
           SizedBox(height: 16),
-          _buildAutoSizeGrid(context, transformationController, floorState),
+          _buildAutoSizeGrid(context, transformationController, floorState, selectedIdx),
           _buildStats(context, floorState),
         ],
       ),
@@ -76,6 +79,7 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     TransformationController transformationController,
     FloorState floorState,
+    ValueNotifier<int?> selectedIdx,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -100,7 +104,7 @@ class WifiMapPage extends HookConsumerWidget {
             transformationController: transformationController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
-              child: _buildGrid(context, squareSize, floorState),
+              child: _buildGrid(context, squareSize, floorState, selectedIdx),
             ),
           ),
         );
@@ -112,6 +116,7 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     double squareSize,
     FloorState floorState,
+    ValueNotifier<int?> selectedIdx,
   ) {
     final rooms = floorState.maybeWhen(
       loaded: (floor) => floor?.rooms ?? [],
@@ -131,17 +136,24 @@ class WifiMapPage extends HookConsumerWidget {
       itemCount: 110,
       itemBuilder: (context, index) {
         final room = rooms.where((r) => r.index == index).firstOrNull;
+        final isSelected = selectedIdx.value == index;
         return GestureDetector(
-          onTap: () => EditRoomBottomSheet.show(context, index),
+          onTap: () {
+            if (room == null) {
+              EditRoomBottomSheet.show(context, index);
+            } else {
+              selectedIdx.value = index;
+            }
+          },
           child: room != null
-              ? _buildRoomCell(context, room)
+              ? _buildRoomCell(context, room, isSelected)
               : _buildEmptyCell(context),
         );
       },
     );
   }
 
-  Widget _buildRoomCell(BuildContext context, RoomModel room) {
+  Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected) {
     final roomType = RoomType.values.firstWhere(
       (e) => e.name == room.roomType,
       orElse: () => RoomType.backyard,
@@ -151,6 +163,12 @@ class WifiMapPage extends HookConsumerWidget {
       decoration: BoxDecoration(
         color: context.appColors.gray4,
         borderRadius: BorderRadius.circular(6.r),
+        border: isSelected
+            ? Border.all(
+                color: context.appColors.fontGy1with90Opacity,
+                width: 1.2.w,
+              )
+            : null,
       ),
       child: Stack(
         children: [
@@ -208,27 +226,46 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFloorTitle(BuildContext context, FloorState floorState) {
+  Widget _buildFloorTitle(BuildContext context, FloorState floorState, WidgetRef ref) {
     final floorName = floorState.maybeWhen(
       loaded: (floor) => floor?.floorName ?? context.l10n.firstFloor,
       orElse: () => context.l10n.firstFloor,
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 16),
-      child: Row(
-        children: [
-          Text(
-            floorName,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w500,
-              color: context.appColors.fontGy1with90Opacity,
-            ),
+    return GestureDetector(
+      onTap: () async {
+        final currentFloorName = floorState.maybeWhen(
+          loaded: (floor) => floor?.floorName,
+          orElse: () => null,
+        );
+        final newFloorName = await showDialog<String>(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => EditFloorNameDialog(
+            initialFloorName: currentFloorName,
           ),
-          Spacing.h2,
-          _buildEditButton(context),
-        ],
+        );
+        if (newFloorName != null && newFloorName.isNotEmpty) {
+          await ref.read(floorViewModelProvider.notifier).updateFloorName(newFloorName);
+        }
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16),
+        child: Row(
+          children: [
+            Text(
+              floorName,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w500,
+                color: context.appColors.fontGy1with90Opacity,
+              ),
+            ),
+            Spacing.h2,
+            _buildEditButton(context),
+          ],
+        ),
       ),
     );
   }
@@ -261,9 +298,7 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildEditButton(BuildContext context) {
     return EditButton(
-      onTap: () {
-        debugPrint('Edit button tapped');
-      },
+      onTap: () {},
     );
   }
 

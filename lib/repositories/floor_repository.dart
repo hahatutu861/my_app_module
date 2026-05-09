@@ -51,6 +51,16 @@ class FloorRepository {
     return _fromDbMap(results.first);
   }
 
+  Future<List<FloorModel>> getAllFloors() async {
+    final db = await _database;
+    final results = await db.query(
+      _table,
+      orderBy: 'created_at DESC',
+    );
+    if (results.isEmpty) return [];
+    return results.map((map) => _fromDbMap(map)).toList();
+  }
+
   Future<FloorModel?> getFloorById(String id) async {
     final db = await _database;
     final results = await db.query(

@@ -9,6 +9,11 @@ final floorViewModelProvider =
   return FloorViewModel(ref.read(floorRepositoryProvider));
 });
 
+final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
+  final repository = ref.read(floorRepositoryProvider);
+  return repository.getAllFloors();
+});
+
 class FloorViewModel extends StateNotifier<FloorState> {
   final FloorRepository _repository;
 
