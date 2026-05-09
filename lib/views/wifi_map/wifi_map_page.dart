@@ -28,7 +28,7 @@ class WifiMapPage extends HookConsumerWidget {
   const WifiMapPage({super.key, this.floorId});
 
   static const int crossAxisCount = 10;
-  static const double spacing = 4;
+  static final double spacing = 4.w;
   static const String _dialogShownKey = 'has_shown_wifi_map_dialog';
 
   @override
@@ -67,9 +67,14 @@ class WifiMapPage extends HookConsumerWidget {
           SizedBox(height: statusBarHeight),
           _buildBackButton(context),
           _buildFloorTitle(context, floorState, ref),
-          SizedBox(height: 16),
-          _buildAutoSizeGrid(context, transformationController, floorState, selectedIdx),
-          _buildStats(context, floorState),
+          SizedBox(height: 16.h),
+          _buildAutoSizeGrid(
+            context,
+            transformationController,
+            floorState,
+            selectedIdx,
+          ),
+          _buildBottomBar(context, floorState, selectedIdx),
         ],
       ),
     );
@@ -84,7 +89,7 @@ class WifiMapPage extends HookConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
-        const double minHorizontalPadding = 16;
+        final double minHorizontalPadding = 16.w;
         final double availableWidth = screenWidth - minHorizontalPadding * 2;
         final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
         final double squareSize =
@@ -95,7 +100,7 @@ class WifiMapPage extends HookConsumerWidget {
             rowCount * squareSize + (rowCount - 1) * spacing;
         return SizedBox(
           width: double.infinity,
-          height: totalGridHeight,
+          height: totalGridHeight.h,
           child: InteractiveViewer(
             alignment: Alignment.topLeft,
             minScale: 1.0,
@@ -127,7 +132,7 @@ class WifiMapPage extends HookConsumerWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: crossAxisCount,
         crossAxisSpacing: spacing,
         mainAxisSpacing: spacing,
@@ -170,10 +175,11 @@ class WifiMapPage extends HookConsumerWidget {
               )
             : null,
       ),
+      clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
           Align(
-            alignment: Alignment(0, 0.3),
+            alignment: const Alignment(0, 0.3),
             child: FittedBox(
               fit: BoxFit.contain,
               child: SizedBox(
@@ -226,7 +232,11 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFloorTitle(BuildContext context, FloorState floorState, WidgetRef ref) {
+  Widget _buildFloorTitle(
+    BuildContext context,
+    FloorState floorState,
+    WidgetRef ref,
+  ) {
     final floorName = floorState.maybeWhen(
       loaded: (floor) => floor?.floorName ?? context.l10n.firstFloor,
       orElse: () => context.l10n.firstFloor,
@@ -241,23 +251,24 @@ class WifiMapPage extends HookConsumerWidget {
         final newFloorName = await showDialog<String>(
           context: context,
           barrierDismissible: false,
-          builder: (context) => EditFloorNameDialog(
-            initialFloorName: currentFloorName,
-          ),
+          builder: (context) =>
+              EditFloorNameDialog(initialFloorName: currentFloorName),
         );
         if (newFloorName != null && newFloorName.isNotEmpty) {
-          await ref.read(floorViewModelProvider.notifier).updateFloorName(newFloorName);
+          await ref
+              .read(floorViewModelProvider.notifier)
+              .updateFloorName(newFloorName);
         }
       },
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.only(left: 16),
+        padding: EdgeInsets.only(left: 16.w),
         child: Row(
           children: [
             Text(
               floorName,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w500,
                 color: context.appColors.fontGy1with90Opacity,
               ),
@@ -275,14 +286,14 @@ class WifiMapPage extends HookConsumerWidget {
       onTap: () => Navigator.of(context).pop(),
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             AppImage(
               'chevron_left.png',
-              width: AppSpacing.icon24,
-              height: AppSpacing.icon24,
+              width: AppSpacing.icon24.w,
+              height: AppSpacing.icon24.w,
               color: context.appColors.fontGy1with90Opacity,
             ),
             Spacing.h8,
@@ -297,26 +308,74 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildEditButton(BuildContext context) {
-    return EditButton(
-      onTap: () {},
+    return EditButton(onTap: () {});
+  }
+
+  Widget _buildBottomBar(
+    BuildContext context,
+    FloorState floorState,
+    ValueNotifier<int?> selectedIdx,
+  ) {
+    final isSelected = selectedIdx.value != null;
+    if (isSelected) {
+      final RoomModel? room = floorState.maybeWhen(
+        loaded: (floor) {
+          final rooms = floor?.rooms ?? [];
+          final matched = rooms.where((r) => r.index == selectedIdx.value);
+          return matched.isNotEmpty ? matched.first : null;
+        },
+        orElse: () => null,
+      );
+      if (room == null) {
+        return _buildStats(context, floorState);
+      }
+      return _buildSelectedRoomBar(context, room);
+    } else {
+      return _buildStats(context, floorState);
+    }
+  }
+
+  Widget _buildSelectedRoomBar(BuildContext context, RoomModel room) {
+    final RoomType roomType = RoomType.values.firstWhere(
+      (e) => e.name == room.roomType,
+      orElse: () => RoomType.backyard,
+    );
+
+    return Padding(
+      padding: EdgeInsets.all(AppSpacing.pad16.w),
+      child: Row(
+        children: [
+          AppImage(roomType.imagePath, width: 20.w, height: 20.w),
+          SizedBox(width: 4.w),
+          Text(
+            room.roomName,
+            style: context.appTextStyles.titleWith90Opacity.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          SizedBox(width: 4.w),
+          _buildEditButton(context),
+        ],
+      ),
     );
   }
 
   Widget _buildStats(BuildContext context, FloorState floorState) {
-    final roomCount = floorState.maybeWhen(
+    final int roomCount = floorState.maybeWhen(
       loaded: (floor) => floor?.rooms.length ?? 0,
       orElse: () => 0,
     );
 
     return Padding(
-      padding: const EdgeInsets.only(
-        top: AppSpacing.pad16,
-        left: AppSpacing.pad16,
+      padding: EdgeInsets.only(
+        top: AppSpacing.pad16.w,
+        left: AppSpacing.pad16.w,
       ),
       child: Text(
         context.l10n.zonesCount(roomCount),
         style: TextStyle(
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w400,
           color: context.appColors.fontGy1with90Opacity,
         ),
@@ -326,7 +385,7 @@ class WifiMapPage extends HookConsumerWidget {
 
   Future<void> _checkAndShowDialog(BuildContext context, WidgetRef ref) async {
     final prefs = ref.read(sharedPreferencesProvider);
-    final hasShown = prefs.getBool(_dialogShownKey) ?? false;
+    final bool hasShown = prefs.getBool(_dialogShownKey) ?? false;
     if (!hasShown) {
       await prefs.setBool(_dialogShownKey, true);
       WidgetsBinding.instance.addPostFrameCallback((_) {

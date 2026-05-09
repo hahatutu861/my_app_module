@@ -19,7 +19,7 @@ class AppBadge extends StatelessWidget {
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(0),
           topRight: Radius.circular(6),
-          bottomLeft: Radius.circular(1),
+          bottomLeft: Radius.circular(2),
           bottomRight: Radius.circular(0),
         ),
       ),
