@@ -23,13 +23,21 @@ class AppSpacing {
   /// 用于：极小元素间距
   static const double s2 = 2.0;
 
+  /// 极小间距 - 3pt
+  /// 用于：房间数量标签垂直内边距
+  static const double s3 = 3.0;
+
   /// 极小间距 - 4pt
   /// 用于：小元素间距（图标与文字、编辑按钮与文本）
   static const double s4 = 4.0;
 
-  /// 小间距 - 8pt
+  /// 中小间距 - 8pt
   /// 用于：基础间距单位
   static const double s8 = 8.0;
+
+  /// 中小间距 - 10pt
+  /// 用于：房间数量标签水平内边距
+  static const double s10 = 10.0;
 
   /// 中小间距 - 12pt
   /// 用于：ActionSection 内部按钮和文字间距
@@ -107,6 +115,10 @@ class AppSpacing {
   static const double margin24 = 24.0;
 
   // ============== 圆角半径 (Border Radius) ==============
+  /// 小圆角 - 3pt
+  /// 用于：房间数量标签圆角
+  static const double radius3 = 3.0;
+
   /// 小圆角 - 4pt
   /// 用于：进度条圆角
   static const double radius4 = 4.0;

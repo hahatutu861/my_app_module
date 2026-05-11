@@ -237,74 +237,94 @@ class _FloorListItem extends StatelessWidget {
               _buildRoomsGrid(context, floor.rooms),
               SizedBox(width: AppSpacing.gap12.w),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 0.2.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            floor.floorName,
-                            style: context.appTextStyles.bodyLargeWith90Opacity,
-                          ),
-                          SizedBox(width: AppSpacing.gap4.w),
-                          Text(
-                            '(${context.l10n.zonesCount(floor.rooms.length)})',
-                            style: context.appTextStyles.captionWith60Opacity,
-                          )
-                        ],
-                      ),
-                      Text(
-                        floor.updatedAt != null
-                            ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
-                            : '',
-                        style: context.appTextStyles.bodyMediumWith60Opacity,
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10.w,
-                          vertical: 3.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: context.appColors.gray1,
-                          borderRadius: BorderRadius.circular(3.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            AppImage(
-                              'no_result.png',
-                              width: AppSpacing.gap16.w,
-                              height: AppSpacing.gap16.h,
-                              color: context.appColors.fontGy2with60Opacity,
-                            ),
-                            SizedBox(width: AppSpacing.gap4.w),
-                            Text(
-                              floor.rooms.length.toString(),
-                              style: context.appTextStyles.bodyMediumWith60Opacity,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                child: _buildFloorInfo(context, floor),
               ),
               SizedBox(width: AppSpacing.gap16.w),
-              Align(
-                alignment: Alignment.center,
-                child: AppImage(
-                  'chevron_right.png',
-                  width: AppSpacing.gap24.w,
-                  height: AppSpacing.gap24.h,
-                  color: context.appColors.fontGy2with60Opacity,
-                ),
-              ),
+              _buildArrowIcon(context),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildFloorInfo(BuildContext context, FloorModel floor) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 0.2.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildFloorNameRow(context, floor),
+          _buildUpdateTime(context, floor),
+          _buildRoomCountBadge(context, floor),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloorNameRow(BuildContext context, FloorModel floor) {
+    return Row(
+      children: [
+        Text(
+          floor.floorName,
+          style: context.appTextStyles.bodyLargeWith90Opacity,
+        ),
+        SizedBox(width: AppSpacing.gap4.w),
+        Text(
+          '(${context.l10n.zonesCount(floor.rooms.length)})',
+          style: context.appTextStyles.captionWith60Opacity,
+        )
+      ],
+    );
+  }
+
+  Widget _buildUpdateTime(BuildContext context, FloorModel floor) {
+    return Text(
+      floor.updatedAt != null
+          ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
+          : '',
+      style: context.appTextStyles.bodyMediumWith60Opacity,
+    );
+  }
+
+  Widget _buildRoomCountBadge(BuildContext context, FloorModel floor) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.s10.w,
+        vertical: AppSpacing.s3.h,
+      ),
+      decoration: BoxDecoration(
+        color: context.appColors.gray1,
+        borderRadius: BorderRadius.circular(AppSpacing.radius3.r),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppImage(
+            'no_result.png',
+            width: AppSpacing.gap16.w,
+            height: AppSpacing.gap16.h,
+            color: context.appColors.fontGy2with60Opacity,
+          ),
+          SizedBox(width: AppSpacing.gap4.w),
+          Text(
+            floor.rooms.length.toString(),
+            style: context.appTextStyles.bodyMediumWith60Opacity,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildArrowIcon(BuildContext context) {
+    return Align(
+      alignment: Alignment.center,
+      child: AppImage(
+        'chevron_right.png',
+        width: AppSpacing.gap24.w,
+        height: AppSpacing.gap24.h,
+        color: context.appColors.fontGy2with60Opacity,
       ),
     );
   }
