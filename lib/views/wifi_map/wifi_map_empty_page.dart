@@ -211,6 +211,14 @@ class _EmptyStateDescription extends StatelessWidget {
 }
 
 class _FloorListItem extends StatelessWidget {
+  static const double _baseCellSize = 15.0;
+  static const double _baseSpacing = 1.25;
+  static const int _baseCols = 4;
+  static const int _baseRows = 5;
+  static const int _originalCols = 10;
+  static const int _originalRows = 11;
+  static const double _roomCellRadius = 2.0;
+
   final FloorModel floor;
   final VoidCallback? onTap;
 
@@ -330,26 +338,20 @@ class _FloorListItem extends StatelessWidget {
   }
 
   Widget _buildRoomsGrid(BuildContext context, List<RoomModel> rooms) {
-    const baseCols = 4;
-    const baseRows = 5;
-    const baseCellSize = 15.0;
-    const baseSpacing = 1.25;
-    final totalWidth = baseCols * baseCellSize + (baseCols - 1) * baseSpacing;
-    final totalHeight = baseRows * baseCellSize + (baseRows - 1) * baseSpacing;
+    final totalWidth = _baseCols * _baseCellSize + (_baseCols - 1) * _baseSpacing;
+    final totalHeight = _baseRows * _baseCellSize + (_baseRows - 1) * _baseSpacing;
     if (rooms.isEmpty) {
       return SizedBox(width: totalWidth.w, height: totalHeight.h);
     }
-    const originalCols = 10;
-    const originalRows = 11;
     final roomPositions = <Point<int>>{};
-    int minX = originalCols;
+    int minX = _originalCols;
     int maxX = 0;
-    int minY = originalRows;
+    int minY = _originalRows;
     int maxY = 0;
 
     for (final room in rooms) {
-      final x = room.index % originalCols;
-      final y = room.index ~/ originalCols;
+      final x = room.index % _originalCols;
+      final y = room.index ~/ _originalCols;
       roomPositions.add(Point(x, y));
       if (x < minX) minX = x;
       if (x > maxX) maxX = x;
@@ -359,8 +361,8 @@ class _FloorListItem extends StatelessWidget {
     final xRange = maxX - minX + 1;
     final yRange = maxY - minY + 1;
     const originalAspect = 10.0 / 11.0;
-    int newCols = baseCols;
-    int newRows = baseRows;
+    int newCols = _baseCols;
+    int newRows = _baseRows;
     if (xRange > newCols || yRange > newRows) {
       if (xRange > newCols && xRange / yRange > originalAspect) {
         newCols = xRange;
@@ -371,11 +373,10 @@ class _FloorListItem extends StatelessWidget {
         if (newCols < xRange) newCols = xRange;
       }
     }
-    final cellWidth = (totalWidth - (newCols - 1) * baseSpacing) / newCols;
-    final cellHeight = (totalHeight - (newRows - 1) * baseSpacing) / newRows;
+    final cellWidth = (totalWidth - (newCols - 1) * _baseSpacing) / newCols;
+    final cellHeight = (totalHeight - (newRows - 1) * _baseSpacing) / newRows;
     final cellSize = cellWidth < cellHeight ? cellWidth : cellHeight;
-    final spacing = baseSpacing * cellSize / baseCellSize;
-    final radius = 2.0.r;
+    final spacing = _baseSpacing * cellSize / _baseCellSize;
     final roomIndicesInNewGrid = <int>{};
     for (final pos in roomPositions) {
       final newX = pos.x - minX;
@@ -404,7 +405,7 @@ class _FloorListItem extends StatelessWidget {
           return Container(
             decoration: BoxDecoration(
               color: hasRoom ? context.appColors.gray4 : context.appColors.gray1,
-              borderRadius: BorderRadius.circular(radius),
+              borderRadius: BorderRadius.circular(_roomCellRadius.r),
             ),
           );
         },
