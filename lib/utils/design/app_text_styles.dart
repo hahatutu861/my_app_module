@@ -50,6 +50,16 @@ class AppThemeTextStyles {
         color: _colors.fontGy1with90Opacity,
       );
 
+  /// 正文中号 + 60% 不透明度灰色
+  ///
+  /// 用于：次要说明文字、更新时间
+  /// fontSize: 14, fontWeight: w400, color: fontGy2with60Opacity
+  TextStyle get bodyMediumWith60Opacity => TextStyle(
+        fontSize: 14.sp,
+        fontWeight: FontWeight.w400,
+        color: _colors.fontGy2with60Opacity,
+      );
+
   /// 标题 + 90% 不透明度灰色
   ///
   /// 用于：页面标题
@@ -87,6 +97,16 @@ class AppThemeTextStyles {
   TextStyle get captionWith90Opacity => TextStyle(
         fontSize: 11.sp,
         color: _colors.fontGy1with90Opacity,
+      );
+
+  /// 辅助文字 + 60% 不透明度灰色
+  ///
+  /// 用于：次要说明文字、标签
+  /// fontSize: 12, fontWeight: w400, color: fontGy2with60Opacity
+  TextStyle get captionWith60Opacity => TextStyle(
+        fontSize: 12.sp,
+        fontWeight: FontWeight.w400,
+        color: _colors.fontGy2with60Opacity,
       );
 
   /// 正文 + 90% 不透明度灰色
