@@ -6,7 +6,7 @@ import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
 final floorViewModelProvider =
     StateNotifierProvider<FloorViewModel, FloorState>((ref) {
-  return FloorViewModel(ref.read(floorRepositoryProvider));
+  return FloorViewModel(ref.read(floorRepositoryProvider), ref);
 });
 
 final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
@@ -16,9 +16,14 @@ final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
 
 class FloorViewModel extends StateNotifier<FloorState> {
   final FloorRepository _repository;
+  final Ref _ref;
 
-  FloorViewModel(this._repository) : super(const FloorState.initial()) {
+  FloorViewModel(this._repository, this._ref) : super(const FloorState.initial()) {
     loadActiveFloor();
+  }
+
+  void _refreshAllFloors() {
+    _ref.invalidate(allFloorsProvider);
   }
 
   void loadActiveFloor() {
@@ -51,6 +56,7 @@ class FloorViewModel extends StateNotifier<FloorState> {
     try {
       final floor = await _repository.createFloor(floorName);
       state = FloorState.loaded(floor: floor);
+      _refreshAllFloors();
       return floor;
     } catch (e) {
       state = FloorState.error(message: e.toString());
@@ -71,6 +77,7 @@ class FloorViewModel extends StateNotifier<FloorState> {
           await _repository.updateFloorName(currentFloor.id, newName);
       if (updatedFloor != null) {
         state = FloorState.loaded(floor: updatedFloor);
+        _refreshAllFloors();
       }
     } catch (e) {
       state = FloorState.error(message: e.toString());
@@ -97,6 +104,7 @@ class FloorViewModel extends StateNotifier<FloorState> {
           await _repository.updateRooms(currentFloor.id, rooms);
       if (updatedFloor != null) {
         state = FloorState.loaded(floor: updatedFloor);
+        _refreshAllFloors();
       }
     } catch (e) {
       state = FloorState.error(message: e.toString());
@@ -118,6 +126,7 @@ class FloorViewModel extends StateNotifier<FloorState> {
           await _repository.updateRooms(currentFloor.id, rooms);
       if (updatedFloor != null) {
         state = FloorState.loaded(floor: updatedFloor);
+        _refreshAllFloors();
       }
     } catch (e) {
       state = FloorState.error(message: e.toString());
