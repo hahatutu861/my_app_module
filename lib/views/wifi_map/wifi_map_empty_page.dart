@@ -232,89 +232,98 @@ class _FloorListItem extends StatelessWidget {
         width: double.infinity,
         padding: EdgeInsets.all(AppSpacing.pad16.w),
         decoration: BoxDecoration(
-          color: context.appColors.fontWh1with100Opacity
+          color: context.appColors.fontWh1with100Opacity,
         ),
-        child: Row(
-          children: [
-            _buildRoomsGrid(context, floor.rooms),
-            SizedBox(width: AppSpacing.gap12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildRoomsGrid(context, floor.rooms),
+              SizedBox(width: AppSpacing.gap12.w),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 0.2.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      Row(
+                        children: [
+                          Text(
+                            floor.floorName,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.appColors.fontGy1with90Opacity,
+                            ),
+                          ),
+                          SizedBox(width: AppSpacing.gap4.w),
+                          Text(
+                            '(${context.l10n.zonesCount(floor.rooms.length)})',
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: context.appColors.fontGy2with60Opacity,
+                            ),
+                          )
+                        ],
+                      ),
                       Text(
-                        floor.floorName,
+                        floor.updatedAt != null
+                            ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
+                            : '',
                         style: TextStyle(
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
-                          color: context.appColors.fontGy1with90Opacity,
+                          color: context.appColors.fontGy2with60Opacity,
                         ),
                       ),
-                      SizedBox(width: AppSpacing.gap4.w),
-                      Text(
-                        '(${context.l10n.zonesCount(floor.rooms.length)})',
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w400,
-                          color: context.appColors.fontGy2with60Opacity,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 10.w,
+                          vertical: 3.h,
                         ),
-                      )
+                        decoration: BoxDecoration(
+                          color: context.appColors.gray1,
+                          borderRadius: BorderRadius.circular(3.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            AppImage(
+                              'no_result.png',
+                              width: AppSpacing.gap16.w,
+                              height: AppSpacing.gap16.h,
+                              color: context.appColors.fontGy2with60Opacity,
+                            ),
+                            SizedBox(width: AppSpacing.gap4.w),
+                            Text(
+                              floor.rooms.length.toString(),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
+                                color: context.appColors.fontGy2with60Opacity,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  Text(
-                    floor.updatedAt != null
-                        ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
-                        : '',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: context.appColors.fontGy2with60Opacity,
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 3.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: context.appColors.gray1,
-                      borderRadius: BorderRadius.circular(3.r),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        AppImage(
-                          'no_result.png',
-                          width: AppSpacing.gap16.w,
-                          height: AppSpacing.gap16.h,
-                          color: context.appColors.fontGy2with60Opacity,
-                        ),
-                        SizedBox(width: AppSpacing.gap4.w),
-                        Text(
-                          floor.rooms.length.toString(),
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
-                            color: context.appColors.fontGy2with60Opacity,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-            SizedBox(width: AppSpacing.gap16.w),
-            AppImage(
-              'chevron_right.png',
-              width: AppSpacing.gap24.w,
-              height: AppSpacing.gap24.h,
-              color: context.appColors.fontGy2with60Opacity,
-            ),
-          ],
+              SizedBox(width: AppSpacing.gap16.w),
+              Align(
+                alignment: Alignment.center,
+                child: AppImage(
+                  'chevron_right.png',
+                  width: AppSpacing.gap24.w,
+                  height: AppSpacing.gap24.h,
+                  color: context.appColors.fontGy2with60Opacity,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
