@@ -214,15 +214,6 @@ class _FloorListItem extends StatelessWidget {
   final FloorModel floor;
   final VoidCallback? onTap;
 
-  static const _baseCols = 4;
-  static const _baseRows = 5;
-  static const _baseCellSize = 15.0;
-  static const _baseSpacing = 1.25;
-  static const _originalCols = 10;
-  static const _originalRows = 11;
-  static const _originalAspect = 10.0 / 11.0;
-  static const _radius = 2.0;
-
   const _FloorListItem({
     required this.floor,
     this.onTap,
@@ -319,20 +310,26 @@ class _FloorListItem extends StatelessWidget {
   }
 
   Widget _buildRoomsGrid(BuildContext context, List<RoomModel> rooms) {
-    final totalWidth = _baseCols * _baseCellSize + (_baseCols - 1) * _baseSpacing;
-    final totalHeight = _baseRows * _baseCellSize + (_baseRows - 1) * _baseSpacing;
+    const baseCols = 4;
+    const baseRows = 5;
+    const baseCellSize = 15.0;
+    const baseSpacing = 1.25;
+    final totalWidth = baseCols * baseCellSize + (baseCols - 1) * baseSpacing;
+    final totalHeight = baseRows * baseCellSize + (baseRows - 1) * baseSpacing;
     if (rooms.isEmpty) {
       return SizedBox(width: totalWidth.w, height: totalHeight.h);
     }
+    const originalCols = 10;
+    const originalRows = 11;
     final roomPositions = <Point<int>>{};
-    int minX = _originalCols;
+    int minX = originalCols;
     int maxX = 0;
-    int minY = _originalRows;
+    int minY = originalRows;
     int maxY = 0;
 
     for (final room in rooms) {
-      final x = room.index % _originalCols;
-      final y = room.index ~/ _originalCols;
+      final x = room.index % originalCols;
+      final y = room.index ~/ originalCols;
       roomPositions.add(Point(x, y));
       if (x < minX) minX = x;
       if (x > maxX) maxX = x;
@@ -341,22 +338,24 @@ class _FloorListItem extends StatelessWidget {
     }
     final xRange = maxX - minX + 1;
     final yRange = maxY - minY + 1;
-    int newCols = _baseCols;
-    int newRows = _baseRows;
+    const originalAspect = 10.0 / 11.0;
+    int newCols = baseCols;
+    int newRows = baseRows;
     if (xRange > newCols || yRange > newRows) {
-      if (xRange > newCols && xRange / yRange > _originalAspect) {
+      if (xRange > newCols && xRange / yRange > originalAspect) {
         newCols = xRange;
-        newRows = (xRange / _originalAspect).floor();
+        newRows = (xRange / originalAspect).floor();
       } else if (yRange > newRows) {
         newRows = yRange;
-        newCols = (newRows * _originalAspect).floor();
+        newCols = (newRows * originalAspect).floor();
         if (newCols < xRange) newCols = xRange;
       }
     }
-    final cellWidth = (totalWidth - (newCols - 1) * _baseSpacing) / newCols;
-    final cellHeight = (totalHeight - (newRows - 1) * _baseSpacing) / newRows;
+    final cellWidth = (totalWidth - (newCols - 1) * baseSpacing) / newCols;
+    final cellHeight = (totalHeight - (newRows - 1) * baseSpacing) / newRows;
     final cellSize = cellWidth < cellHeight ? cellWidth : cellHeight;
-    final spacing = _baseSpacing * cellSize / _baseCellSize;
+    final spacing = baseSpacing * cellSize / baseCellSize;
+    final radius = 2.0.r;
     final roomIndicesInNewGrid = <int>{};
     for (final pos in roomPositions) {
       final newX = pos.x - minX;
@@ -368,22 +367,27 @@ class _FloorListItem extends StatelessWidget {
     return SizedBox(
       width: totalWidth.w,
       height: totalHeight.h,
-      child: GridView.count(
-        crossAxisCount: newCols,
-        crossAxisSpacing: spacing.w,
-        mainAxisSpacing: spacing.w,
-        childAspectRatio: 1,
+      child: GridView.builder(
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        children: List.generate(newCols * newRows, (index) {
+        clipBehavior: Clip.none,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: newCols,
+          crossAxisSpacing: spacing.w,
+          mainAxisSpacing: spacing.w,
+          childAspectRatio: 1,
+        ),
+        itemCount: newCols * newRows,
+        itemBuilder: (context, index) {
           final hasRoom = roomIndicesInNewGrid.contains(index);
           return Container(
             decoration: BoxDecoration(
               color: hasRoom ? context.appColors.gray4 : context.appColors.gray1,
-              borderRadius: BorderRadius.circular(_radius.r),
+              borderRadius: BorderRadius.circular(radius),
             ),
           );
-        }),
+        },
       ),
     );
   }
