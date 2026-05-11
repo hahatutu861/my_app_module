@@ -338,12 +338,38 @@ class _FloorListItem extends StatelessWidget {
   }
 
   Widget _buildRoomsGrid(BuildContext context, List<RoomModel> rooms) {
-    final totalWidth = _baseCols * _baseCellSize + (_baseCols - 1) * _baseSpacing;
-    final totalHeight = _baseRows * _baseCellSize + (_baseRows - 1) * _baseSpacing;
+    final gridSize = _GridSize(
+      width: _baseCols * _baseCellSize + (_baseCols - 1) * _baseSpacing,
+      height: _baseRows * _baseCellSize + (_baseRows - 1) * _baseSpacing,
+    );
+
     if (rooms.isEmpty) {
-      return SizedBox(width: totalWidth.w, height: totalHeight.h);
+      return SizedBox(width: gridSize.width.w, height: gridSize.height.h);
     }
-    final roomPositions = <Point<int>>{};
+
+    final roomLayout = _calculateRoomLayout(rooms);
+    final newDimensions = _calculateNewGridDimensions(
+      roomLayout.xRange,
+      roomLayout.yRange,
+    );
+    final cellMetrics = _calculateCellMetrics(gridSize, newDimensions);
+    final roomIndicesInNewGrid = _mapRoomIndicesToNewGrid(
+      roomLayout.positions,
+      roomLayout.minX,
+      roomLayout.minY,
+      newDimensions.cols,
+    );
+
+    return _buildGridView(
+      gridSize,
+      newDimensions,
+      cellMetrics,
+      roomIndicesInNewGrid,
+    );
+  }
+
+  _RoomLayout _calculateRoomLayout(List<RoomModel> rooms) {
+    final positions = <Point<int>>{};
     int minX = _originalCols;
     int maxX = 0;
     int minY = _originalRows;
@@ -352,17 +378,29 @@ class _FloorListItem extends StatelessWidget {
     for (final room in rooms) {
       final x = room.index % _originalCols;
       final y = room.index ~/ _originalCols;
-      roomPositions.add(Point(x, y));
+      positions.add(Point(x, y));
       if (x < minX) minX = x;
       if (x > maxX) maxX = x;
       if (y < minY) minY = y;
       if (y > maxY) maxY = y;
     }
-    final xRange = maxX - minX + 1;
-    final yRange = maxY - minY + 1;
+
+    return _RoomLayout(
+      positions: positions,
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+      xRange: maxX - minX + 1,
+      yRange: maxY - minY + 1,
+    );
+  }
+
+  _GridDimensions _calculateNewGridDimensions(int xRange, int yRange) {
     const originalAspect = 10.0 / 11.0;
     int newCols = _baseCols;
     int newRows = _baseRows;
+
     if (xRange > newCols || yRange > newRows) {
       if (xRange > newCols && xRange / yRange > originalAspect) {
         newCols = xRange;
@@ -373,35 +411,58 @@ class _FloorListItem extends StatelessWidget {
         if (newCols < xRange) newCols = xRange;
       }
     }
-    final cellWidth = (totalWidth - (newCols - 1) * _baseSpacing) / newCols;
-    final cellHeight = (totalHeight - (newRows - 1) * _baseSpacing) / newRows;
+
+    return _GridDimensions(cols: newCols, rows: newRows);
+  }
+
+  _CellMetrics _calculateCellMetrics(_GridSize gridSize, _GridDimensions dimensions) {
+    final cellWidth = (gridSize.width - (dimensions.cols - 1) * _baseSpacing) / dimensions.cols;
+    final cellHeight = (gridSize.height - (dimensions.rows - 1) * _baseSpacing) / dimensions.rows;
     final cellSize = cellWidth < cellHeight ? cellWidth : cellHeight;
     final spacing = _baseSpacing * cellSize / _baseCellSize;
-    final roomIndicesInNewGrid = <int>{};
-    for (final pos in roomPositions) {
+
+    return _CellMetrics(cellSize: cellSize, spacing: spacing);
+  }
+
+  Set<int> _mapRoomIndicesToNewGrid(
+    Set<Point<int>> positions,
+    int minX,
+    int minY,
+    int newCols,
+  ) {
+    final indices = <int>{};
+    for (final pos in positions) {
       final newX = pos.x - minX;
       final newY = pos.y - minY;
       final newIndex = newY * newCols + newX;
-      roomIndicesInNewGrid.add(newIndex);
+      indices.add(newIndex);
     }
+    return indices;
+  }
 
+  Widget _buildGridView(
+    _GridSize gridSize,
+    _GridDimensions dimensions,
+    _CellMetrics cellMetrics,
+    Set<int> roomIndices,
+  ) {
     return SizedBox(
-      width: totalWidth.w,
-      height: totalHeight.h,
+      width: gridSize.width.w,
+      height: gridSize.height.h,
       child: GridView.builder(
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         clipBehavior: Clip.none,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: newCols,
-          crossAxisSpacing: spacing.w,
-          mainAxisSpacing: spacing.w,
+          crossAxisCount: dimensions.cols,
+          crossAxisSpacing: cellMetrics.spacing.w,
+          mainAxisSpacing: cellMetrics.spacing.w,
           childAspectRatio: 1,
         ),
-        itemCount: newCols * newRows,
+        itemCount: dimensions.cols * dimensions.rows,
         itemBuilder: (context, index) {
-          final hasRoom = roomIndicesInNewGrid.contains(index);
+          final hasRoom = roomIndices.contains(index);
           return Container(
             decoration: BoxDecoration(
               color: hasRoom ? context.appColors.gray4 : context.appColors.gray1,
@@ -412,4 +473,45 @@ class _FloorListItem extends StatelessWidget {
       ),
     );
   }
+}
+
+class _GridSize {
+  final double width;
+  final double height;
+
+  const _GridSize({required this.width, required this.height});
+}
+
+class _RoomLayout {
+  final Set<Point<int>> positions;
+  final int minX;
+  final int maxX;
+  final int minY;
+  final int maxY;
+  final int xRange;
+  final int yRange;
+
+  const _RoomLayout({
+    required this.positions,
+    required this.minX,
+    required this.maxX,
+    required this.minY,
+    required this.maxY,
+    required this.xRange,
+    required this.yRange,
+  });
+}
+
+class _GridDimensions {
+  final int cols;
+  final int rows;
+
+  const _GridDimensions({required this.cols, required this.rows});
+}
+
+class _CellMetrics {
+  final double cellSize;
+  final double spacing;
+
+  const _CellMetrics({required this.cellSize, required this.spacing});
 }
