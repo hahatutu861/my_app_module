@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
@@ -238,17 +239,79 @@ class _FloorListItem extends StatelessWidget {
             _buildRoomsGrid(context, floor.rooms),
             SizedBox(width: AppSpacing.gap12.w),
             Expanded(
-              child: Text(
-                floor.floorName,
-                style: context.appTextStyles.bodyWith90Opacity,
-                overflow: TextOverflow.ellipsis,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        floor.floorName,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400,
+                          color: context.appColors.fontGy1with90Opacity,
+                        ),
+                      ),
+                      SizedBox(width: AppSpacing.gap4.w),
+                      Text(
+                        '(${context.l10n.zonesCount(floor.rooms.length)})',
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w400,
+                          color: context.appColors.fontGy2with60Opacity,
+                        ),
+                      )
+                    ],
+                  ),
+                  Text(
+                    floor.updatedAt != null
+                        ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
+                        : '',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w400,
+                      color: context.appColors.fontGy2with60Opacity,
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 3.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: context.appColors.gray1,
+                      borderRadius: BorderRadius.circular(3.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AppImage(
+                          'no_result.png',
+                          width: AppSpacing.gap16.w,
+                          height: AppSpacing.gap16.h,
+                          color: context.appColors.fontGy2with60Opacity,
+                        ),
+                        SizedBox(width: AppSpacing.gap4.w),
+                        Text(
+                          floor.rooms.length.toString(),
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w400,
+                            color: context.appColors.fontGy2with60Opacity,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(width: AppSpacing.gap12.w),
+            SizedBox(width: AppSpacing.gap16.w),
             AppImage(
               'chevron_right.png',
-              width: AppSpacing.icon16.w,
-              height: AppSpacing.icon16.h,
+              width: AppSpacing.gap24.w,
+              height: AppSpacing.gap24.h,
               color: context.appColors.fontGy2with60Opacity,
             ),
           ],
