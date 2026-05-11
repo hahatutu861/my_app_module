@@ -84,7 +84,7 @@ class WifiMapEmptyPage extends HookConsumerWidget {
 
   Widget _buildFloorList(BuildContext context, List<FloorModel> floors, WidgetRef ref) {
     return ListView.builder(
-      padding: const EdgeInsets.only(top: 16),
+      padding: EdgeInsets.only(top: AppSpacing.gap16.h),
       shrinkWrap: true,
       itemCount: floors.length,
       itemBuilder: (context, index) {
@@ -343,8 +343,16 @@ class _FloorListItem extends StatelessWidget {
       height: _baseRows * _baseCellSize + (_baseRows - 1) * _baseSpacing,
     );
 
+    final dimensions = _GridDimensions(cols: _baseCols, rows: _baseRows);
+    final cellMetrics = _CellMetrics(cellSize: _baseCellSize, spacing: _baseSpacing);
+
     if (rooms.isEmpty) {
-      return SizedBox(width: gridSize.width.w, height: gridSize.height.h);
+      return _buildGridView(
+        gridSize,
+        dimensions,
+        cellMetrics,
+        {},
+      );
     }
 
     final roomLayout = _calculateRoomLayout(rooms);
@@ -352,7 +360,7 @@ class _FloorListItem extends StatelessWidget {
       roomLayout.xRange,
       roomLayout.yRange,
     );
-    final cellMetrics = _calculateCellMetrics(gridSize, newDimensions);
+    final newCellMetrics = _calculateCellMetrics(gridSize, newDimensions);
     final roomIndicesInNewGrid = _mapRoomIndicesToNewGrid(
       roomLayout.positions,
       roomLayout.minX,
@@ -363,7 +371,7 @@ class _FloorListItem extends StatelessWidget {
     return _buildGridView(
       gridSize,
       newDimensions,
-      cellMetrics,
+      newCellMetrics,
       roomIndicesInNewGrid,
     );
   }
