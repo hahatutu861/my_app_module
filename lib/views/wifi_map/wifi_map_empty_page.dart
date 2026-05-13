@@ -2,20 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:my_app_module/utils/design/app_color_extension.dart';
-import 'package:my_app_module/utils/design/app_spacing_extension.dart';
-import 'package:my_app_module/utils/design/app_text_styles.dart';
-import 'package:my_app_module/widgets/app_image.dart';
-import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
-import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
-import 'package:my_app_module/utils/design/app_colors.dart';
-import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/utils/design/app_color_extension.dart';
+import 'package:my_app_module/utils/design/app_spacing.dart';
+import 'package:my_app_module/utils/design/app_text_styles.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/widgets/app_image.dart';
+import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 
 class WifiMapEmptyPage extends HookConsumerWidget {
   const WifiMapEmptyPage({super.key});
@@ -42,9 +41,7 @@ class WifiMapEmptyPage extends HookConsumerWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-              left: AppSpacing.pad16.w,
-            ),
+            padding: EdgeInsets.only(left: AppSpacing.pad16.w),
             child: const _PageTitle(),
           ),
           Expanded(
@@ -67,9 +64,7 @@ class WifiMapEmptyPage extends HookConsumerWidget {
   Widget _buildEmptyState() {
     return Center(
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: AppSpacing.pad16.w,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pad16.w),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -82,7 +77,11 @@ class WifiMapEmptyPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFloorList(BuildContext context, List<FloorModel> floors, WidgetRef ref) {
+  Widget _buildFloorList(
+    BuildContext context,
+    List<FloorModel> floors,
+    WidgetRef ref,
+  ) {
     return ListView.builder(
       padding: EdgeInsets.only(top: AppSpacing.gap16.h),
       shrinkWrap: true,
@@ -153,7 +152,9 @@ Widget _buildAddFloorButton(BuildContext context, WidgetRef ref) {
         builder: (context) => const EditFloorNameDialog(),
       );
       if (floorName != null && floorName.isNotEmpty) {
-        final floor = await ref.read(floorViewModelProvider.notifier).createFloor(floorName);
+        final floor = await ref
+            .read(floorViewModelProvider.notifier)
+            .createFloor(floorName);
         if (context.mounted && floor != null) {
           context.push('/wifi-map?floorId=${floor.id}');
         }
@@ -210,7 +211,7 @@ class _EmptyStateDescription extends StatelessWidget {
   }
 }
 
-class _FloorListItem extends StatelessWidget {
+class _FloorListItem extends ConsumerWidget {
   static const double _baseCellSize = 15.0;
   static const double _baseSpacing = 1.25;
   static const int _baseCols = 4;
@@ -222,34 +223,54 @@ class _FloorListItem extends StatelessWidget {
   final FloorModel floor;
   final VoidCallback? onTap;
 
-  const _FloorListItem({
-    required this.floor,
-    this.onTap,
-  });
+  const _FloorListItem({required this.floor, this.onTap});
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(AppSpacing.pad16.w),
-        decoration: BoxDecoration(
-          color: context.appColors.fontWh1with100Opacity,
-        ),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildRoomsGrid(context, floor.rooms),
-              SizedBox(width: AppSpacing.gap12.w),
-              Expanded(
-                child: _buildFloorInfo(context, floor),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Slidable(
+      key: ValueKey(floor.id),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        extentRatio: 0.25,
+        children: [
+          CustomSlidableAction(
+            onPressed: (context) {
+              Slidable.of(context)?.close();
+              ref.read(floorViewModelProvider.notifier).deleteFloor(floor.id);
+            },
+            backgroundColor: context.appColors.error6Normal,
+            child: Center(
+              child: Text(
+                context.l10n.deleteFloor,
+                style: context.appTextStyles.bodyMediumWith90Opacity.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-              SizedBox(width: AppSpacing.gap16.w),
-              _buildArrowIcon(context),
-            ],
+            ),
+          ),
+        ],
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(AppSpacing.pad16.w),
+          decoration: BoxDecoration(
+            color: context.appColors.fontWh1with100Opacity,
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildRoomsGrid(context, floor.rooms),
+                SizedBox(width: AppSpacing.gap12.w),
+                Expanded(child: _buildFloorInfo(context, floor)),
+                SizedBox(width: AppSpacing.gap16.w),
+                _buildArrowIcon(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -282,7 +303,7 @@ class _FloorListItem extends StatelessWidget {
         Text(
           '(${context.l10n.zonesCount(floor.rooms.length)})',
           style: context.appTextStyles.captionWith60Opacity,
-        )
+        ),
       ],
     );
   }
@@ -343,15 +364,13 @@ class _FloorListItem extends StatelessWidget {
     );
 
     final dimensions = _GridDimensions(cols: _baseCols, rows: _baseRows);
-    final cellMetrics = _CellMetrics(cellSize: _baseCellSize, spacing: _baseSpacing);
+    final cellMetrics = _CellMetrics(
+      cellSize: _baseCellSize,
+      spacing: _baseSpacing,
+    );
 
     if (rooms.isEmpty) {
-      return _buildGridView(
-        gridSize,
-        dimensions,
-        cellMetrics,
-        {},
-      );
+      return _buildGridView(gridSize, dimensions, cellMetrics, {});
     }
 
     final roomLayout = _calculateRoomLayout(rooms);
@@ -422,9 +441,16 @@ class _FloorListItem extends StatelessWidget {
     return _GridDimensions(cols: newCols, rows: newRows);
   }
 
-  _CellMetrics _calculateCellMetrics(_GridSize gridSize, _GridDimensions dimensions) {
-    final cellWidth = (gridSize.width - (dimensions.cols - 1) * _baseSpacing) / dimensions.cols;
-    final cellHeight = (gridSize.height - (dimensions.rows - 1) * _baseSpacing) / dimensions.rows;
+  _CellMetrics _calculateCellMetrics(
+    _GridSize gridSize,
+    _GridDimensions dimensions,
+  ) {
+    final cellWidth =
+        (gridSize.width - (dimensions.cols - 1) * _baseSpacing) /
+        dimensions.cols;
+    final cellHeight =
+        (gridSize.height - (dimensions.rows - 1) * _baseSpacing) /
+        dimensions.rows;
     final cellSize = cellWidth < cellHeight ? cellWidth : cellHeight;
     final spacing = _baseSpacing * cellSize / _baseCellSize;
 
@@ -472,7 +498,9 @@ class _FloorListItem extends StatelessWidget {
           final hasRoom = roomIndices.contains(index);
           return Container(
             decoration: BoxDecoration(
-              color: hasRoom ? context.appColors.gray4 : context.appColors.gray1,
+              color: hasRoom
+                  ? context.appColors.gray4
+                  : context.appColors.gray1,
               borderRadius: BorderRadius.circular(_roomCellRadius.r),
             ),
           );

@@ -132,4 +132,13 @@ class FloorViewModel extends StateNotifier<FloorState> {
       state = FloorState.error(message: e.toString());
     }
   }
+
+  Future<void> deleteFloor(String id) async {
+    try {
+      await _repository.deleteFloor(id);
+      _refreshAllFloors();
+    } catch (e) {
+      state = FloorState.error(message: e.toString());
+    }
+  }
 }

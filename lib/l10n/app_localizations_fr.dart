@@ -194,4 +194,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteZoneRoom => 'Supprimer cette zone/pièce';
+
+  @override
+  String get deleteFloor => 'Supprimer';
 }

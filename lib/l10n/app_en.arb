@@ -70,5 +70,6 @@
   "gateway": "Gateway",
   "router": "Router",
   "extender": "Extender",
-  "deleteZoneRoom": "Delete this zone/room"
+  "deleteZoneRoom": "Delete this zone/room",
+  "deleteFloor": "Delete"
 }

@@ -439,6 +439,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete this zone/room'**
   String get deleteZoneRoom;
+
+  /// No description provided for @deleteFloor.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteFloor;
 }
 
 class _AppLocalizationsDelegate

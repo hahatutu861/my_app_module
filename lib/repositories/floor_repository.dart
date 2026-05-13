@@ -115,6 +115,11 @@ class FloorRepository {
     return updated;
   }
 
+  Future<void> deleteFloor(String id) async {
+    final db = await _database;
+    await db.delete(_table, where: 'id = ?', whereArgs: [id]);
+  }
+
   Map<String, dynamic> _toDbMap(FloorModel floor) => {
         'id': floor.id,
         'floor_name': floor.floorName,
