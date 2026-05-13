@@ -288,10 +288,9 @@ class _FloorListItem extends StatelessWidget {
   }
 
   Widget _buildUpdateTime(BuildContext context, FloorModel floor) {
+    final displayTime = floor.updatedAt ?? floor.createdAt;
     return Text(
-      floor.updatedAt != null
-          ? DateFormat('yyyy-MM-dd HH:mm').format(floor.updatedAt!)
-          : '',
+      DateFormat('yyyy-MM-dd HH:mm').format(displayTime),
       style: context.appTextStyles.bodyMediumWith60Opacity,
     );
   }
