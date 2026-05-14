@@ -71,5 +71,6 @@
   "router": "Routeur",
   "extender": "Extender",
   "deleteZoneRoom": "Supprimer cette zone/pièce",
-  "deleteFloor": "Supprimer"
+  "deleteFloor": "Supprimer",
+  "showPreviousFloorReference": "Afficher la référence de l'étage précédent."
 }

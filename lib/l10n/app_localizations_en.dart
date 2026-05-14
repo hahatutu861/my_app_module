@@ -195,4 +195,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteFloor => 'Delete';
+
+  @override
+  String get showPreviousFloorReference => 'Show previous floor reference.';
 }

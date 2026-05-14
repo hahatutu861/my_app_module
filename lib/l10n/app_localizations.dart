@@ -445,6 +445,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete'**
   String get deleteFloor;
+
+  /// No description provided for @showPreviousFloorReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Show previous floor reference.'**
+  String get showPreviousFloorReference;
 }
 
 class _AppLocalizationsDelegate

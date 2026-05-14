@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
@@ -14,6 +15,7 @@ import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
+import 'package:my_app_module/widgets/app_bubble_tip.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
@@ -57,6 +59,8 @@ class WifiMapPage extends HookConsumerWidget {
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
     final selectedIdx = useState<int?>(null);
+    final hideButtonSize = useState<Size?>(null);
+    final bubbleSize = useState<Size?>(null);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -65,7 +69,7 @@ class WifiMapPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
-          _buildBackButton(context),
+          _buildHeader(context, hideButtonSize, bubbleSize),
           _buildFloorTitle(context, floorState, ref),
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
@@ -287,8 +291,95 @@ class WifiMapPage extends HookConsumerWidget {
               ),
             ),
             Spacing.h2,
-            _buildEditButton(context),
+            EditButton(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader(
+    BuildContext context,
+    ValueNotifier<Size?> hideButtonSize,
+    ValueNotifier<Size?> bubbleSize,
+  ) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _buildBackButton(context),
+          _buildHideButton(context, hideButtonSize, bubbleSize),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHideButton(
+    BuildContext context,
+    ValueNotifier<Size?> hideButtonSize,
+    ValueNotifier<Size?> bubbleSize,
+  ) {
+    final isMeasured = hideButtonSize.value != null && bubbleSize.value != null;
+
+    if (!isMeasured) {
+      return Opacity(
+        opacity: 0,
+        child: ExcludeSemantics(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              MeasureSize(
+                onChange: (size) => hideButtonSize.value = size,
+                child: _buildHideButtonIcon(context),
+              ),
+              MeasureSize(
+                onChange: (size) => bubbleSize.value = size,
+                child: AppBubbleTip(
+                  text: context.l10n.showPreviousFloorReference,
+                  targetWidgetSize: const Size(32, 32),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    final double bubbleLeft =
+        hideButtonSize.value!.width - bubbleSize.value!.width;
+
+    return Stack(
+      alignment: Alignment.topCenter,
+      clipBehavior: Clip.none,
+      children: [
+        _buildHideButtonIcon(context),
+        Positioned(
+          top: hideButtonSize.value!.height + 4,
+          left: bubbleLeft,
+          child: AppAnimatedBubbleTip(
+            text: context.l10n.showPreviousFloorReference,
+            targetWidgetSize: hideButtonSize.value,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHideButtonIcon(BuildContext context) {
+    return Container(
+      width: 32.w,
+      height: 32.w,
+      decoration: BoxDecoration(
+        color: context.appColors.brand1Light,
+        shape: BoxShape.circle,
+      ),
+      child: Center(
+        child: AppImage(
+          'hide.png',
+          width: 18.w,
+          height: 18.w,
+          color: context.appColors.brand6Normal,
         ),
       ),
     );
@@ -298,30 +389,23 @@ class WifiMapPage extends HookConsumerWidget {
     return GestureDetector(
       onTap: () => Navigator.of(context).pop(),
       behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            AppImage(
-              'chevron_left.png',
-              width: AppSpacing.icon24.w,
-              height: AppSpacing.icon24.w,
-              color: context.appColors.fontGy1with90Opacity,
-            ),
-            Spacing.h8,
-            Text(
-              context.l10n.back,
-              style: context.appTextStyles.bodyLargeWith90Opacity,
-            ),
-          ],
-        ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppImage(
+            'chevron_left.png',
+            width: AppSpacing.icon24.w,
+            height: AppSpacing.icon24.w,
+            color: context.appColors.fontGy1with90Opacity,
+          ),
+          Spacing.h8,
+          Text(
+            context.l10n.back,
+            style: context.appTextStyles.bodyLargeWith90Opacity,
+          ),
+        ],
       ),
     );
-  }
-
-  Widget _buildEditButton(BuildContext context) {
-    return EditButton();
   }
 
   Widget _buildBottomBar(
@@ -371,7 +455,7 @@ class WifiMapPage extends HookConsumerWidget {
               ),
             ),
             SizedBox(width: 4.w),
-            _buildEditButton(context),
+            EditButton(),
           ],
         ),
       ),

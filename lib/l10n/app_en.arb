@@ -71,5 +71,6 @@
   "router": "Router",
   "extender": "Extender",
   "deleteZoneRoom": "Delete this zone/room",
-  "deleteFloor": "Delete"
+  "deleteFloor": "Delete",
+  "showPreviousFloorReference": "Show previous floor reference."
 }

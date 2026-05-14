@@ -197,4 +197,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteFloor => 'Supprimer';
+
+  @override
+  String get showPreviousFloorReference =>
+      'Afficher la référence de l\'étage précédent.';
 }
