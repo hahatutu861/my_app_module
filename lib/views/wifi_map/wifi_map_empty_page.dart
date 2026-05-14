@@ -235,7 +235,6 @@ class _FloorListItem extends ConsumerWidget {
         children: [
           CustomSlidableAction(
             onPressed: (context) {
-              Slidable.of(context)?.close();
               ref.read(floorViewModelProvider.notifier).deleteFloor(floor.id);
             },
             backgroundColor: context.appColors.error6Normal,
@@ -251,25 +250,30 @@ class _FloorListItem extends ConsumerWidget {
           ),
         ],
       ),
-      child: GestureDetector(
-        onTap: onTap,
-        behavior: HitTestBehavior.opaque,
-        child: Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(AppSpacing.pad16.w),
-          decoration: BoxDecoration(
-            color: context.appColors.fontWh1with100Opacity,
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildRoomsGrid(context, floor.rooms),
-                SizedBox(width: AppSpacing.gap12.w),
-                Expanded(child: _buildFloorInfo(context, floor)),
-                SizedBox(width: AppSpacing.gap16.w),
-                _buildArrowIcon(context),
-              ],
+      child: Builder(
+        builder: (newContext) => GestureDetector(
+          onTap: () {
+            Slidable.of(newContext)?.close();
+            onTap?.call();
+          },
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(AppSpacing.pad16.w),
+            decoration: BoxDecoration(
+              color: context.appColors.fontWh1with100Opacity,
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildRoomsGrid(context, floor.rooms),
+                  SizedBox(width: AppSpacing.gap12.w),
+                  Expanded(child: _buildFloorInfo(context, floor)),
+                  SizedBox(width: AppSpacing.gap16.w),
+                  _buildArrowIcon(context),
+                ],
+              ),
             ),
           ),
         ),
