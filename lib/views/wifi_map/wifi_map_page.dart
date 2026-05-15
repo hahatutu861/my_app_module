@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
+import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
@@ -36,6 +37,7 @@ class WifiMapPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final floorState = ref.watch(floorViewModelProvider);
+    final allFloorsAsync = ref.watch(allFloorsProvider);
 
     useEffect(() {
       _checkAndShowDialog(context, ref);
@@ -69,7 +71,7 @@ class WifiMapPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
-          _buildHeader(context, hideButtonSize, bubbleSize),
+          _buildHeader(context, hideButtonSize, bubbleSize, floorState, allFloorsAsync),
           _buildFloorTitle(context, floorState, ref),
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
@@ -302,6 +304,8 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
+    FloorState floorState,
+    AsyncValue<List<FloorModel>> allFloorsAsync,
   ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
@@ -309,7 +313,7 @@ class WifiMapPage extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBackButton(context),
-          _buildHideButton(context, hideButtonSize, bubbleSize),
+          _buildHideButton(context, hideButtonSize, bubbleSize, floorState, allFloorsAsync),
         ],
       ),
     );
@@ -319,6 +323,8 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
+    FloorState floorState,
+    AsyncValue<List<FloorModel>> allFloorsAsync,
   ) {
     final isMeasured = hideButtonSize.value != null && bubbleSize.value != null;
 
@@ -331,7 +337,7 @@ class WifiMapPage extends HookConsumerWidget {
             children: [
               MeasureSize(
                 onChange: (size) => hideButtonSize.value = size,
-                child: _buildHideButtonIcon(context),
+                child: _buildHideButtonIcon(context, floorState, allFloorsAsync),
               ),
               MeasureSize(
                 onChange: (size) => bubbleSize.value = size,
@@ -353,7 +359,7 @@ class WifiMapPage extends HookConsumerWidget {
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
-        _buildHideButtonIcon(context),
+        _buildHideButtonIcon(context, floorState, allFloorsAsync),
         Positioned(
           top: hideButtonSize.value!.height + 4,
           left: bubbleLeft,
@@ -366,12 +372,48 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildHideButtonIcon(BuildContext context) {
+  Widget _buildHideButtonIcon(
+    BuildContext context,
+    FloorState floorState,
+    AsyncValue<List<FloorModel>> allFloorsAsync,
+  ) {
+    final currentFloorRooms = floorState.maybeWhen(
+      loaded: (floor) => floor?.rooms ?? [],
+      orElse: () => <RoomModel>[],
+    );
+
+    final bool isContained = allFloorsAsync.maybeWhen(
+      data: (allFloors) {
+        final currentFloorId = floorState.maybeWhen(
+          loaded: (floor) => floor?.id,
+          orElse: () => null,
+        );
+        final currentRoomIndices =
+            currentFloorRooms.map((r) => r.index).toSet();
+
+        if (currentRoomIndices.isEmpty) return false;
+
+        for (final otherFloor in allFloors) {
+          if (otherFloor.id == currentFloorId) continue;
+          final otherRoomIndices =
+              otherFloor.rooms.map((r) => r.index).toSet();
+          if (currentRoomIndices.every(
+              (idx) => otherRoomIndices.contains(idx))) {
+            return true;
+          }
+        }
+        return false;
+      },
+      orElse: () => false,
+    );
+
     return Container(
       width: 32.w,
       height: 32.w,
       decoration: BoxDecoration(
-        color: context.appColors.brand1Light,
+        color: isContained
+            ? context.appColors.brand1Light
+            : context.appColors.gray3,
         shape: BoxShape.circle,
       ),
       child: Center(
@@ -379,7 +421,9 @@ class WifiMapPage extends HookConsumerWidget {
           'hide.png',
           width: 18.w,
           height: 18.w,
-          color: context.appColors.brand6Normal,
+          color: isContained
+              ? context.appColors.brand6Normal
+              : context.appColors.fontGy1with90Opacity,
         ),
       ),
     );
