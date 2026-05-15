@@ -331,7 +331,6 @@ class WifiMapPage extends HookConsumerWidget {
     ValueNotifier<Size?> bubbleSize,
     FloorState floorState,
   ) {
-    final isMeasured = hideButtonSize.value != null;
     final currentFloorRooms = floorState.maybeWhen(
       loaded: (floor) => floor?.rooms ?? [],
       orElse: () => <RoomModel>[],
@@ -342,7 +341,21 @@ class WifiMapPage extends HookConsumerWidget {
         .getPreviousFloorWithRooms();
     final previousFloorWithRooms = previousFloor != null;
 
-    if (!isMeasured) {
+    if (!previousFloorWithRooms) {
+      return const SizedBox.shrink();
+    }
+
+    final needsBubble = isCurrentFloorEmpty;
+    final isHideButtonMeasured = hideButtonSize.value != null &&
+        hideButtonSize.value!.width > 0 &&
+        hideButtonSize.value!.height > 0;
+    final isBubbleMeasured = bubbleSize.value != null &&
+        bubbleSize.value!.width > 0 &&
+        bubbleSize.value!.height > 0;
+
+    final isReady = isHideButtonMeasured && (!needsBubble || isBubbleMeasured);
+
+    if (!isReady) {
       return Opacity(
         opacity: 0,
         child: ExcludeSemantics(
@@ -353,7 +366,7 @@ class WifiMapPage extends HookConsumerWidget {
                 onChange: (size) => hideButtonSize.value = size,
                 child: _buildHideButtonIcon(context, ref, floorState),
               ),
-              if (previousFloorWithRooms && isCurrentFloorEmpty)
+              if (needsBubble)
                 MeasureSize(
                   onChange: (size) => bubbleSize.value = size,
                   child: AppBubbleTip(
@@ -367,16 +380,12 @@ class WifiMapPage extends HookConsumerWidget {
       );
     }
 
-    if (!previousFloorWithRooms) {
-      return const SizedBox.shrink();
-    }
-
     return Stack(
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
         _buildHideButtonIcon(context, ref, floorState),
-        if (previousFloorWithRooms && isCurrentFloorEmpty && bubbleSize.value != null)
+        if (needsBubble)
           Positioned(
             top: hideButtonSize.value!.height + 4,
             left: hideButtonSize.value!.width - bubbleSize.value!.width,
