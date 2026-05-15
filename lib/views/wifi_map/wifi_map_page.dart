@@ -331,7 +331,7 @@ class WifiMapPage extends HookConsumerWidget {
     ValueNotifier<Size?> bubbleSize,
     FloorState floorState,
   ) {
-    final isMeasured = hideButtonSize.value != null && bubbleSize.value != null;
+    final isMeasured = hideButtonSize.value != null;
     final currentFloorRooms = floorState.maybeWhen(
       loaded: (floor) => floor?.rooms ?? [],
       orElse: () => <RoomModel>[],
@@ -367,18 +367,19 @@ class WifiMapPage extends HookConsumerWidget {
       );
     }
 
-    final double bubbleLeft =
-        hideButtonSize.value!.width - bubbleSize.value!.width;
+    if (!previousFloorWithRooms) {
+      return const SizedBox.shrink();
+    }
 
     return Stack(
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
         _buildHideButtonIcon(context, ref, floorState),
-        if (previousFloorWithRooms && isCurrentFloorEmpty)
+        if (previousFloorWithRooms && isCurrentFloorEmpty && bubbleSize.value != null)
           Positioned(
             top: hideButtonSize.value!.height + 4,
-            left: bubbleLeft,
+            left: hideButtonSize.value!.width - bubbleSize.value!.width,
             child: AppAnimatedBubbleTip(
               text: context.l10n.showPreviousFloorReference,
               targetWidgetSize: hideButtonSize.value,
