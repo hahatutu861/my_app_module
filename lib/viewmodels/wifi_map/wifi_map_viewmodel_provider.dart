@@ -4,14 +4,16 @@ import 'package:my_app_module/repositories/host_repository.dart';
 import 'package:my_app_module/viewmodels/wifi_map/wifi_map_state.dart';
 
 final wifiMapViewModelProvider =
-    StateNotifierProvider<WifiMapViewModel, WifiMapState>((ref) {
-  return WifiMapViewModel(ref.read(hostRepositoryProvider));
-});
+    NotifierProvider<WifiMapViewModel, WifiMapState>(WifiMapViewModel.new);
 
-class WifiMapViewModel extends StateNotifier<WifiMapState> {
-  final HostRepository _repository;
+class WifiMapViewModel extends Notifier<WifiMapState> {
+  late final HostRepository _repository;
 
-  WifiMapViewModel(this._repository) : super(const WifiMapState.initial());
+  @override
+  WifiMapState build() {
+    _repository = ref.read(hostRepositoryProvider);
+    return const WifiMapState.initial();
+  }
 
   Future<void> loadHosts() async {
     state = const WifiMapState.loading();

@@ -8,16 +8,16 @@ final counterRepositoryProvider = Provider<CounterRepository>((ref) {
 });
 
 final counterViewModelProvider =
-    StateNotifierProvider<CounterViewModel, CounterState>((ref) {
-  final repository = ref.watch(counterRepositoryProvider);
-  return CounterViewModel(repository);
-});
+    NotifierProvider<CounterViewModel, CounterState>(CounterViewModel.new);
 
-class CounterViewModel extends StateNotifier<CounterState> {
-  final CounterRepository _repository;
+class CounterViewModel extends Notifier<CounterState> {
+  late final CounterRepository _repository;
 
-  CounterViewModel(this._repository) : super(const CounterState.initial()) {
+  @override
+  CounterState build() {
+    _repository = ref.read(counterRepositoryProvider);
     loadCounter();
+    return const CounterState.initial();
   }
 
   void loadCounter() {

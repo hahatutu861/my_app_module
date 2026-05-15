@@ -2,12 +2,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/viewmodels/home_network/network_topology_state.dart';
 
 final networkTopologyViewModelProvider =
-    StateNotifierProvider<NetworkTopologyViewModel, NetworkTopologyState>((ref) {
-  return NetworkTopologyViewModel();
-});
+    NotifierProvider<NetworkTopologyViewModel, NetworkTopologyState>(NetworkTopologyViewModel.new);
 
-class NetworkTopologyViewModel extends StateNotifier<NetworkTopologyState> {
-  NetworkTopologyViewModel() : super(const NetworkTopologyState.showingLineAnimation());
+class NetworkTopologyViewModel extends Notifier<NetworkTopologyState> {
+  @override
+  NetworkTopologyState build() {
+    return const NetworkTopologyState.showingLineAnimation();
+  }
 
   void onLineAnimationCompleted() {
     state = const NetworkTopologyState.showingWifiSuccessAnimation();

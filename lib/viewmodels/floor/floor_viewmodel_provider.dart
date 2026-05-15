@@ -5,21 +5,23 @@ import 'package:my_app_module/repositories/floor_repository.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
 final floorViewModelProvider =
-    StateNotifierProvider<FloorViewModel, FloorState>((ref) {
-  return FloorViewModel(ref.read(floorRepositoryProvider), ref);
-});
+    NotifierProvider<FloorViewModel, FloorState>(FloorViewModel.new);
 
 final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
   final repository = ref.read(floorRepositoryProvider);
   return repository.getAllFloors();
 });
 
-class FloorViewModel extends StateNotifier<FloorState> {
-  final FloorRepository _repository;
-  final Ref _ref;
+class FloorViewModel extends Notifier<FloorState> {
+  late final FloorRepository _repository;
+  late final Ref _ref;
 
-  FloorViewModel(this._repository, this._ref) : super(const FloorState.initial()) {
+  @override
+  FloorState build() {
+    _repository = ref.read(floorRepositoryProvider);
+    _ref = ref;
     loadActiveFloor();
+    return const FloorState.initial();
   }
 
   void _refreshAllFloors() {
@@ -143,7 +145,8 @@ class FloorViewModel extends StateNotifier<FloorState> {
   }
 
   FloorModel? getPreviousFloorWithRooms() {
-    final allFloors = _ref.read(allFloorsProvider).valueOrNull;
+    final allFloorsAsync = _ref.read(allFloorsProvider);
+    final allFloors = allFloorsAsync.hasValue ? allFloorsAsync.value : null;
     if (allFloors == null) return null;
 
     final currentFloor = state.maybeWhen(

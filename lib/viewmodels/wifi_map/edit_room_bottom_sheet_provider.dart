@@ -4,10 +4,8 @@ import 'package:my_app_module/utils/design/room_types.dart';
 import 'package:my_app_module/models/room_model.dart';
 
 final editRoomBottomSheetProvider =
-    StateNotifierProvider.autoDispose<EditRoomBottomSheetViewModel,
-        EditRoomBottomSheetState>((ref) {
-  return EditRoomBottomSheetViewModel();
-});
+    NotifierProvider<EditRoomBottomSheetViewModel,
+        EditRoomBottomSheetState>(EditRoomBottomSheetViewModel.new);
 
 class EditRoomBottomSheetState {
   final RoomType? selectedRoom;
@@ -35,9 +33,12 @@ class EditRoomBottomSheetState {
 }
 
 class EditRoomBottomSheetViewModel
-    extends StateNotifier<EditRoomBottomSheetState> {
-  EditRoomBottomSheetViewModel()
-      : super(const EditRoomBottomSheetState());
+    extends Notifier<EditRoomBottomSheetState> {
+  @override
+  EditRoomBottomSheetState build() {
+    ref.onDispose(() {});
+    return const EditRoomBottomSheetState();
+  }
 
   void initWithRoom(RoomModel? room) {
     if (room == null) {

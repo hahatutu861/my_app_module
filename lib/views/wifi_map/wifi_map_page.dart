@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
-import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
@@ -313,7 +312,13 @@ class WifiMapPage extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBackButton(context),
-          _buildHideButton(context, ref, hideButtonSize, bubbleSize, floorState),
+          _buildHideButton(
+            context,
+            ref,
+            hideButtonSize,
+            bubbleSize,
+            floorState,
+          ),
         ],
       ),
     );
@@ -327,7 +332,14 @@ class WifiMapPage extends HookConsumerWidget {
     FloorState floorState,
   ) {
     final isMeasured = hideButtonSize.value != null && bubbleSize.value != null;
-    final previousFloor = ref.read(floorViewModelProvider.notifier).getPreviousFloorWithRooms();
+    final currentFloorRooms = floorState.maybeWhen(
+      loaded: (floor) => floor?.rooms ?? [],
+      orElse: () => <RoomModel>[],
+    );
+    final isCurrentFloorEmpty = currentFloorRooms.isEmpty;
+    final previousFloor = ref
+        .read(floorViewModelProvider.notifier)
+        .getPreviousFloorWithRooms();
     final previousFloorWithRooms = previousFloor != null;
 
     if (!isMeasured) {
@@ -341,7 +353,7 @@ class WifiMapPage extends HookConsumerWidget {
                 onChange: (size) => hideButtonSize.value = size,
                 child: _buildHideButtonIcon(context, ref, floorState),
               ),
-              if (previousFloorWithRooms)
+              if (previousFloorWithRooms && isCurrentFloorEmpty)
                 MeasureSize(
                   onChange: (size) => bubbleSize.value = size,
                   child: AppBubbleTip(
@@ -363,7 +375,7 @@ class WifiMapPage extends HookConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         _buildHideButtonIcon(context, ref, floorState),
-        if (previousFloorWithRooms)
+        if (previousFloorWithRooms && isCurrentFloorEmpty)
           Positioned(
             top: hideButtonSize.value!.height + 4,
             left: bubbleLeft,
@@ -385,7 +397,9 @@ class WifiMapPage extends HookConsumerWidget {
       loaded: (floor) => floor?.rooms ?? [],
       orElse: () => <RoomModel>[],
     );
-    final previousFloorWithRooms = ref.read(floorViewModelProvider.notifier).getPreviousFloorWithRooms();
+    final previousFloorWithRooms = ref
+        .read(floorViewModelProvider.notifier)
+        .getPreviousFloorWithRooms();
     if (previousFloorWithRooms == null) {
       return const SizedBox.shrink();
     }
@@ -461,7 +475,11 @@ class WifiMapPage extends HookConsumerWidget {
     }
   }
 
-  Widget _buildSelectedRoomBar(BuildContext context, RoomModel room, int index) {
+  Widget _buildSelectedRoomBar(
+    BuildContext context,
+    RoomModel room,
+    int index,
+  ) {
     final RoomType roomType = RoomType.values.firstWhere(
       (e) => e.name == room.roomType,
       orElse: () => RoomType.backyard,

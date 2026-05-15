@@ -13,20 +13,20 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # 状态管理 - Riverpod
-  flutter_riverpod: ^2.6.1
-  hooks_riverpod: ^2.6.1
+  flutter_riverpod: ^3.3.1
+  hooks_riverpod: ^3.3.1
 
   # 路由导航
-  go_router: ^14.6.2
+  go_router: ^17.2.3
 
   # 网络请求
   dio: ^5.7.0
-  connectivity_plus: ^6.1.0
+  connectivity_plus: ^7.1.1
 
   # 数据处理
   json_serializable: ^6.9.2
   json_annotation: ^4.9.0
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.1.0
 
   # 本地存储
   path_provider: ^2.1.5
@@ -40,7 +40,7 @@ dependencies:
   intl: ^0.20.1
 
   # UI 组件
-  flutter_hooks: ^0.20.5
+  flutter_hooks: ^0.21.3+1
   gap: ^3.0.1
   lottie: ^3.1.3
   measure_size: ^5.0.1
@@ -54,10 +54,10 @@ dev_dependencies:
 
   # 代码生成
   build_runner: ^2.4.13
-  freezed: ^2.5.7
+  freezed: ^3.2.5
 
   # 平台通信 - Pigeon
-  pigeon: ^22.0.0
+  pigeon: ^26.3.4
 
   # 测试
   mocktail: ^1.0.4

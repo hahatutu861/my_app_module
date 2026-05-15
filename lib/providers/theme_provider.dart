@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 
-/// 主题模式状态管理
-///
-/// 从原生端获取主题模式并管理状态
-class ThemeModeNotifier extends StateNotifier<ThemeMode> {
-  final NativeApi _nativeApi;
-
-  ThemeModeNotifier(this._nativeApi) : super(ThemeMode.system) {
-    _loadThemeMode();
+class ThemeModeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() {
+    final nativeApi = NativeApi();
+    _loadThemeMode(nativeApi);
+    return ThemeMode.system;
   }
 
-  /// 从原生端加载主题模式
-  Future<void> _loadThemeMode() async {
+  Future<void> _loadThemeMode(NativeApi nativeApi) async {
     try {
-      final modeEnum = await _nativeApi.getThemeMode();
+      final modeEnum = await nativeApi.getThemeMode();
       state = _convertToThemeMode(modeEnum);
     } catch (e) {
       state = ThemeMode.system;
@@ -23,7 +20,6 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
     }
   }
 
-  /// 将 Pigeon 枚举转换为 Flutter ThemeMode
   ThemeMode _convertToThemeMode(ThemeModeEnum modeEnum) {
     switch (modeEnum) {
       case ThemeModeEnum.light:
@@ -36,14 +32,4 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
   }
 }
 
-/// 主题模式 Provider
-///
-/// 使用示例：
-/// ```dart
-/// final themeMode = ref.watch(themeModeProvider);
-/// MaterialApp(themeMode: themeMode, ...)
-/// ```
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
-  final nativeApi = NativeApi();
-  return ThemeModeNotifier(nativeApi);
-});
+final themeModeProvider = NotifierProvider<ThemeModeNotifier, ThemeMode>(ThemeModeNotifier.new);
