@@ -37,7 +37,7 @@ class WifiMapPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final floorState = ref.watch(floorViewModelProvider);
-    final allFloorsAsync = ref.watch(allFloorsProvider);
+    ref.watch(allFloorsProvider);
 
     useEffect(() {
       _checkAndShowDialog(context, ref);
@@ -71,7 +71,7 @@ class WifiMapPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
-          _buildHeader(context, hideButtonSize, bubbleSize, floorState, allFloorsAsync),
+          _buildHeader(context, ref, hideButtonSize, bubbleSize, floorState),
           _buildFloorTitle(context, floorState, ref),
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
@@ -302,10 +302,10 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildHeader(
     BuildContext context,
+    WidgetRef ref,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
     FloorState floorState,
-    AsyncValue<List<FloorModel>> allFloorsAsync,
   ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
@@ -313,7 +313,7 @@ class WifiMapPage extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBackButton(context),
-          _buildHideButton(context, hideButtonSize, bubbleSize, floorState, allFloorsAsync),
+          _buildHideButton(context, ref, hideButtonSize, bubbleSize, floorState),
         ],
       ),
     );
@@ -321,12 +321,14 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildHideButton(
     BuildContext context,
+    WidgetRef ref,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
     FloorState floorState,
-    AsyncValue<List<FloorModel>> allFloorsAsync,
   ) {
     final isMeasured = hideButtonSize.value != null && bubbleSize.value != null;
+    final previousFloor = ref.read(floorViewModelProvider.notifier).getPreviousFloorWithRooms();
+    final previousFloorWithRooms = previousFloor != null;
 
     if (!isMeasured) {
       return Opacity(
@@ -337,15 +339,16 @@ class WifiMapPage extends HookConsumerWidget {
             children: [
               MeasureSize(
                 onChange: (size) => hideButtonSize.value = size,
-                child: _buildHideButtonIcon(context, floorState, allFloorsAsync),
+                child: _buildHideButtonIcon(context, ref, floorState),
               ),
-              MeasureSize(
-                onChange: (size) => bubbleSize.value = size,
-                child: AppBubbleTip(
-                  text: context.l10n.showPreviousFloorReference,
-                  targetWidgetSize: const Size(32, 32),
+              if (previousFloorWithRooms)
+                MeasureSize(
+                  onChange: (size) => bubbleSize.value = size,
+                  child: AppBubbleTip(
+                    text: context.l10n.showPreviousFloorReference,
+                    targetWidgetSize: const Size(32, 32),
+                  ),
                 ),
-              ),
             ],
           ),
         ),
@@ -359,59 +362,41 @@ class WifiMapPage extends HookConsumerWidget {
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
-        _buildHideButtonIcon(context, floorState, allFloorsAsync),
-        Positioned(
-          top: hideButtonSize.value!.height + 4,
-          left: bubbleLeft,
-          child: AppAnimatedBubbleTip(
-            text: context.l10n.showPreviousFloorReference,
-            targetWidgetSize: hideButtonSize.value,
+        _buildHideButtonIcon(context, ref, floorState),
+        if (previousFloorWithRooms)
+          Positioned(
+            top: hideButtonSize.value!.height + 4,
+            left: bubbleLeft,
+            child: AppAnimatedBubbleTip(
+              text: context.l10n.showPreviousFloorReference,
+              targetWidgetSize: hideButtonSize.value,
+            ),
           ),
-        ),
       ],
     );
   }
 
   Widget _buildHideButtonIcon(
     BuildContext context,
+    WidgetRef ref,
     FloorState floorState,
-    AsyncValue<List<FloorModel>> allFloorsAsync,
   ) {
     final currentFloorRooms = floorState.maybeWhen(
       loaded: (floor) => floor?.rooms ?? [],
       orElse: () => <RoomModel>[],
     );
+    final previousFloorWithRooms = ref.read(floorViewModelProvider.notifier).getPreviousFloorWithRooms();
+    if (previousFloorWithRooms == null) {
+      return const SizedBox.shrink();
+    }
 
-    final bool isContained = allFloorsAsync.maybeWhen(
-      data: (allFloors) {
-        final currentFloorId = floorState.maybeWhen(
-          loaded: (floor) => floor?.id,
-          orElse: () => null,
-        );
-        final currentRoomIndices =
-            currentFloorRooms.map((r) => r.index).toSet();
-
-        if (currentRoomIndices.isEmpty) return false;
-
-        for (final otherFloor in allFloors) {
-          if (otherFloor.id == currentFloorId) continue;
-          final otherRoomIndices =
-              otherFloor.rooms.map((r) => r.index).toSet();
-          if (currentRoomIndices.every(
-              (idx) => otherRoomIndices.contains(idx))) {
-            return true;
-          }
-        }
-        return false;
-      },
-      orElse: () => false,
-    );
+    final isCurrentFloorEmpty = currentFloorRooms.isEmpty;
 
     return Container(
       width: 32.w,
       height: 32.w,
       decoration: BoxDecoration(
-        color: isContained
+        color: isCurrentFloorEmpty
             ? context.appColors.brand1Light
             : context.appColors.gray3,
         shape: BoxShape.circle,
@@ -421,7 +406,7 @@ class WifiMapPage extends HookConsumerWidget {
           'hide.png',
           width: 18.w,
           height: 18.w,
-          color: isContained
+          color: isCurrentFloorEmpty
               ? context.appColors.brand6Normal
               : context.appColors.fontGy1with90Opacity,
         ),

@@ -141,4 +141,27 @@ class FloorViewModel extends StateNotifier<FloorState> {
       state = FloorState.error(message: e.toString());
     }
   }
+
+  FloorModel? getPreviousFloorWithRooms() {
+    final allFloors = _ref.read(allFloorsProvider).valueOrNull;
+    if (allFloors == null) return null;
+
+    final currentFloor = state.maybeWhen(
+      loaded: (floor) => floor,
+      orElse: () => null,
+    );
+
+    if (currentFloor == null) return null;
+
+    final sortedFloors = List<FloorModel>.from(allFloors)
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+
+    final currentIndex = sortedFloors.indexWhere((f) => f.id == currentFloor.id);
+    if (currentIndex <= 0) return null;
+
+    final previousFloor = sortedFloors[currentIndex - 1];
+    if (previousFloor.rooms.isEmpty) return null;
+
+    return previousFloor;
+  }
 }
