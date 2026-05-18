@@ -10,7 +10,6 @@ import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
-import 'package:my_app_module/utils/design/room_types.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
@@ -52,7 +51,6 @@ class WifiMapPage extends HookConsumerWidget {
 
     final statusBarHeight = MediaQuery.of(context).padding.top;
 
-    final selectedIdx = useState<int?>(null);
     final hideButtonSize = useState<Size?>(null);
     final bubbleSize = useState<Size?>(null);
 
@@ -70,9 +68,8 @@ class WifiMapPage extends HookConsumerWidget {
             context,
             transformationController,
             floorViewModel,
-            selectedIdx,
           ),
-          _buildBottomBar(context, floorViewModel, selectedIdx),
+          _buildBottomBar(context, floorViewModel),
         ],
       ),
     );
@@ -82,7 +79,6 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     TransformationController transformationController,
     FloorViewModel floorViewModel,
-    ValueNotifier<int?> selectedIdx,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -107,7 +103,7 @@ class WifiMapPage extends HookConsumerWidget {
             transformationController: transformationController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
-              child: _buildGrid(context, squareSize, floorViewModel, selectedIdx),
+              child: _buildGrid(context, squareSize, floorViewModel),
             ),
           ),
         );
@@ -119,7 +115,6 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     double squareSize,
     FloorViewModel floorViewModel,
-    ValueNotifier<int?> selectedIdx,
   ) {
     final roomsMap = floorViewModel.roomsMap;
 
@@ -136,13 +131,13 @@ class WifiMapPage extends HookConsumerWidget {
       itemCount: 110,
       itemBuilder: (context, index) {
         final room = roomsMap[index];
-        final isSelected = selectedIdx.value == index;
+        final isSelected = floorViewModel.selectedRoomIndex == index;
         return GestureDetector(
           onTap: () {
             if (room == null) {
               EditRoomBottomSheet.show(context, index);
             } else {
-              selectedIdx.value = index;
+              floorViewModel.selectRoom(index);
             }
           },
           child: room != null
@@ -428,15 +423,14 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildBottomBar(
     BuildContext context,
     FloorViewModel floorViewModel,
-    ValueNotifier<int?> selectedIdx,
   ) {
-    final isSelected = selectedIdx.value != null;
+    final isSelected = floorViewModel.selectedRoomIndex != null;
     if (isSelected) {
-      final room = floorViewModel.getRoomByIndex(selectedIdx.value!);
+      final room = floorViewModel.getRoomByIndex(floorViewModel.selectedRoomIndex!);
       if (room == null) {
         return _buildStats(context, floorViewModel);
       }
-      return _buildSelectedRoomBar(context, room, selectedIdx.value!);
+      return _buildSelectedRoomBar(context, room, floorViewModel.selectedRoomIndex!);
     } else {
       return _buildStats(context, floorViewModel);
     }
@@ -447,10 +441,7 @@ class WifiMapPage extends HookConsumerWidget {
     RoomModel room,
     int index,
   ) {
-    final RoomType roomType = RoomType.values.firstWhere(
-      (e) => e.name == room.roomType,
-      orElse: () => RoomType.backyard,
-    );
+    final roomType = room.roomTypeEnum;
 
     return GestureDetector(
       onTap: () => EditRoomBottomSheet.show(context, index),

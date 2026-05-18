@@ -15,6 +15,7 @@ final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
 class FloorViewModel extends Notifier<FloorState> {
   late final FloorRepository _repository;
   late final Ref _ref;
+  int? _selectedRoomIndex;
 
   @override
   FloorState build() {
@@ -22,6 +23,12 @@ class FloorViewModel extends Notifier<FloorState> {
     _ref = ref;
     loadActiveFloor();
     return const FloorState.initial();
+  }
+
+  int? get selectedRoomIndex => _selectedRoomIndex;
+
+  void selectRoom(int? index) {
+    _selectedRoomIndex = index;
   }
 
   void _refreshAllFloors() {
