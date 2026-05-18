@@ -200,4 +200,9 @@ class FloorViewModel extends Notifier<FloorState> {
     final matched = rooms.where((r) => r.index == index);
     return matched.isNotEmpty ? matched.first : null;
   }
+
+  Map<int, RoomModel> get roomsMap {
+    final rooms = currentRooms;
+    return {for (var r in rooms) r.index: r};
+  }
 }

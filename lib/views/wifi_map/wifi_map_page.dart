@@ -121,7 +121,7 @@ class WifiMapPage extends HookConsumerWidget {
     FloorViewModel floorViewModel,
     ValueNotifier<int?> selectedIdx,
   ) {
-    final rooms = floorViewModel.currentRooms;
+    final roomsMap = floorViewModel.roomsMap;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -135,7 +135,7 @@ class WifiMapPage extends HookConsumerWidget {
       ),
       itemCount: 110,
       itemBuilder: (context, index) {
-        final room = rooms.where((r) => r.index == index).firstOrNull;
+        final room = roomsMap[index];
         final isSelected = selectedIdx.value == index;
         return GestureDetector(
           onTap: () {
@@ -154,10 +154,7 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected) {
-    final roomType = RoomType.values.firstWhere(
-      (e) => e.name == room.roomType,
-      orElse: () => RoomType.backyard,
-    );
+    final roomType = room.roomTypeEnum;
 
     return Container(
       decoration: BoxDecoration(
