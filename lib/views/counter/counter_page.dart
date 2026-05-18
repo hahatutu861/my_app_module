@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 
 import 'package:my_app_module/viewmodels/counter/counter_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/counter/counter_state.dart';
 
 class CounterPage extends ConsumerWidget {
   const CounterPage({super.key});
@@ -17,10 +18,9 @@ class CounterPage extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Center(
-        child: counterState.when(
-          initial: () => const CircularProgressIndicator(),
-          loading: () => const CircularProgressIndicator(),
-          loaded: (counter) => Column(
+        child: switch (counterState) {
+          CounterStateInitial() || CounterStateLoading() => const CircularProgressIndicator(),
+          CounterStateLoaded(:final counter) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
@@ -34,11 +34,11 @@ class CounterPage extends ConsumerWidget {
               ),
             ],
           ),
-          error: (message) => Text(
+          CounterStateError(:final message) => Text(
             context.l10n.error(message),
             style: const TextStyle(color: Colors.red),
           ),
-        ),
+        },
       ),
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,

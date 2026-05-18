@@ -5,7 +5,7 @@ part 'host_model.freezed.dart';
 part 'host_model.g.dart';
 
 @freezed
-class HostModel with _$HostModel {
+abstract class HostModel with _$HostModel {
   const factory HostModel({
     required String id,
     required String mac,
@@ -33,7 +33,7 @@ class HostModel with _$HostModel {
 }
 
 @freezed
-class GetHostsResponse with _$GetHostsResponse {
+abstract class GetHostsResponse with _$GetHostsResponse {
   const factory GetHostsResponse({
     required List<HostModel> hosts,
   }) = _GetHostsResponse;

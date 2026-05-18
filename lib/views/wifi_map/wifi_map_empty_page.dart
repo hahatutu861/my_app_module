@@ -53,7 +53,7 @@ class WifiMapEmptyPage extends HookConsumerWidget {
                 return _buildFloorList(context, floors, ref);
               },
               loading: () => const SizedBox(),
-              error: (_, __) => const SizedBox(),
+              error: (err, stack) => const SizedBox(),
             ),
           ),
         ],

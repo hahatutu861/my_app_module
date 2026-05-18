@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,290 +9,290 @@ part of 'floor_model.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-FloorModel _$FloorModelFromJson(Map<String, dynamic> json) {
-  return _FloorModel.fromJson(json);
-}
 
 /// @nodoc
 mixin _$FloorModel {
-  String get id => throw _privateConstructorUsedError;
-  String get floorName => throw _privateConstructorUsedError;
-  int get zoneCount => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  DateTime? get updatedAt => throw _privateConstructorUsedError;
-  List<RoomModel> get rooms => throw _privateConstructorUsedError;
+
+ String get id; String get floorName; int get zoneCount; DateTime get createdAt; DateTime? get updatedAt; List<RoomModel> get rooms;
+/// Create a copy of FloorModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FloorModelCopyWith<FloorModel> get copyWith => _$FloorModelCopyWithImpl<FloorModel>(this as FloorModel, _$identity);
 
   /// Serializes this FloorModel to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of FloorModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $FloorModelCopyWith<FloorModel> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.rooms, rooms));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(rooms));
+
+@override
+String toString() {
+  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $FloorModelCopyWith<$Res> {
-  factory $FloorModelCopyWith(
-    FloorModel value,
-    $Res Function(FloorModel) then,
-  ) = _$FloorModelCopyWithImpl<$Res, FloorModel>;
-  @useResult
-  $Res call({
-    String id,
-    String floorName,
-    int zoneCount,
-    DateTime createdAt,
-    DateTime? updatedAt,
-    List<RoomModel> rooms,
-  });
-}
+abstract mixin class $FloorModelCopyWith<$Res>  {
+  factory $FloorModelCopyWith(FloorModel value, $Res Function(FloorModel) _then) = _$FloorModelCopyWithImpl;
+@useResult
+$Res call({
+ String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms
+});
 
+
+
+
+}
 /// @nodoc
-class _$FloorModelCopyWithImpl<$Res, $Val extends FloorModel>
+class _$FloorModelCopyWithImpl<$Res>
     implements $FloorModelCopyWith<$Res> {
-  _$FloorModelCopyWithImpl(this._value, this._then);
+  _$FloorModelCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final FloorModel _self;
+  final $Res Function(FloorModel) _then;
 
-  /// Create a copy of FloorModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? floorName = null,
-    Object? zoneCount = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? rooms = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            id: null == id
-                ? _value.id
-                : id // ignore: cast_nullable_to_non_nullable
-                      as String,
-            floorName: null == floorName
-                ? _value.floorName
-                : floorName // ignore: cast_nullable_to_non_nullable
-                      as String,
-            zoneCount: null == zoneCount
-                ? _value.zoneCount
-                : zoneCount // ignore: cast_nullable_to_non_nullable
-                      as int,
-            createdAt: null == createdAt
-                ? _value.createdAt
-                : createdAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime,
-            updatedAt: freezed == updatedAt
-                ? _value.updatedAt
-                : updatedAt // ignore: cast_nullable_to_non_nullable
-                      as DateTime?,
-            rooms: null == rooms
-                ? _value.rooms
-                : rooms // ignore: cast_nullable_to_non_nullable
-                      as List<RoomModel>,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of FloorModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,floorName: null == floorName ? _self.floorName : floorName // ignore: cast_nullable_to_non_nullable
+as String,zoneCount: null == zoneCount ? _self.zoneCount : zoneCount // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,rooms: null == rooms ? _self.rooms : rooms // ignore: cast_nullable_to_non_nullable
+as List<RoomModel>,
+  ));
 }
 
-/// @nodoc
-abstract class _$$FloorModelImplCopyWith<$Res>
-    implements $FloorModelCopyWith<$Res> {
-  factory _$$FloorModelImplCopyWith(
-    _$FloorModelImpl value,
-    $Res Function(_$FloorModelImpl) then,
-  ) = __$$FloorModelImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String id,
-    String floorName,
-    int zoneCount,
-    DateTime createdAt,
-    DateTime? updatedAt,
-    List<RoomModel> rooms,
-  });
 }
 
-/// @nodoc
-class __$$FloorModelImplCopyWithImpl<$Res>
-    extends _$FloorModelCopyWithImpl<$Res, _$FloorModelImpl>
-    implements _$$FloorModelImplCopyWith<$Res> {
-  __$$FloorModelImplCopyWithImpl(
-    _$FloorModelImpl _value,
-    $Res Function(_$FloorModelImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of FloorModel
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? id = null,
-    Object? floorName = null,
-    Object? zoneCount = null,
-    Object? createdAt = null,
-    Object? updatedAt = freezed,
-    Object? rooms = null,
-  }) {
-    return _then(
-      _$FloorModelImpl(
-        id: null == id
-            ? _value.id
-            : id // ignore: cast_nullable_to_non_nullable
-                  as String,
-        floorName: null == floorName
-            ? _value.floorName
-            : floorName // ignore: cast_nullable_to_non_nullable
-                  as String,
-        zoneCount: null == zoneCount
-            ? _value.zoneCount
-            : zoneCount // ignore: cast_nullable_to_non_nullable
-                  as int,
-        createdAt: null == createdAt
-            ? _value.createdAt
-            : createdAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime,
-        updatedAt: freezed == updatedAt
-            ? _value.updatedAt
-            : updatedAt // ignore: cast_nullable_to_non_nullable
-                  as DateTime?,
-        rooms: null == rooms
-            ? _value._rooms
-            : rooms // ignore: cast_nullable_to_non_nullable
-                  as List<RoomModel>,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [FloorModel].
+extension FloorModelPatterns on FloorModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _FloorModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FloorModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _FloorModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _FloorModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _FloorModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _FloorModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FloorModel() when $default != null:
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)  $default,) {final _that = this;
+switch (_that) {
+case _FloorModel():
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)?  $default,) {final _that = this;
+switch (_that) {
+case _FloorModel() when $default != null:
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$FloorModelImpl implements _FloorModel {
-  const _$FloorModelImpl({
-    required this.id,
-    required this.floorName,
-    this.zoneCount = 0,
-    required this.createdAt,
-    this.updatedAt,
-    final List<RoomModel> rooms = const [],
-  }) : _rooms = rooms;
 
-  factory _$FloorModelImpl.fromJson(Map<String, dynamic> json) =>
-      _$$FloorModelImplFromJson(json);
+class _FloorModel implements FloorModel {
+  const _FloorModel({required this.id, required this.floorName, this.zoneCount = 0, required this.createdAt, this.updatedAt, final  List<RoomModel> rooms = const []}): _rooms = rooms;
+  factory _FloorModel.fromJson(Map<String, dynamic> json) => _$FloorModelFromJson(json);
 
-  @override
-  final String id;
-  @override
-  final String floorName;
-  @override
-  @JsonKey()
-  final int zoneCount;
-  @override
-  final DateTime createdAt;
-  @override
-  final DateTime? updatedAt;
-  final List<RoomModel> _rooms;
-  @override
-  @JsonKey()
-  List<RoomModel> get rooms {
-    if (_rooms is EqualUnmodifiableListView) return _rooms;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_rooms);
-  }
-
-  @override
-  String toString() {
-    return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$FloorModelImpl &&
-            (identical(other.id, id) || other.id == id) &&
-            (identical(other.floorName, floorName) ||
-                other.floorName == floorName) &&
-            (identical(other.zoneCount, zoneCount) ||
-                other.zoneCount == zoneCount) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.updatedAt, updatedAt) ||
-                other.updatedAt == updatedAt) &&
-            const DeepCollectionEquality().equals(other._rooms, _rooms));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    id,
-    floorName,
-    zoneCount,
-    createdAt,
-    updatedAt,
-    const DeepCollectionEquality().hash(_rooms),
-  );
-
-  /// Create a copy of FloorModel
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$FloorModelImplCopyWith<_$FloorModelImpl> get copyWith =>
-      __$$FloorModelImplCopyWithImpl<_$FloorModelImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$FloorModelImplToJson(this);
-  }
+@override final  String id;
+@override final  String floorName;
+@override@JsonKey() final  int zoneCount;
+@override final  DateTime createdAt;
+@override final  DateTime? updatedAt;
+ final  List<RoomModel> _rooms;
+@override@JsonKey() List<RoomModel> get rooms {
+  if (_rooms is EqualUnmodifiableListView) return _rooms;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_rooms);
 }
 
-abstract class _FloorModel implements FloorModel {
-  const factory _FloorModel({
-    required final String id,
-    required final String floorName,
-    final int zoneCount,
-    required final DateTime createdAt,
-    final DateTime? updatedAt,
-    final List<RoomModel> rooms,
-  }) = _$FloorModelImpl;
 
-  factory _FloorModel.fromJson(Map<String, dynamic> json) =
-      _$FloorModelImpl.fromJson;
+/// Create a copy of FloorModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FloorModelCopyWith<_FloorModel> get copyWith => __$FloorModelCopyWithImpl<_FloorModel>(this, _$identity);
 
-  @override
-  String get id;
-  @override
-  String get floorName;
-  @override
-  int get zoneCount;
-  @override
-  DateTime get createdAt;
-  @override
-  DateTime? get updatedAt;
-  @override
-  List<RoomModel> get rooms;
-
-  /// Create a copy of FloorModel
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FloorModelImplCopyWith<_$FloorModelImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+Map<String, dynamic> toJson() {
+  return _$FloorModelToJson(this, );
 }
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._rooms, _rooms));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(_rooms));
+
+@override
+String toString() {
+  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FloorModelCopyWith<$Res> implements $FloorModelCopyWith<$Res> {
+  factory _$FloorModelCopyWith(_FloorModel value, $Res Function(_FloorModel) _then) = __$FloorModelCopyWithImpl;
+@override @useResult
+$Res call({
+ String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms
+});
+
+
+
+
+}
+/// @nodoc
+class __$FloorModelCopyWithImpl<$Res>
+    implements _$FloorModelCopyWith<$Res> {
+  __$FloorModelCopyWithImpl(this._self, this._then);
+
+  final _FloorModel _self;
+  final $Res Function(_FloorModel) _then;
+
+/// Create a copy of FloorModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,}) {
+  return _then(_FloorModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,floorName: null == floorName ? _self.floorName : floorName // ignore: cast_nullable_to_non_nullable
+as String,zoneCount: null == zoneCount ? _self.zoneCount : zoneCount // ignore: cast_nullable_to_non_nullable
+as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,rooms: null == rooms ? _self._rooms : rooms // ignore: cast_nullable_to_non_nullable
+as List<RoomModel>,
+  ));
+}
+
+
+}
+
+// dart format on

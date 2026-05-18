@@ -32,6 +32,7 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(floorViewModelProvider);
     final floorViewModel = ref.read(floorViewModelProvider.notifier);
     ref.watch(allFloorsProvider);
 

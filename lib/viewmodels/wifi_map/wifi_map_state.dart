@@ -4,9 +4,9 @@ import 'package:my_app_module/models/host_model.dart';
 part 'wifi_map_state.freezed.dart';
 
 @freezed
-class WifiMapState with _$WifiMapState {
-  const factory WifiMapState.initial() = _Initial;
-  const factory WifiMapState.loading() = _Loading;
-  const factory WifiMapState.loaded({required List<HostModel> hosts}) = _Loaded;
-  const factory WifiMapState.error({required String message}) = _Error;
+sealed class WifiMapState with _$WifiMapState {
+  const factory WifiMapState.initial() = WifiMapStateInitial;
+  const factory WifiMapState.loading() = WifiMapStateLoading;
+  const factory WifiMapState.loaded({required List<HostModel> hosts}) = WifiMapStateLoaded;
+  const factory WifiMapState.error({required String message}) = WifiMapStateError;
 }

@@ -11,6 +11,7 @@ import 'package:my_app_module/widgets/hint_text_field.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/viewmodels/wifi_map/edit_room_bottom_sheet_provider.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/models/room_model.dart';
 
 import '../../utils/build_context_extension.dart';
@@ -39,18 +40,18 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     final sheetHeight = context.screenHeight * 0.95;
     final roomNameController = useTextEditingController();
     final floorState = ref.watch(floorViewModelProvider);
-    final hasRoom = floorState.maybeWhen(
-      loaded: (floor) => floor?.rooms.any((r) => r.index == index),
-      orElse: () => false,
-    );
+    final hasRoom = switch (floorState) {
+      FloorStateLoaded(:final floor) => floor?.rooms.any((r) => r.index == index) ?? false,
+      _ => false,
+    };
 
     useEffect(() {
       Future.microtask(() {
         if (index != null) {
-          final floor = floorState.maybeWhen(
-            loaded: (floor) => floor,
-            orElse: () => null,
-          );
+          final floor = switch (floorState) {
+            FloorStateLoaded(:final floor) => floor,
+            _ => null,
+          };
           if (floor != null) {
             final room = floor.rooms.where((r) => r.index == index).firstOrNull;
             viewModel.initWithRoom(room);
@@ -86,7 +87,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
             SizedBox(height: AppSpacing.pad24.w),
             _buildRadioGroup(context, state, viewModel),
             SizedBox(height: AppSpacing.pad24.w),
-            _buildButtons(context, ref, state, hasRoom!),
+            _buildButtons(context, ref, state, hasRoom),
             SizedBox(height: AppSpacing.pad16.w),
           ],
         ),

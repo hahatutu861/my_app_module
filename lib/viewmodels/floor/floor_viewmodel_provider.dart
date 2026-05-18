@@ -15,7 +15,6 @@ final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
 class FloorViewModel extends Notifier<FloorState> {
   late final FloorRepository _repository;
   late final Ref _ref;
-  int? _selectedRoomIndex;
 
   @override
   FloorState build() {
@@ -25,10 +24,16 @@ class FloorViewModel extends Notifier<FloorState> {
     return const FloorState.initial();
   }
 
-  int? get selectedRoomIndex => _selectedRoomIndex;
+  int? get selectedRoomIndex => switch (state) {
+        FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
+        _ => null,
+      };
 
   void selectRoom(int? index) {
-    _selectedRoomIndex = index;
+    state = switch (state) {
+      FloorStateLoaded(:final floor) => FloorState.loaded(floor: floor, selectedRoomIndex: index),
+      _ => state,
+    };
   }
 
   void _refreshAllFloors() {
@@ -82,10 +87,10 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   Future<void> updateFloorName(String newName) async {
-    final currentFloor = state.maybeWhen(
-      loaded: (floor) => floor,
-      orElse: () => null,
-    );
+    final currentFloor = switch (state) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
 
     if (currentFloor == null) return;
 
@@ -93,7 +98,10 @@ class FloorViewModel extends Notifier<FloorState> {
       final updatedFloor =
           await _repository.updateFloorName(currentFloor.id, newName);
       if (updatedFloor != null) {
-        state = FloorState.loaded(floor: updatedFloor);
+        state = switch (state) {
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          _ => FloorState.loaded(floor: updatedFloor),
+        };
         _refreshAllFloors();
       }
     } catch (e) {
@@ -102,10 +110,10 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   Future<void> updateRoom(int index, RoomModel room) async {
-    final currentFloor = state.maybeWhen(
-      loaded: (floor) => floor,
-      orElse: () => null,
-    );
+    final currentFloor = switch (state) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
 
     if (currentFloor == null) return;
 
@@ -120,7 +128,10 @@ class FloorViewModel extends Notifier<FloorState> {
       final updatedFloor =
           await _repository.updateRooms(currentFloor.id, rooms);
       if (updatedFloor != null) {
-        state = FloorState.loaded(floor: updatedFloor);
+        state = switch (state) {
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          _ => FloorState.loaded(floor: updatedFloor),
+        };
         _refreshAllFloors();
       }
     } catch (e) {
@@ -129,10 +140,10 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   Future<void> deleteRoom(int index) async {
-    final currentFloor = state.maybeWhen(
-      loaded: (floor) => floor,
-      orElse: () => null,
-    );
+    final currentFloor = switch (state) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
 
     if (currentFloor == null) return;
 
@@ -142,7 +153,10 @@ class FloorViewModel extends Notifier<FloorState> {
       final updatedFloor =
           await _repository.updateRooms(currentFloor.id, rooms);
       if (updatedFloor != null) {
-        state = FloorState.loaded(floor: updatedFloor);
+        state = switch (state) {
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          _ => FloorState.loaded(floor: updatedFloor),
+        };
         _refreshAllFloors();
       }
     } catch (e) {
@@ -164,10 +178,10 @@ class FloorViewModel extends Notifier<FloorState> {
     final allFloors = allFloorsAsync.hasValue ? allFloorsAsync.value : null;
     if (allFloors == null) return null;
 
-    final currentFloor = state.maybeWhen(
-      loaded: (floor) => floor,
-      orElse: () => null,
-    );
+    final currentFloor = switch (state) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
 
     if (currentFloor == null) return null;
 
@@ -184,10 +198,10 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   FloorModel? get currentFloor {
-    return state.maybeWhen(
-      loaded: (floor) => floor,
-      orElse: () => null,
-    );
+    return switch (state) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
   }
 
   List<RoomModel> get currentRooms {

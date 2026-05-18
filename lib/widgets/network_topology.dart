@@ -144,13 +144,13 @@ class _DeviceIndicator extends ConsumerWidget {
   }
 
   List<Widget> _buildStateIndicator(BuildContext context) {
-    return state.maybeWhen(
-      showingWifiSuccessAnimation: () => [
+    return switch (state) {
+      NetworkTopologyStateShowingWifiSuccessAnimation() => [
         _WifiSuccessAnimation(controller: controller, onCompleted: onCompleted),
       ],
-      showingSecondLineAnimation: () => const [_CompletedIndicator()],
-      orElse: () => [],
-    );
+      NetworkTopologyStateShowingSecondLineAnimation() => const [_CompletedIndicator()],
+      _ => [],
+    };
   }
 }
 
@@ -298,10 +298,10 @@ class _SecondLineAnimation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shouldShow = state.maybeWhen(
-      showingSecondLineAnimation: () => true,
-      orElse: () => false,
-    );
+    final shouldShow = switch (state) {
+      NetworkTopologyStateShowingSecondLineAnimation() => true,
+      _ => false,
+    };
     if (!shouldShow) {
       return const Expanded(child: SizedBox());
     }

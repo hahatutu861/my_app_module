@@ -5,7 +5,7 @@ part 'floor_model.freezed.dart';
 part 'floor_model.g.dart';
 
 @freezed
-class FloorModel with _$FloorModel {
+abstract class FloorModel with _$FloorModel {
   const factory FloorModel({
     required String id,
     required String floorName,
