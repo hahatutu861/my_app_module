@@ -12,6 +12,7 @@ class WifiMapViewModel extends Notifier<WifiMapState> {
   @override
   WifiMapState build() {
     _repository = ref.read(hostRepositoryProvider);
+    loadHosts();
     return const WifiMapState.initial();
   }
 

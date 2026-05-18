@@ -41,7 +41,6 @@ class WifiMapPage extends HookConsumerWidget {
     useEffect(() {
       _checkAndShowDialog(context, ref);
       Future.microtask(() {
-        ref.read(wifiMapViewModelProvider.notifier).loadHosts();
         if (floorId != null && floorId!.isNotEmpty) {
           ref.read(floorViewModelProvider.notifier).loadFloorById(floorId!);
         } else {
