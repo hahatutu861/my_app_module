@@ -175,4 +175,29 @@ class FloorViewModel extends Notifier<FloorState> {
 
     return previousFloor;
   }
+
+  FloorModel? get currentFloor {
+    return state.maybeWhen(
+      loaded: (floor) => floor,
+      orElse: () => null,
+    );
+  }
+
+  List<RoomModel> get currentRooms {
+    return currentFloor?.rooms ?? [];
+  }
+
+  bool get hasCurrentFloorRooms {
+    return currentRooms.isNotEmpty;
+  }
+
+  bool get hasPreviousFloorWithRooms {
+    return getPreviousFloorWithRooms() != null;
+  }
+
+  RoomModel? getRoomByIndex(int index) {
+    final rooms = currentRooms;
+    final matched = rooms.where((r) => r.index == index);
+    return matched.isNotEmpty ? matched.first : null;
+  }
 }

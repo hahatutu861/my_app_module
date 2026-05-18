@@ -11,9 +11,7 @@ import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/utils/design/room_types.dart';
-import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
-import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
 import 'package:my_app_module/widgets/app_image.dart';
@@ -35,7 +33,7 @@ class WifiMapPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final floorState = ref.watch(floorViewModelProvider);
+    final floorViewModel = ref.read(floorViewModelProvider.notifier);
     ref.watch(allFloorsProvider);
 
     useEffect(() {
@@ -65,16 +63,16 @@ class WifiMapPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
-          _buildHeader(context, ref, hideButtonSize, bubbleSize, floorState),
-          _buildFloorTitle(context, floorState, ref),
+          _buildHeader(context, ref, hideButtonSize, bubbleSize, floorViewModel),
+          _buildFloorTitle(context, floorViewModel),
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
             context,
             transformationController,
-            floorState,
+            floorViewModel,
             selectedIdx,
           ),
-          _buildBottomBar(context, floorState, selectedIdx),
+          _buildBottomBar(context, floorViewModel, selectedIdx),
         ],
       ),
     );
@@ -83,7 +81,7 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildAutoSizeGrid(
     BuildContext context,
     TransformationController transformationController,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
     ValueNotifier<int?> selectedIdx,
   ) {
     return LayoutBuilder(
@@ -109,7 +107,7 @@ class WifiMapPage extends HookConsumerWidget {
             transformationController: transformationController,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
-              child: _buildGrid(context, squareSize, floorState, selectedIdx),
+              child: _buildGrid(context, squareSize, floorViewModel, selectedIdx),
             ),
           ),
         );
@@ -120,13 +118,10 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildGrid(
     BuildContext context,
     double squareSize,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
     ValueNotifier<int?> selectedIdx,
   ) {
-    final rooms = floorState.maybeWhen(
-      loaded: (floor) => floor?.rooms ?? [],
-      orElse: () => <RoomModel>[],
-    );
+    final rooms = floorViewModel.currentRooms;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -247,20 +242,13 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildFloorTitle(
     BuildContext context,
-    FloorState floorState,
-    WidgetRef ref,
+    FloorViewModel floorViewModel,
   ) {
-    final floorName = floorState.maybeWhen(
-      loaded: (floor) => floor?.floorName ?? context.l10n.firstFloor,
-      orElse: () => context.l10n.firstFloor,
-    );
+    final floorName = floorViewModel.currentFloor?.floorName ?? context.l10n.firstFloor;
 
     return GestureDetector(
       onTap: () async {
-        final currentFloorName = floorState.maybeWhen(
-          loaded: (floor) => floor?.floorName,
-          orElse: () => null,
-        );
+        final currentFloorName = floorViewModel.currentFloor?.floorName;
         final newFloorName = await showDialog<String>(
           context: context,
           barrierDismissible: false,
@@ -268,9 +256,7 @@ class WifiMapPage extends HookConsumerWidget {
               EditFloorNameDialog(initialFloorName: currentFloorName),
         );
         if (newFloorName != null && newFloorName.isNotEmpty) {
-          await ref
-              .read(floorViewModelProvider.notifier)
-              .updateFloorName(newFloorName);
+          await floorViewModel.updateFloorName(newFloorName);
         }
       },
       behavior: HitTestBehavior.opaque,
@@ -299,7 +285,7 @@ class WifiMapPage extends HookConsumerWidget {
     WidgetRef ref,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
   ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.w),
@@ -312,7 +298,7 @@ class WifiMapPage extends HookConsumerWidget {
             ref,
             hideButtonSize,
             bubbleSize,
-            floorState,
+            floorViewModel,
           ),
         ],
       ),
@@ -324,17 +310,10 @@ class WifiMapPage extends HookConsumerWidget {
     WidgetRef ref,
     ValueNotifier<Size?> hideButtonSize,
     ValueNotifier<Size?> bubbleSize,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
   ) {
-    final currentFloorRooms = floorState.maybeWhen(
-      loaded: (floor) => floor?.rooms ?? [],
-      orElse: () => <RoomModel>[],
-    );
-    final isCurrentFloorEmpty = currentFloorRooms.isEmpty;
-    final previousFloor = ref
-        .read(floorViewModelProvider.notifier)
-        .getPreviousFloorWithRooms();
-    final previousFloorWithRooms = previousFloor != null;
+    final isCurrentFloorEmpty = !floorViewModel.hasCurrentFloorRooms;
+    final previousFloorWithRooms = floorViewModel.hasPreviousFloorWithRooms;
 
     if (!previousFloorWithRooms) {
       return const SizedBox.shrink();
@@ -359,7 +338,7 @@ class WifiMapPage extends HookConsumerWidget {
             children: [
               MeasureSize(
                 onChange: (size) => hideButtonSize.value = size,
-                child: _buildHideButtonIcon(context, ref, floorState),
+                child: _buildHideButtonIcon(context, ref, floorViewModel),
               ),
               if (needsBubble)
                 MeasureSize(
@@ -379,7 +358,7 @@ class WifiMapPage extends HookConsumerWidget {
       alignment: Alignment.topCenter,
       clipBehavior: Clip.none,
       children: [
-        _buildHideButtonIcon(context, ref, floorState),
+        _buildHideButtonIcon(context, ref, floorViewModel),
         if (needsBubble)
           Positioned(
             top: hideButtonSize.value!.height + 4,
@@ -396,20 +375,13 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildHideButtonIcon(
     BuildContext context,
     WidgetRef ref,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
   ) {
-    final currentFloorRooms = floorState.maybeWhen(
-      loaded: (floor) => floor?.rooms ?? [],
-      orElse: () => <RoomModel>[],
-    );
-    final previousFloorWithRooms = ref
-        .read(floorViewModelProvider.notifier)
-        .getPreviousFloorWithRooms();
-    if (previousFloorWithRooms == null) {
+    if (!floorViewModel.hasPreviousFloorWithRooms) {
       return const SizedBox.shrink();
     }
 
-    final isCurrentFloorEmpty = currentFloorRooms.isEmpty;
+    final isCurrentFloorEmpty = !floorViewModel.hasCurrentFloorRooms;
 
     return Container(
       width: 32.w,
@@ -458,25 +430,18 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildBottomBar(
     BuildContext context,
-    FloorState floorState,
+    FloorViewModel floorViewModel,
     ValueNotifier<int?> selectedIdx,
   ) {
     final isSelected = selectedIdx.value != null;
     if (isSelected) {
-      final RoomModel? room = floorState.maybeWhen(
-        loaded: (floor) {
-          final rooms = floor?.rooms ?? [];
-          final matched = rooms.where((r) => r.index == selectedIdx.value);
-          return matched.isNotEmpty ? matched.first : null;
-        },
-        orElse: () => null,
-      );
+      final room = floorViewModel.getRoomByIndex(selectedIdx.value!);
       if (room == null) {
-        return _buildStats(context, floorState);
+        return _buildStats(context, floorViewModel);
       }
       return _buildSelectedRoomBar(context, room, selectedIdx.value!);
     } else {
-      return _buildStats(context, floorState);
+      return _buildStats(context, floorViewModel);
     }
   }
 
@@ -514,11 +479,8 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context, FloorState floorState) {
-    final int roomCount = floorState.maybeWhen(
-      loaded: (floor) => floor?.rooms.length ?? 0,
-      orElse: () => 0,
-    );
+  Widget _buildStats(BuildContext context, FloorViewModel floorViewModel) {
+    final roomCount = floorViewModel.currentRooms.length;
 
     return Padding(
       padding: EdgeInsets.only(
