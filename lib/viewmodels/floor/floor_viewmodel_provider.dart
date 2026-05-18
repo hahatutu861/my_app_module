@@ -54,6 +54,14 @@ class FloorViewModel extends Notifier<FloorState> {
     }
   }
 
+  void loadFloor(String? floorId) {
+    if (floorId != null && floorId.isNotEmpty) {
+      loadFloorById(floorId);
+    } else {
+      loadActiveFloor();
+    }
+  }
+
   Future<FloorModel?> createFloor(String floorName) async {
     try {
       final floor = await _repository.createFloor(floorName);

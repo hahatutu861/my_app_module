@@ -41,11 +41,7 @@ class WifiMapPage extends HookConsumerWidget {
     useEffect(() {
       _checkAndShowDialog(context, ref);
       Future.microtask(() {
-        if (floorId != null && floorId!.isNotEmpty) {
-          ref.read(floorViewModelProvider.notifier).loadFloorById(floorId!);
-        } else {
-          ref.read(floorViewModelProvider.notifier).loadActiveFloor();
-        }
+        ref.read(floorViewModelProvider.notifier).loadFloor(floorId);
       });
       return null;
     }, [floorId]);
