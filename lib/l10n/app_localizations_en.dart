@@ -73,7 +73,7 @@ class AppLocalizationsEn extends AppLocalizations {
       locale: localeName,
       other: '$count zones',
       one: '1 zone',
-      zero: 'No zones',
+      zero: '0 zones',
     );
     return '$_temp0';
   }

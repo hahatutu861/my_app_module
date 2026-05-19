@@ -52,7 +52,7 @@ class XxxPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(xxxProvider);
     final viewModel = ref.read(xxxProvider.notifier);
-    
+
     return Scaffold(
       body: Column(
         children: [
@@ -65,11 +65,11 @@ class XxxPage extends ConsumerWidget {
   }
 
   // ===== 私有构建方法 =====
-  
+
   Widget _buildHeader(BuildContext context) { ... }
-  
+
   Widget _buildContent(BuildContext context, XxxState state, XxxViewModel viewModel) { ... }
-  
+
   Widget _buildFooter(BuildContext context, XxxState state, XxxViewModel viewModel) { ... }
 }
 ```
@@ -98,8 +98,8 @@ Container(
 // 条件样式（选中态）
 Container(
   decoration: BoxDecoration(
-    color: isSelected 
-        ? context.appColors.brand1Light 
+    color: isSelected
+        ? context.appColors.brand1Light
         : context.appColors.fontWh1with100Opacity,
   ),
 )
@@ -162,6 +162,49 @@ ElevatedButton(
 
 ---
 
+## 异步状态管理规则
+
+### 状态竞争问题
+
+**规则**：在异步回调（`.then()`、`await` 之后）中，不要直接依赖外部共享状态。必须在使用前捕获需要的值，或将数据作为参数传入。
+
+#### 错误示例
+
+```dart
+void loadData() {
+  state = Loading();
+  api.fetch().then((data) {
+    final current = state.currentItem;  // ❌ state 可能已变化
+    process(current, data);
+  });
+}
+```
+
+#### 正确示例
+
+```dart
+void loadData() {
+  final current = state.currentItem;  // 先捕获
+  state = Loading();
+  api.fetch().then((data) {
+    process(current, data);  // ✅ 使用捕获的值
+  });
+}
+
+// 或者重构方法，接受参数而非依赖外部状态
+bool _hasPreviousFloorWithRoomsFor(FloorModel? floor) {
+  return getPreviousFloorWithRooms(floor) != null;
+}
+```
+
+#### 检查清单
+
+- 回调中是否使用了 `state.xxx`？→ 考虑是否需要先捕获
+- 多个异步操作是否会修改同一状态？→ 使用版本号或取消机制
+- Widget 的 `setState` 前是否检查了 `mounted`？
+
+---
+
 ## 输出要求
 
 1. **只输出 Dart 代码**，不输出解释性文字
@@ -174,3 +217,9 @@ ElevatedButton(
    - 禁止硬编码颜色值（必须使用 context.appColors）
    - 禁止硬编码尺寸数值（必须使用 .w/.h 后缀）
    - 禁止省略类型声明
+
+---
+
+## 相关文档
+
+详细案例和分析见：`docs/isReferenceEnabled-issue-analysis.md`

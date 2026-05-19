@@ -74,7 +74,7 @@ class AppLocalizationsFr extends AppLocalizations {
       locale: localeName,
       other: '$count zones',
       one: '1 zone',
-      zero: 'Aucune zone',
+      zero: '0 zone',
     );
     return '$_temp0';
   }

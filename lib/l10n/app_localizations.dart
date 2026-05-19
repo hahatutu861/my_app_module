@@ -209,7 +209,7 @@ abstract class AppLocalizations {
   /// No description provided for @zonesCount.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, =0{No zones} =1{1 zone} other{{count} zones}}'**
+  /// **'{count, plural, =0{0 zones} =1{1 zone} other{{count} zones}}'**
   String zonesCount(int count);
 
   /// No description provided for @wifiMapPage.
