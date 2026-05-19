@@ -4,8 +4,9 @@ import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/repositories/floor_repository.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 
-final floorViewModelProvider =
-    NotifierProvider<FloorViewModel, FloorState>(FloorViewModel.new);
+final floorViewModelProvider = NotifierProvider<FloorViewModel, FloorState>(
+  FloorViewModel.new,
+);
 
 final allFloorsProvider = FutureProvider<List<FloorModel>>((ref) async {
   final repository = ref.read(floorRepositoryProvider);
@@ -25,13 +26,16 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   int? get selectedRoomIndex => switch (state) {
-        FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
-        _ => null,
-      };
+    FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
+    _ => null,
+  };
 
   void selectRoom(int? index) {
     state = switch (state) {
-      FloorStateLoaded(:final floor) => FloorState.loaded(floor: floor, selectedRoomIndex: index),
+      FloorStateLoaded(:final floor) => FloorState.loaded(
+        floor: floor,
+        selectedRoomIndex: index,
+      ),
       _ => state,
     };
   }
@@ -43,16 +47,21 @@ class FloorViewModel extends Notifier<FloorState> {
   void loadActiveFloor() {
     state = const FloorState.loading();
     try {
-      _repository.getActiveFloor().then((floor) {
-        final isReferenceEnabled = floor != null && floor.rooms.isEmpty && hasPreviousFloorWithRooms;
-        state = FloorState.loaded(
-          floor: floor,
-          isReferenceEnabled: isReferenceEnabled,
-          bubbleTrigger: isReferenceEnabled ? 1 : 0,
-        );
-      }).catchError((e) {
-        state = FloorState.error(message: e.toString());
-      });
+      _repository
+          .getActiveFloor()
+          .then((floor) {
+            final hasPrevFloor = _hasPreviousFloorWithRoomsFor(floor);
+            final isReferenceEnabled =
+                floor != null && floor.rooms.isEmpty && hasPrevFloor;
+            state = FloorState.loaded(
+              floor: floor,
+              isReferenceEnabled: isReferenceEnabled,
+              bubbleTrigger: isReferenceEnabled ? 1 : 0,
+            );
+          })
+          .catchError((e) {
+            state = FloorState.error(message: e.toString());
+          });
     } catch (e) {
       state = FloorState.error(message: e.toString());
     }
@@ -61,16 +70,21 @@ class FloorViewModel extends Notifier<FloorState> {
   void loadFloorById(String id) {
     state = const FloorState.loading();
     try {
-      _repository.getFloorById(id).then((floor) {
-        final isReferenceEnabled = floor != null && floor.rooms.isEmpty && hasPreviousFloorWithRooms;
-        state = FloorState.loaded(
-          floor: floor,
-          isReferenceEnabled: isReferenceEnabled,
-          bubbleTrigger: isReferenceEnabled ? 1 : 0,
-        );
-      }).catchError((e) {
-        state = FloorState.error(message: e.toString());
-      });
+      _repository
+          .getFloorById(id)
+          .then((floor) {
+            final hasPrevFloor = _hasPreviousFloorWithRoomsFor(floor);
+            final isReferenceEnabled =
+                floor != null && floor.rooms.isEmpty && hasPrevFloor;
+            state = FloorState.loaded(
+              floor: floor,
+              isReferenceEnabled: isReferenceEnabled,
+              bubbleTrigger: isReferenceEnabled ? 1 : 0,
+            );
+          })
+          .catchError((e) {
+            state = FloorState.error(message: e.toString());
+          });
     } catch (e) {
       state = FloorState.error(message: e.toString());
     }
@@ -105,11 +119,16 @@ class FloorViewModel extends Notifier<FloorState> {
     if (currentFloor == null) return;
 
     try {
-      final updatedFloor =
-          await _repository.updateFloorName(currentFloor.id, newName);
+      final updatedFloor = await _repository.updateFloorName(
+        currentFloor.id,
+        newName,
+      );
       if (updatedFloor != null) {
         state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
+            floor: updatedFloor,
+            selectedRoomIndex: selectedRoomIndex,
+          ),
           _ => FloorState.loaded(floor: updatedFloor),
         };
         _refreshAllFloors();
@@ -135,11 +154,16 @@ class FloorViewModel extends Notifier<FloorState> {
       } else {
         rooms.add(room);
       }
-      final updatedFloor =
-          await _repository.updateRooms(currentFloor.id, rooms);
+      final updatedFloor = await _repository.updateRooms(
+        currentFloor.id,
+        rooms,
+      );
       if (updatedFloor != null) {
         state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
+            floor: updatedFloor,
+            selectedRoomIndex: selectedRoomIndex,
+          ),
           _ => FloorState.loaded(floor: updatedFloor),
         };
         _refreshAllFloors();
@@ -160,11 +184,16 @@ class FloorViewModel extends Notifier<FloorState> {
     try {
       final rooms = List<RoomModel>.from(currentFloor.rooms);
       rooms.removeWhere((r) => r.index == index);
-      final updatedFloor =
-          await _repository.updateRooms(currentFloor.id, rooms);
+      final updatedFloor = await _repository.updateRooms(
+        currentFloor.id,
+        rooms,
+      );
       if (updatedFloor != null) {
         state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(floor: updatedFloor, selectedRoomIndex: selectedRoomIndex),
+          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
+            floor: updatedFloor,
+            selectedRoomIndex: selectedRoomIndex,
+          ),
           _ => FloorState.loaded(floor: updatedFloor),
         };
         _refreshAllFloors();
@@ -183,22 +212,23 @@ class FloorViewModel extends Notifier<FloorState> {
     }
   }
 
-  FloorModel? getPreviousFloorWithRooms() {
+  FloorModel? getPreviousFloorWithRooms([FloorModel? forFloor]) {
     final allFloorsAsync = _ref.read(allFloorsProvider);
     final allFloors = allFloorsAsync.hasValue ? allFloorsAsync.value : null;
     if (allFloors == null) return null;
+    final targetFloor =
+        forFloor ??
+        switch (state) {
+          FloorStateLoaded(:final floor) => floor,
+          _ => null,
+        };
 
-    final currentFloor = switch (state) {
-      FloorStateLoaded(:final floor) => floor,
-      _ => null,
-    };
-
-    if (currentFloor == null) return null;
+    if (targetFloor == null) return null;
 
     final sortedFloors = List<FloorModel>.from(allFloors)
       ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
-    final currentIndex = sortedFloors.indexWhere((f) => f.id == currentFloor.id);
+    final currentIndex = sortedFloors.indexWhere((f) => f.id == targetFloor.id);
     if (currentIndex <= 0) return null;
 
     final previousFloor = sortedFloors[currentIndex - 1];
@@ -224,6 +254,10 @@ class FloorViewModel extends Notifier<FloorState> {
 
   bool get hasPreviousFloorWithRooms {
     return getPreviousFloorWithRooms() != null;
+  }
+
+  bool _hasPreviousFloorWithRoomsFor(FloorModel? floor) {
+    return getPreviousFloorWithRooms(floor) != null;
   }
 
   RoomModel? getRoomByIndex(int index) {
@@ -256,14 +290,14 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   bool get isReferenceEnabled => switch (state) {
-        FloorStateLoaded(:final isReferenceEnabled) => isReferenceEnabled,
-        _ => false,
-      };
+    FloorStateLoaded(:final isReferenceEnabled) => isReferenceEnabled,
+    _ => false,
+  };
 
   int get bubbleTrigger => switch (state) {
-        FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
-        _ => 0,
-      };
+    FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
+    _ => 0,
+  };
 
   Set<int> get referenceIndices {
     if (!isReferenceEnabled) return {};
