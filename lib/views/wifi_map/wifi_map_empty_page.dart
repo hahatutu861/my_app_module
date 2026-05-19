@@ -383,12 +383,27 @@ class _FloorListItem extends ConsumerWidget {
       roomLayout.yRange,
     );
     final newCellMetrics = _calculateCellMetrics(gridSize, newDimensions);
-    final roomIndicesInNewGrid = _mapRoomIndicesToNewGrid(
-      roomLayout.positions,
-      roomLayout.minX,
-      roomLayout.minY,
-      newDimensions.cols,
-    );
+    const lastFourColsStart = _originalCols - _baseCols;
+    const lastFiveRowsStart = _originalRows - _baseRows;
+
+    final isInLastRegion = roomLayout.minX >= lastFourColsStart &&
+        roomLayout.maxX < _originalCols &&
+        roomLayout.minY >= lastFiveRowsStart &&
+        roomLayout.maxY < _originalRows;
+
+    final roomIndicesInNewGrid = isInLastRegion
+        ? _mapRoomIndicesToNewGrid(
+            roomLayout.positions,
+            lastFourColsStart,
+            lastFiveRowsStart,
+            _baseCols,
+          )
+        : _mapRoomIndicesToNewGrid(
+            roomLayout.positions,
+            roomLayout.minX,
+            roomLayout.minY,
+            newDimensions.cols,
+          );
 
     return _buildGridView(
       gridSize,
