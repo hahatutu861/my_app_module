@@ -10,6 +10,8 @@ sealed class FloorState with _$FloorState {
   const factory FloorState.loaded({
     FloorModel? floor,
     int? selectedRoomIndex,
+    @Default(false) bool isReferenceEnabled,
+    @Default(0) int bubbleTrigger,
   }) = FloorStateLoaded;
   const factory FloorState.error({required String message}) = FloorStateError;
 }

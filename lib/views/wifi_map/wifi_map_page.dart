@@ -118,6 +118,7 @@ class WifiMapPage extends HookConsumerWidget {
     FloorViewModel floorViewModel,
   ) {
     final roomsMap = floorViewModel.roomsMap;
+    final referenceIndices = floorViewModel.referenceIndices;
 
     return GridView.builder(
       shrinkWrap: true,
@@ -132,18 +133,26 @@ class WifiMapPage extends HookConsumerWidget {
       itemCount: 110,
       itemBuilder: (context, index) {
         final room = roomsMap[index];
+        final isReference = referenceIndices.contains(index);
         final isSelected = floorViewModel.selectedRoomIndex == index;
+        
+        if (room != null) {
+          return GestureDetector(
+            onTap: () => floorViewModel.selectRoom(index),
+            child: _buildRoomCell(context, room, isSelected),
+          );
+        }
+
+        if (isReference) {
+          return GestureDetector(
+            onTap: () => EditRoomBottomSheet.show(context, index),
+            child: _buildEmptyCell(context, color: context.appColors.gray4),
+          );
+        }
+
         return GestureDetector(
-          onTap: () {
-            if (room == null) {
-              EditRoomBottomSheet.show(context, index);
-            } else {
-              floorViewModel.selectRoom(index);
-            }
-          },
-          child: room != null
-              ? _buildRoomCell(context, room, isSelected)
-              : _buildEmptyCell(context),
+          onTap: () => EditRoomBottomSheet.show(context, index),
+          child: _buildEmptyCell(context),
         );
       },
     );
@@ -224,10 +233,10 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildEmptyCell(BuildContext context) {
+  Widget _buildEmptyCell(BuildContext context, {Color? color}) {
     return Container(
       decoration: BoxDecoration(
-        color: context.appColors.gray1,
+        color: color ?? context.appColors.gray1,
         borderRadius: BorderRadius.circular(6.r),
       ),
     );
@@ -305,14 +314,12 @@ class WifiMapPage extends HookConsumerWidget {
     ValueNotifier<Size?> bubbleSize,
     FloorViewModel floorViewModel,
   ) {
-    final isCurrentFloorEmpty = !floorViewModel.hasCurrentFloorRooms;
-    final previousFloorWithRooms = floorViewModel.hasPreviousFloorWithRooms;
+    final hasPreviousFloorWithRooms = floorViewModel.hasPreviousFloorWithRooms;
 
-    if (!previousFloorWithRooms) {
+    if (!hasPreviousFloorWithRooms) {
       return const SizedBox.shrink();
     }
 
-    final needsBubble = isCurrentFloorEmpty;
     final isHideButtonMeasured = hideButtonSize.value != null &&
         hideButtonSize.value!.width > 0 &&
         hideButtonSize.value!.height > 0;
@@ -320,7 +327,7 @@ class WifiMapPage extends HookConsumerWidget {
         bubbleSize.value!.width > 0 &&
         bubbleSize.value!.height > 0;
 
-    final isReady = isHideButtonMeasured && (!needsBubble || isBubbleMeasured);
+    final isReady = isHideButtonMeasured && isBubbleMeasured;
 
     if (!isReady) {
       return Opacity(
@@ -333,14 +340,13 @@ class WifiMapPage extends HookConsumerWidget {
                 onChange: (size) => hideButtonSize.value = size,
                 child: _buildHideButtonIcon(context, ref, floorViewModel),
               ),
-              if (needsBubble)
-                MeasureSize(
-                  onChange: (size) => bubbleSize.value = size,
-                  child: AppBubbleTip(
-                    text: context.l10n.showPreviousFloorReference,
-                    targetWidgetSize: const Size(32, 32),
-                  ),
+              MeasureSize(
+                onChange: (size) => bubbleSize.value = size,
+                child: AppBubbleTip(
+                  text: context.l10n.showPreviousFloorReference,
+                  targetWidgetSize: const Size(32, 32),
                 ),
+              ),
             ],
           ),
         ),
@@ -352,11 +358,12 @@ class WifiMapPage extends HookConsumerWidget {
       clipBehavior: Clip.none,
       children: [
         _buildHideButtonIcon(context, ref, floorViewModel),
-        if (needsBubble)
+        if (floorViewModel.bubbleTrigger > 0)
           Positioned(
             top: hideButtonSize.value!.height + 4,
             left: hideButtonSize.value!.width - bubbleSize.value!.width,
             child: AppAnimatedBubbleTip(
+              key: ValueKey(floorViewModel.bubbleTrigger),
               text: context.l10n.showPreviousFloorReference,
               targetWidgetSize: hideButtonSize.value,
             ),
@@ -370,29 +377,28 @@ class WifiMapPage extends HookConsumerWidget {
     WidgetRef ref,
     FloorViewModel floorViewModel,
   ) {
-    if (!floorViewModel.hasPreviousFloorWithRooms) {
-      return const SizedBox.shrink();
-    }
+    final isSelected = floorViewModel.isReferenceEnabled;
 
-    final isCurrentFloorEmpty = !floorViewModel.hasCurrentFloorRooms;
-
-    return Container(
-      width: 32.w,
-      height: 32.w,
-      decoration: BoxDecoration(
-        color: isCurrentFloorEmpty
-            ? context.appColors.brand1Light
-            : context.appColors.gray3,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: AppImage(
-          'hide.png',
-          width: 18.w,
-          height: 18.w,
-          color: isCurrentFloorEmpty
-              ? context.appColors.brand6Normal
-              : context.appColors.fontGy1with90Opacity,
+    return GestureDetector(
+      onTap: () => floorViewModel.toggleReference(),
+      child: Container(
+        width: 32.w,
+        height: 32.w,
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.appColors.brand1Light
+              : context.appColors.gray3,
+          shape: BoxShape.circle,
+        ),
+        child: Center(
+          child: AppImage(
+            'hide.png',
+            width: 18.w,
+            height: 18.w,
+            color: isSelected
+                ? context.appColors.brand6Normal
+                : context.appColors.fontGy1with90Opacity,
+          ),
         ),
       ),
     );

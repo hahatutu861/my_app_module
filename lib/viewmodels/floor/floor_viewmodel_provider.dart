@@ -44,7 +44,12 @@ class FloorViewModel extends Notifier<FloorState> {
     state = const FloorState.loading();
     try {
       _repository.getActiveFloor().then((floor) {
-        state = FloorState.loaded(floor: floor);
+        final isReferenceEnabled = floor != null && floor.rooms.isEmpty && hasPreviousFloorWithRooms;
+        state = FloorState.loaded(
+          floor: floor,
+          isReferenceEnabled: isReferenceEnabled,
+          bubbleTrigger: isReferenceEnabled ? 1 : 0,
+        );
       }).catchError((e) {
         state = FloorState.error(message: e.toString());
       });
@@ -57,7 +62,12 @@ class FloorViewModel extends Notifier<FloorState> {
     state = const FloorState.loading();
     try {
       _repository.getFloorById(id).then((floor) {
-        state = FloorState.loaded(floor: floor);
+        final isReferenceEnabled = floor != null && floor.rooms.isEmpty && hasPreviousFloorWithRooms;
+        state = FloorState.loaded(
+          floor: floor,
+          isReferenceEnabled: isReferenceEnabled,
+          bubbleTrigger: isReferenceEnabled ? 1 : 0,
+        );
       }).catchError((e) {
         state = FloorState.error(message: e.toString());
       });
@@ -225,5 +235,40 @@ class FloorViewModel extends Notifier<FloorState> {
   Map<int, RoomModel> get roomsMap {
     final rooms = currentRooms;
     return {for (var r in rooms) r.index: r};
+  }
+
+  void toggleReference() {
+    state = switch (state) {
+      FloorStateLoaded(
+        :final floor,
+        :final selectedRoomIndex,
+        :final isReferenceEnabled,
+        :final bubbleTrigger
+      ) =>
+        FloorState.loaded(
+          floor: floor,
+          selectedRoomIndex: selectedRoomIndex,
+          isReferenceEnabled: !isReferenceEnabled,
+          bubbleTrigger: bubbleTrigger + 1,
+        ),
+      _ => state,
+    };
+  }
+
+  bool get isReferenceEnabled => switch (state) {
+        FloorStateLoaded(:final isReferenceEnabled) => isReferenceEnabled,
+        _ => false,
+      };
+
+  int get bubbleTrigger => switch (state) {
+        FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
+        _ => 0,
+      };
+
+  Set<int> get referenceIndices {
+    if (!isReferenceEnabled) return {};
+    final prevFloor = getPreviousFloorWithRooms();
+    if (prevFloor == null) return {};
+    return prevFloor.rooms.map((r) => r.index).toSet();
   }
 }
