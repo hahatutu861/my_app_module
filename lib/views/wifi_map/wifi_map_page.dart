@@ -10,6 +10,7 @@ import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
+import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
@@ -44,16 +45,14 @@ class WifiMapPage extends HookConsumerWidget {
       return null;
     }, [floorId]);
 
-    final transformationController = useMemoized(() {
-      final controller = TransformationController();
-      controller.value = Matrix4.identity()..scaleByDouble(1.5, 1.5, 1.0, 1.0);
-      return controller;
-    });
-
     final statusBarHeight = MediaQuery.of(context).padding.top;
-
     final hideButtonSize = useState<Size?>(null);
     final bubbleSize = useState<Size?>(null);
+    final transformationController = useMemoized(() {
+      final controller = TransformationController();
+      return controller;
+    });
+    final hasFittedToRooms = useState<bool>(false);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -67,8 +66,10 @@ class WifiMapPage extends HookConsumerWidget {
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
             context,
+            ref,
             transformationController,
             floorViewModel,
+            hasFittedToRooms,
           ),
           _buildBottomBar(context, floorViewModel),
         ],
@@ -78,8 +79,10 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildAutoSizeGrid(
     BuildContext context,
+    WidgetRef ref,
     TransformationController transformationController,
     FloorViewModel floorViewModel,
+    ValueNotifier<bool> hasFittedToRooms,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -93,6 +96,23 @@ class WifiMapPage extends HookConsumerWidget {
         final int rowCount = (totalItemCount / crossAxisCount).ceil();
         final double totalGridHeight =
             rowCount * squareSize + (rowCount - 1) * spacing;
+
+        final state = ref.read(floorViewModelProvider);
+        if (state is FloorStateLoaded &&
+            floorViewModel.roomsMap.isNotEmpty &&
+            !hasFittedToRooms.value) {
+          hasFittedToRooms.value = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _fitToRooms(
+              transformationController,
+              floorViewModel.roomsMap,
+              viewportSize: Size(screenWidth, totalGridHeight),
+              squareSize: squareSize,
+              padding: minHorizontalPadding,
+            );
+          });
+        }
+
         return SizedBox(
           width: double.infinity,
           height: totalGridHeight,
@@ -506,5 +526,68 @@ class WifiMapPage extends HookConsumerWidget {
         );
       });
     }
+  }
+
+  void _fitToRooms(
+    TransformationController controller,
+    Map<int, RoomModel> roomsMap, {
+    required Size viewportSize,
+    required double squareSize,
+    required double padding,
+  }) {
+    if (roomsMap.isEmpty) return;
+    final indices = roomsMap.keys.toList();
+
+    int minRow = 110 ~/ crossAxisCount;
+    int maxRow = 0;
+    int minCol = crossAxisCount - 1;
+    int maxCol = 0;
+
+    for (final index in indices) {
+      final row = index ~/ crossAxisCount;
+      final col = index % crossAxisCount;
+      if (row < minRow) minRow = row;
+      if (row > maxRow) maxRow = row;
+      if (col < minCol) minCol = col;
+      if (col > maxCol) maxCol = col;
+    }
+
+    final double cellSizeWithSpacing = squareSize + spacing;
+    final double boundsWidth = (maxCol - minCol + 1) * squareSize + (maxCol - minCol) * spacing;
+    final double boundsHeight = (maxRow - minRow + 1) * squareSize + (maxRow - minRow) * spacing;
+
+    final double boundsCenterX = padding + minCol * cellSizeWithSpacing + boundsWidth / 2;
+    final double boundsCenterY = minRow * cellSizeWithSpacing + boundsHeight / 2;
+
+    double scale = 1.0;
+    if (boundsWidth > 0 && boundsHeight > 0) {
+      final scaleX = viewportSize.width / boundsWidth;
+      final scaleY = viewportSize.height / boundsHeight;
+      scale = scaleX < scaleY ? scaleX : scaleY;
+      if (scale < 1.0) scale = 1.0;
+      if (scale > 2.5) scale = 2.5;
+    }
+
+    double tx = viewportSize.width / 2 - scale * boundsCenterX;
+    double ty = viewportSize.height / 2 - scale * boundsCenterY;
+
+    final double contentWidth = viewportSize.width;
+    final double contentHeight = viewportSize.height;
+
+    if (scale * contentWidth > viewportSize.width) {
+      tx = tx.clamp(viewportSize.width - scale * contentWidth, 0.0);
+    } else {
+      tx = (viewportSize.width - scale * contentWidth) / 2;
+    }
+
+    if (scale * contentHeight > viewportSize.height) {
+      ty = ty.clamp(viewportSize.height - scale * contentHeight, 0.0);
+    } else {
+      ty = (viewportSize.height - scale * contentHeight) / 2;
+    }
+
+    controller.value = Matrix4.identity()
+      ..translateByDouble(tx, ty, 0.0, 1.0)
+      ..scaleByDouble(scale, scale, 1.0, 1.0);
   }
 }
