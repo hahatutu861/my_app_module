@@ -20,6 +20,38 @@ import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
+class GridLayoutInfo {
+  final double squareSize;
+  final double gridHeight;
+  final double horizontalPadding;
+  final double screenWidth;
+
+  const GridLayoutInfo({
+    required this.squareSize,
+    required this.gridHeight,
+    required this.horizontalPadding,
+    this.screenWidth = 0,
+  });
+}
+
+class RoomFitContext {
+  final bool hasCurrentRooms;
+  final bool hasReferenceRooms;
+  final bool shouldUseReference;
+  final bool isFloorMatch;
+  final bool hasNoRoomsAtAll;
+  final List<RoomModel>? previousFloorRooms;
+
+  const RoomFitContext({
+    required this.hasCurrentRooms,
+    required this.hasReferenceRooms,
+    required this.shouldUseReference,
+    required this.isFloorMatch,
+    required this.hasNoRoomsAtAll,
+    this.previousFloorRooms,
+  });
+}
+
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
 class WifiMapPage extends HookConsumerWidget {
@@ -77,6 +109,85 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
+  GridLayoutInfo _calculateGridLayout(double screenWidth) {
+    const int totalItemCount = 110;
+    final double horizontalPadding = 16.w;
+    final double availableWidth = screenWidth - horizontalPadding * 2;
+    final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
+    final double squareSize = (availableWidth - totalSpacingWidth) / crossAxisCount;
+    final int rowCount = (totalItemCount / crossAxisCount).ceil();
+    final double totalGridHeight = rowCount * squareSize + (rowCount - 1) * spacing;
+
+    return GridLayoutInfo(
+      squareSize: squareSize,
+      gridHeight: totalGridHeight,
+      horizontalPadding: horizontalPadding,
+    );
+  }
+
+  RoomFitContext _buildRoomFitContext(
+    FloorViewModel floorViewModel,
+    FloorState? state,
+    String? currentFloorId,
+  ) {
+    final hasCurrentRooms = floorViewModel.roomsMap.isNotEmpty;
+    final previousFloor = floorViewModel.getPreviousFloorWithRooms();
+    final hasReferenceRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
+    final shouldUseReference = hasReferenceRooms && floorViewModel.isReferenceEnabled;
+    final loadedState = state is FloorStateLoaded ? state : null;
+    final isFloorMatch = currentFloorId != null && loadedState?.floor?.id == currentFloorId;
+    final hasNoRoomsAtAll = !hasCurrentRooms && !hasReferenceRooms;
+
+    return RoomFitContext(
+      hasCurrentRooms: hasCurrentRooms,
+      hasReferenceRooms: hasReferenceRooms,
+      shouldUseReference: shouldUseReference,
+      isFloorMatch: isFloorMatch,
+      hasNoRoomsAtAll: hasNoRoomsAtAll,
+      previousFloorRooms: previousFloor?.rooms,
+    );
+  }
+
+  void _handleRoomFitting(
+    RoomFitContext context,
+    FloorViewModel floorViewModel,
+    TransformationController transformationController,
+    GridLayoutInfo layout,
+    ValueNotifier<bool> hasFittedToRooms,
+  ) {
+    if (context.isFloorMatch && !hasFittedToRooms.value) {
+      hasFittedToRooms.value = true;
+      Map<int, RoomModel> targetRooms;
+      bool shouldTranslate;
+
+      if (context.hasCurrentRooms || context.shouldUseReference) {
+        targetRooms = context.hasCurrentRooms
+            ? floorViewModel.roomsMap
+            : {for (var r in context.previousFloorRooms!) r.index: r};
+        shouldTranslate = true;
+      } else if (context.hasNoRoomsAtAll) {
+        targetRooms = {};
+        shouldTranslate = false;
+      } else {
+        return;
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _fitToRooms(
+          transformationController,
+          targetRooms,
+          viewportSize: Size(
+            layout.screenWidth,
+            layout.gridHeight,
+          ),
+          squareSize: layout.squareSize,
+          padding: layout.horizontalPadding,
+          shouldTranslate: shouldTranslate,
+        );
+      });
+    }
+  }
+
   Widget _buildAutoSizeGrid(
     BuildContext context,
     WidgetRef ref,
@@ -87,60 +198,32 @@ class WifiMapPage extends HookConsumerWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final double screenWidth = constraints.maxWidth;
-        final double minHorizontalPadding = 16.w;
-        final double availableWidth = screenWidth - minHorizontalPadding * 2;
-        final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
-        final double squareSize =
-            (availableWidth - totalSpacingWidth) / crossAxisCount;
-        const int totalItemCount = 110;
-        final int rowCount = (totalItemCount / crossAxisCount).ceil();
-        final double totalGridHeight =
-            rowCount * squareSize + (rowCount - 1) * spacing;
+        final layout = _calculateGridLayout(screenWidth);
 
         final state = ref.read(floorViewModelProvider);
-        final hasCurrentFloorRooms = floorViewModel.roomsMap.isNotEmpty;
-        final previousFloor = floorViewModel.getPreviousFloorWithRooms();
-        final hasPreviousFloorRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
-        final shouldFitToReference = hasPreviousFloorRooms && floorViewModel.isReferenceEnabled;
         final currentState = state is FloorStateLoaded ? state : null;
-        final stateFloorId = currentState?.floor?.id;
-        final isStateFloorMatch = stateFloorId == floorId;
-        final hasNoRoomsAtAll = !hasCurrentFloorRooms && !hasPreviousFloorRooms;
-        if (state is FloorStateLoaded &&
-            isStateFloorMatch &&
-            (hasCurrentFloorRooms || shouldFitToReference) &&
-            !hasFittedToRooms.value) {
-          hasFittedToRooms.value = true;
-          final targetRoomsMap = hasCurrentFloorRooms 
-              ? floorViewModel.roomsMap 
-              : {for (var r in previousFloor!.rooms) r.index: r};
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _fitToRooms(
-              transformationController,
-              targetRoomsMap,
-              viewportSize: Size(screenWidth, totalGridHeight),
-              squareSize: squareSize,
-              padding: minHorizontalPadding,
-              shouldTranslate: true,
-            );
-          });
-        } else if (state is FloorStateLoaded && isStateFloorMatch && hasNoRoomsAtAll && !hasFittedToRooms.value) {
-          hasFittedToRooms.value = true;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _fitToRooms(
-              transformationController,
-              {},
-              viewportSize: Size(screenWidth, totalGridHeight),
-              squareSize: squareSize,
-              padding: minHorizontalPadding,
-              shouldTranslate: false,
-            );
-          });
-        }
+        final fitContext = _buildRoomFitContext(
+          floorViewModel,
+          currentState,
+          floorId,
+        );
+
+        _handleRoomFitting(
+          fitContext,
+          floorViewModel,
+          transformationController,
+          GridLayoutInfo(
+            squareSize: layout.squareSize,
+            gridHeight: layout.gridHeight,
+            horizontalPadding: layout.horizontalPadding,
+            screenWidth: screenWidth,
+          ),
+          hasFittedToRooms,
+        );
 
         return SizedBox(
           width: double.infinity,
-          height: totalGridHeight,
+          height: layout.gridHeight,
           child: InteractiveViewer(
             alignment: Alignment.topLeft,
             minScale: 1.0,
@@ -148,8 +231,8 @@ class WifiMapPage extends HookConsumerWidget {
             boundaryMargin: EdgeInsets.zero,
             transformationController: transformationController,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: minHorizontalPadding),
-              child: _buildGrid(context, squareSize, floorViewModel),
+              padding: EdgeInsets.symmetric(horizontal: layout.horizontalPadding),
+              child: _buildGrid(context, layout.squareSize, floorViewModel),
             ),
           ),
         );
