@@ -34,24 +34,6 @@ class GridLayoutInfo {
   });
 }
 
-class RoomFitContext {
-  final bool hasCurrentRooms;
-  final bool hasReferenceRooms;
-  final bool shouldUseReference;
-  final bool isFloorMatch;
-  final bool hasNoRoomsAtAll;
-  final List<RoomModel>? previousFloorRooms;
-
-  const RoomFitContext({
-    required this.hasCurrentRooms,
-    required this.hasReferenceRooms,
-    required this.shouldUseReference,
-    required this.isFloorMatch,
-    required this.hasNoRoomsAtAll,
-    this.previousFloorRooms,
-  });
-}
-
 /// Wi-Fi 地图页面
 /// 显示楼层的 Wi-Fi 设备网格，支持缩放和滑动
 class WifiMapPage extends HookConsumerWidget {
@@ -127,25 +109,9 @@ class WifiMapPage extends HookConsumerWidget {
 
   RoomFitContext _buildRoomFitContext(
     FloorViewModel floorViewModel,
-    FloorState? state,
     String? currentFloorId,
   ) {
-    final hasCurrentRooms = floorViewModel.roomsMap.isNotEmpty;
-    final previousFloor = floorViewModel.getPreviousFloorWithRooms();
-    final hasReferenceRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
-    final shouldUseReference = hasReferenceRooms && floorViewModel.isReferenceEnabled;
-    final loadedState = state is FloorStateLoaded ? state : null;
-    final isFloorMatch = currentFloorId != null && loadedState?.floor?.id == currentFloorId;
-    final hasNoRoomsAtAll = !hasCurrentRooms && !hasReferenceRooms;
-
-    return RoomFitContext(
-      hasCurrentRooms: hasCurrentRooms,
-      hasReferenceRooms: hasReferenceRooms,
-      shouldUseReference: shouldUseReference,
-      isFloorMatch: isFloorMatch,
-      hasNoRoomsAtAll: hasNoRoomsAtAll,
-      previousFloorRooms: previousFloor?.rooms,
-    );
+    return floorViewModel.getRoomFitContext(currentFloorId);
   }
 
   void _handleRoomFitting(
@@ -155,35 +121,29 @@ class WifiMapPage extends HookConsumerWidget {
     GridLayoutInfo layout,
     ValueNotifier<bool> hasFittedToRooms,
   ) {
-    if (context.isFloorMatch && !hasFittedToRooms.value) {
+    if (context.shouldFitToRooms && !hasFittedToRooms.value) {
       hasFittedToRooms.value = true;
-      Map<int, RoomModel> targetRooms;
-      bool shouldTranslate;
-
-      if (context.hasCurrentRooms || context.shouldUseReference) {
-        targetRooms = context.hasCurrentRooms
-            ? floorViewModel.roomsMap
-            : {for (var r in context.previousFloorRooms!) r.index: r};
-        shouldTranslate = true;
-      } else if (context.hasNoRoomsAtAll) {
-        targetRooms = {};
-        shouldTranslate = false;
-      } else {
+      final targetRooms = floorViewModel.getTargetRoomsForFitting(context);
+      final shouldTranslate = context.hasCurrentRooms || context.shouldUseReference 
+          ? true 
+          : (context.hasNoRoomsAtAll ? false : true);
+      if (targetRooms.isEmpty && !shouldTranslate) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          transformationController.value = Matrix4.identity()..scaleByDouble(2.5, 2.5, 1.0, 1.0);
+        });
         return;
       }
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _fitToRooms(
-          transformationController,
-          targetRooms,
-          viewportSize: Size(
-            layout.screenWidth,
-            layout.gridHeight,
-          ),
+        final transform = floorViewModel.calculateFitTransform(
+          roomsMap: targetRooms,
+          viewportSize: Size(layout.screenWidth, layout.gridHeight),
           squareSize: layout.squareSize,
+          spacing: WifiMapPage.spacing,
           padding: layout.horizontalPadding,
           shouldTranslate: shouldTranslate,
         );
+        transformationController.value = transform;
       });
     }
   }
@@ -200,11 +160,8 @@ class WifiMapPage extends HookConsumerWidget {
         final double screenWidth = constraints.maxWidth;
         final layout = _calculateGridLayout(screenWidth);
 
-        final state = ref.read(floorViewModelProvider);
-        final currentState = state is FloorStateLoaded ? state : null;
         final fitContext = _buildRoomFitContext(
           floorViewModel,
-          currentState,
           floorId,
         );
 
@@ -634,74 +591,5 @@ class WifiMapPage extends HookConsumerWidget {
         );
       });
     }
-  }
-
-  void _fitToRooms(
-    TransformationController controller,
-    Map<int, RoomModel> roomsMap, {
-    required Size viewportSize,
-    required double squareSize,
-    required double padding,
-    required bool shouldTranslate,
-  }) {
-    if (roomsMap.isEmpty) {
-      if (!shouldTranslate) {
-        controller.value = Matrix4.identity()..scale(2.5);
-      }
-      return;
-    }
-    final indices = roomsMap.keys.toList();
-
-    int minRow = 110 ~/ crossAxisCount;
-    int maxRow = 0;
-    int minCol = crossAxisCount - 1;
-    int maxCol = 0;
-
-    for (final index in indices) {
-      final row = index ~/ crossAxisCount;
-      final col = index % crossAxisCount;
-      if (row < minRow) minRow = row;
-      if (row > maxRow) maxRow = row;
-      if (col < minCol) minCol = col;
-      if (col > maxCol) maxCol = col;
-    }
-
-    final double cellSizeWithSpacing = squareSize + spacing;
-    final double boundsWidth = (maxCol - minCol + 1) * squareSize + (maxCol - minCol) * spacing;
-    final double boundsHeight = (maxRow - minRow + 1) * squareSize + (maxRow - minRow) * spacing;
-
-    final double boundsCenterX = padding + minCol * cellSizeWithSpacing + boundsWidth / 2;
-    final double boundsCenterY = minRow * cellSizeWithSpacing + boundsHeight / 2;
-
-    double scale = 1.0;
-    if (boundsWidth > 0 && boundsHeight > 0) {
-      final scaleX = viewportSize.width / boundsWidth;
-      final scaleY = viewportSize.height / boundsHeight;
-      scale = scaleX < scaleY ? scaleX : scaleY;
-      if (scale < 1.0) scale = 1.0;
-      if (scale > 2.5) scale = 2.5;
-    }
-
-    double tx = viewportSize.width / 2 - scale * boundsCenterX;
-    double ty = viewportSize.height / 2 - scale * boundsCenterY;
-
-    final double contentWidth = viewportSize.width;
-    final double contentHeight = viewportSize.height;
-
-    if (scale * contentWidth > viewportSize.width) {
-      tx = tx.clamp(viewportSize.width - scale * contentWidth, 0.0);
-    } else {
-      tx = (viewportSize.width - scale * contentWidth) / 2;
-    }
-
-    if (scale * contentHeight > viewportSize.height) {
-      ty = ty.clamp(viewportSize.height - scale * contentHeight, 0.0);
-    } else {
-      ty = (viewportSize.height - scale * contentHeight) / 2;
-    }
-
-    controller.value = Matrix4.identity()
-      ..translateByDouble(tx, ty, 0.0, 1.0)
-      ..scaleByDouble(scale, scale, 1.0, 1.0);
   }
 }

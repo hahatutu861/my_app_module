@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
@@ -304,5 +305,109 @@ class FloorViewModel extends Notifier<FloorState> {
     final prevFloor = getPreviousFloorWithRooms();
     if (prevFloor == null) return {};
     return prevFloor.rooms.map((r) => r.index).toSet();
+  }
+
+  RoomFitContext getRoomFitContext(String? currentFloorId) {
+    final hasCurrentRooms = roomsMap.isNotEmpty;
+    final previousFloor = getPreviousFloorWithRooms();
+    final hasReferenceRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
+    final shouldUseReference = hasReferenceRooms && isReferenceEnabled;
+    final loadedState = state is FloorStateLoaded ? state : null;
+    final isFloorMatch = currentFloorId != null && loadedState is FloorStateLoaded && loadedState.floor?.id == currentFloorId;
+    final hasNoRoomsAtAll = !hasCurrentRooms && !hasReferenceRooms;
+
+    return RoomFitContext(
+      hasCurrentRooms: hasCurrentRooms,
+      hasReferenceRooms: hasReferenceRooms,
+      shouldUseReference: shouldUseReference,
+      isFloorMatch: isFloorMatch,
+      hasNoRoomsAtAll: hasNoRoomsAtAll,
+      previousFloorRooms: previousFloor?.rooms,
+    );
+  }
+
+  Map<int, RoomModel> getTargetRoomsForFitting(RoomFitContext context) {
+    if (context.hasCurrentRooms) {
+      return roomsMap;
+    } else if (context.shouldUseReference && context.previousFloorRooms != null) {
+      return {for (var r in context.previousFloorRooms!) r.index: r};
+    } else if (context.hasNoRoomsAtAll) {
+      return {};
+    }
+    return {};
+  }
+
+  Matrix4 calculateFitTransform({
+    required Map<int, RoomModel> roomsMap,
+    required Size viewportSize,
+    required double squareSize,
+    required double spacing,
+    required double padding,
+    required bool shouldTranslate,
+    int crossAxisCount = 10,
+  }) {
+    if (roomsMap.isEmpty) {
+      if (!shouldTranslate) {
+        return Matrix4.identity()..scaleByDouble(2.5, 2.5, 1.0, 1.0);
+      }
+      return Matrix4.identity();
+    }
+
+    final indices = roomsMap.keys.toList();
+
+    int minRow = 110 ~/ crossAxisCount;
+    int maxRow = 0;
+    int minCol = crossAxisCount - 1;
+    int maxCol = 0;
+
+    for (final index in indices) {
+      final row = index ~/ crossAxisCount;
+      final col = index % crossAxisCount;
+      if (row < minRow) minRow = row;
+      if (row > maxRow) maxRow = row;
+      if (col < minCol) minCol = col;
+      if (col > maxCol) maxCol = col;
+    }
+
+    final double cellSizeWithSpacing = squareSize + spacing;
+    final double boundsWidth = (maxCol - minCol + 1) * squareSize + (maxCol - minCol) * spacing;
+    final double boundsHeight = (maxRow - minRow + 1) * squareSize + (maxRow - minRow) * spacing;
+
+    final double boundsCenterX = padding + minCol * cellSizeWithSpacing + boundsWidth / 2;
+    final double boundsCenterY = minRow * cellSizeWithSpacing + boundsHeight / 2;
+
+    double scale = 1.0;
+    if (boundsWidth > 0 && boundsHeight > 0) {
+      final scaleX = viewportSize.width / boundsWidth;
+      final scaleY = viewportSize.height / boundsHeight;
+      scale = scaleX < scaleY ? scaleX : scaleY;
+      if (scale < 1.0) scale = 1.0;
+      if (scale > 2.5) scale = 2.5;
+    }
+
+    double tx = viewportSize.width / 2 - scale * boundsCenterX;
+    double ty = viewportSize.height / 2 - scale * boundsCenterY;
+
+    final double contentWidth = viewportSize.width;
+    final double contentHeight = viewportSize.height;
+
+    if (scale * contentWidth > viewportSize.width) {
+      tx = tx.clamp(viewportSize.width - scale * contentWidth, 0.0);
+    } else {
+      tx = (viewportSize.width - scale * contentWidth) / 2;
+    }
+
+    if (scale * contentHeight > viewportSize.height) {
+      ty = ty.clamp(viewportSize.height - scale * contentHeight, 0.0);
+    } else {
+      ty = (viewportSize.height - scale * contentHeight) / 2;
+    }
+
+    return Matrix4.identity()
+      ..setEntry(0, 3, tx)
+      ..setEntry(1, 3, ty)
+      ..setEntry(0, 0, scale)
+      ..setEntry(1, 1, scale)
+      ..setEntry(2, 2, 1.0);
   }
 }

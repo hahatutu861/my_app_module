@@ -1,7 +1,28 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:my_app_module/models/floor_model.dart';
+import 'package:my_app_module/models/room_model.dart';
 
 part 'floor_state.freezed.dart';
+
+class RoomFitContext {
+  final bool hasCurrentRooms;
+  final bool hasReferenceRooms;
+  final bool shouldUseReference;
+  final bool isFloorMatch;
+  final bool hasNoRoomsAtAll;
+  final List<RoomModel>? previousFloorRooms;
+
+  const RoomFitContext({
+    required this.hasCurrentRooms,
+    required this.hasReferenceRooms,
+    required this.shouldUseReference,
+    required this.isFloorMatch,
+    required this.hasNoRoomsAtAll,
+    this.previousFloorRooms,
+  });
+
+  bool get shouldFitToRooms => isFloorMatch;
+}
 
 @freezed
 sealed class FloorState with _$FloorState {
