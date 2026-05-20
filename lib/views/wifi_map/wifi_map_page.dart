@@ -105,6 +105,7 @@ class WifiMapPage extends HookConsumerWidget {
         final currentState = state is FloorStateLoaded ? state : null;
         final stateFloorId = currentState?.floor?.id;
         final isStateFloorMatch = stateFloorId == floorId;
+        final hasNoRoomsAtAll = !hasCurrentFloorRooms && !hasPreviousFloorRooms;
         if (state is FloorStateLoaded &&
             isStateFloorMatch &&
             (hasCurrentFloorRooms || shouldFitToReference) &&
@@ -120,6 +121,19 @@ class WifiMapPage extends HookConsumerWidget {
               viewportSize: Size(screenWidth, totalGridHeight),
               squareSize: squareSize,
               padding: minHorizontalPadding,
+              shouldTranslate: true,
+            );
+          });
+        } else if (state is FloorStateLoaded && isStateFloorMatch && hasNoRoomsAtAll && !hasFittedToRooms.value) {
+          hasFittedToRooms.value = true;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _fitToRooms(
+              transformationController,
+              {},
+              viewportSize: Size(screenWidth, totalGridHeight),
+              squareSize: squareSize,
+              padding: minHorizontalPadding,
+              shouldTranslate: false,
             );
           });
         }
@@ -545,8 +559,14 @@ class WifiMapPage extends HookConsumerWidget {
     required Size viewportSize,
     required double squareSize,
     required double padding,
+    required bool shouldTranslate,
   }) {
-    if (roomsMap.isEmpty) return;
+    if (roomsMap.isEmpty) {
+      if (!shouldTranslate) {
+        controller.value = Matrix4.identity()..scale(2.5);
+      }
+      return;
+    }
     final indices = roomsMap.keys.toList();
 
     int minRow = 110 ~/ crossAxisCount;
