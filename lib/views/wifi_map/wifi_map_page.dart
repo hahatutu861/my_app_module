@@ -48,11 +48,11 @@ class WifiMapPage extends HookConsumerWidget {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final hideButtonSize = useState<Size?>(null);
     final bubbleSize = useState<Size?>(null);
+    final hasFittedToRooms = useState<bool>(false);
     final transformationController = useMemoized(() {
       final controller = TransformationController();
       return controller;
     });
-    final hasFittedToRooms = useState<bool>(false);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -102,8 +102,11 @@ class WifiMapPage extends HookConsumerWidget {
         final previousFloor = floorViewModel.getPreviousFloorWithRooms();
         final hasPreviousFloorRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
         final shouldFitToReference = hasPreviousFloorRooms && floorViewModel.isReferenceEnabled;
-        
+        final currentState = state is FloorStateLoaded ? state : null;
+        final stateFloorId = currentState?.floor?.id;
+        final isStateFloorMatch = stateFloorId == floorId;
         if (state is FloorStateLoaded &&
+            isStateFloorMatch &&
             (hasCurrentFloorRooms || shouldFitToReference) &&
             !hasFittedToRooms.value) {
           hasFittedToRooms.value = true;
