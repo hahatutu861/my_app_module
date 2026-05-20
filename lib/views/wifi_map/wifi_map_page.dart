@@ -98,14 +98,22 @@ class WifiMapPage extends HookConsumerWidget {
             rowCount * squareSize + (rowCount - 1) * spacing;
 
         final state = ref.read(floorViewModelProvider);
+        final hasCurrentFloorRooms = floorViewModel.roomsMap.isNotEmpty;
+        final previousFloor = floorViewModel.getPreviousFloorWithRooms();
+        final hasPreviousFloorRooms = previousFloor != null && previousFloor.rooms.isNotEmpty;
+        final shouldFitToReference = hasPreviousFloorRooms && floorViewModel.isReferenceEnabled;
+        
         if (state is FloorStateLoaded &&
-            floorViewModel.roomsMap.isNotEmpty &&
+            (hasCurrentFloorRooms || shouldFitToReference) &&
             !hasFittedToRooms.value) {
           hasFittedToRooms.value = true;
+          final targetRoomsMap = hasCurrentFloorRooms 
+              ? floorViewModel.roomsMap 
+              : {for (var r in previousFloor!.rooms) r.index: r};
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _fitToRooms(
               transformationController,
-              floorViewModel.roomsMap,
+              targetRoomsMap,
               viewportSize: Size(screenWidth, totalGridHeight),
               squareSize: squareSize,
               padding: minHorizontalPadding,
