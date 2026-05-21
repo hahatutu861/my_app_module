@@ -381,12 +381,24 @@ class WifiMapPage extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildBackButton(context),
-          _buildHideButton(
-            context,
-            ref,
-            hideButtonSize,
-            bubbleSize,
-            floorViewModel,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppImage(
+                'info.png',
+                width: 24.w,
+                height: 24.w,
+                color: context.appColors.fontGy1with90Opacity,
+              ),
+              SizedBox(width: 8.w),
+              _buildHideButton(
+                context,
+                ref,
+                hideButtonSize,
+                bubbleSize,
+                floorViewModel,
+              ),
+            ],
           ),
         ],
       ),
