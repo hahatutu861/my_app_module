@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/design/app_button_style.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
-import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 
-import '../utils/design/app_media_query_extension.dart';
+class DeleteConfirmDialog extends ConsumerWidget {
+  final String itemName;
 
-class DeleteFloorConfirmDialog extends ConsumerWidget {
-  final String floorName;
-
-  const DeleteFloorConfirmDialog({
-    super.key,
-    required this.floorName,
-  });
+  const DeleteConfirmDialog({super.key, required this.itemName});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,7 +29,7 @@ class DeleteFloorConfirmDialog extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.fromLTRB(24.w, 32.w, 24.w, 8.w),
               child: Text(
-                context.l10n.deleteFloorConfirmTitle(floorName),
+                context.l10n.deleteFloorConfirmTitle(itemName),
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w500,
@@ -58,10 +53,7 @@ class DeleteFloorConfirmDialog extends ConsumerWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border(
-                  top: BorderSide(
-                    color: context.appColors.gray3,
-                    width: 0.5.w,
-                  ),
+                  top: BorderSide(color: context.appColors.gray3, width: 0.5.w),
                 ),
               ),
               child: IntrinsicHeight(

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/utils/design/room_types.dart';
 import 'package:my_app_module/models/room_model.dart';
+import 'package:my_app_module/viewmodels/floor/floor_state.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
 
 final editRoomBottomSheetProvider =
     NotifierProvider<EditRoomBottomSheetViewModel,
@@ -74,5 +77,27 @@ class EditRoomBottomSheetViewModel
       isGateway: isGateway,
       clearIsGateway: isGateway == null,
     );
+  }
+
+  Future<void> deleteRoom(BuildContext context, FloorState floorState, int index) async {
+    final floor = switch (floorState) {
+      FloorStateLoaded(:final floor) => floor,
+      _ => null,
+    };
+    final room = floor?.rooms.firstWhere(
+      (r) => r.index == index,
+      orElse: () => throw StateError('Room not found'),
+    );
+    final roomName = room?.roomName ?? '';
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => DeleteConfirmDialog(
+        itemName: roomName,
+      ),
+    );
+    if (confirmed == true) {
+      ref.read(floorViewModelProvider.notifier).deleteRoom(index);
+    }
   }
 }

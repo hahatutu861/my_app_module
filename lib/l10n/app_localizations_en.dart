@@ -197,8 +197,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteFloor => 'Delete';
 
   @override
-  String deleteFloorConfirmTitle(String floorName) {
-    return 'Delete $floorName?';
+  String deleteFloorConfirmTitle(String itemName) {
+    return 'Delete $itemName?';
   }
 
   @override

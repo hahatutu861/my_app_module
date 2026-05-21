@@ -87,7 +87,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
             SizedBox(height: AppSpacing.pad24.w),
             _buildRadioGroup(context, state, viewModel),
             SizedBox(height: AppSpacing.pad24.w),
-            _buildButtons(context, ref, state, hasRoom),
+            _buildButtons(context, ref, state, hasRoom, floorState, viewModel),
             SizedBox(height: AppSpacing.pad16.w),
           ],
         ),
@@ -286,7 +286,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     );
   }
 
-  Widget _buildButtons(BuildContext context, WidgetRef ref, EditRoomBottomSheetState state, bool hasRoom) {
+  Widget _buildButtons(BuildContext context, WidgetRef ref, EditRoomBottomSheetState state, bool hasRoom, FloorState floorState, EditRoomBottomSheetViewModel viewModel) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
       child: Column(
@@ -331,9 +331,11 @@ class EditRoomBottomSheet extends HookConsumerWidget {
               width: double.infinity,
               height: 48.w,
               child: OutlinedButton(
-                onPressed: () {
-                  ref.read(floorViewModelProvider.notifier).deleteRoom(index!);
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  await viewModel.deleteRoom(context, floorState, index!);
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(

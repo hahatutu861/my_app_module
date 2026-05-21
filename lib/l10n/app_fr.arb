@@ -72,10 +72,10 @@
   "extender": "Extender",
   "deleteZoneRoom": "Supprimer cette zone/pièce",
   "deleteFloor": "Supprimer",
-  "deleteFloorConfirmTitle": "Supprimer {floorName} ?",
+  "deleteFloorConfirmTitle": "Supprimer {itemName} ?",
   "@deleteFloorConfirmTitle": {
     "placeholders": {
-      "floorName": {
+      "itemName": {
         "type": "String"
       }
     }

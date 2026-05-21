@@ -449,8 +449,8 @@ abstract class AppLocalizations {
   /// No description provided for @deleteFloorConfirmTitle.
   ///
   /// In en, this message translates to:
-  /// **'Delete {floorName}?'**
-  String deleteFloorConfirmTitle(String floorName);
+  /// **'Delete {itemName}?'**
+  String deleteFloorConfirmTitle(String itemName);
 
   /// No description provided for @deleteFloorConfirmDescription.
   ///

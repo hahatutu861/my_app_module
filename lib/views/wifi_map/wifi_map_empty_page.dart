@@ -238,8 +238,8 @@ class _FloorListItem extends ConsumerWidget {
             onPressed: (context) async {
               final confirmed = await showDialog<bool>(
                 context: context,
-                builder: (context) => DeleteFloorConfirmDialog(
-                  floorName: floor.floorName,
+                builder: (context) => DeleteConfirmDialog(
+                  itemName: floor.floorName,
                 ),
               );
               if (confirmed == true) {
