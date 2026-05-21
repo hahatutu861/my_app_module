@@ -212,6 +212,18 @@ abstract class AppLocalizations {
   /// **'{count, plural, =0{0 zones} =1{1 zone} other{{count} zones}}'**
   String zonesCount(int count);
 
+  /// No description provided for @wifiMapStatsTips.
+  ///
+  /// In en, this message translates to:
+  /// **'Tips:'**
+  String get wifiMapStatsTips;
+
+  /// No description provided for @wifiMapStatsClickZonesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'You must click zones to test Wi-Fi.'**
+  String get wifiMapStatsClickZonesHint;
+
   /// No description provided for @wifiMapPage.
   ///
   /// In en, this message translates to:

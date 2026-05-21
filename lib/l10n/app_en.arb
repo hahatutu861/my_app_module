@@ -33,6 +33,8 @@
       }
     }
   },
+  "wifiMapStatsTips": "Tips:",
+  "wifiMapStatsClickZonesHint": "You must click zones to test Wi-Fi.",
   "wifiMapPage": "Wi-Fi Map",
   "noZones": "0 zones",
   "wifiMapDialogTips": "Tips",

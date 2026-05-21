@@ -33,6 +33,8 @@
       }
     }
   },
+  "wifiMapStatsTips": "Conseils :",
+  "wifiMapStatsClickZonesHint": "Vous devez cliquer sur les zones pour tester le Wi-Fi.",
   "wifiMapPage": "Carte Wi-Fi",
   "noZones": "0 zones",
   "wifiMapDialogTips": "Conseils",

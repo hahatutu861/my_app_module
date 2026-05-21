@@ -16,6 +16,7 @@ import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
+import 'package:my_app_module/widgets/room_count_badge.dart';
 
 class WifiMapEmptyPage extends HookConsumerWidget {
   const WifiMapEmptyPage({super.key});
@@ -238,9 +239,8 @@ class _FloorListItem extends ConsumerWidget {
             onPressed: (context) async {
               final confirmed = await showDialog<bool>(
                 context: context,
-                builder: (context) => DeleteConfirmDialog(
-                  itemName: floor.floorName,
-                ),
+                builder: (context) =>
+                    DeleteConfirmDialog(itemName: floor.floorName),
               );
               if (confirmed == true) {
                 ref.read(floorViewModelProvider.notifier).deleteFloor(floor.id);
@@ -299,7 +299,7 @@ class _FloorListItem extends ConsumerWidget {
         children: [
           _buildFloorNameRow(context, floor),
           _buildUpdateTime(context, floor),
-          _buildRoomCountBadge(context, floor),
+          RoomCountBadge(count: floor.rooms.length),
         ],
       ),
     );
@@ -326,35 +326,6 @@ class _FloorListItem extends ConsumerWidget {
     return Text(
       DateFormat('yyyy-MM-dd HH:mm').format(displayTime),
       style: context.appTextStyles.bodyMediumWith60Opacity,
-    );
-  }
-
-  Widget _buildRoomCountBadge(BuildContext context, FloorModel floor) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: AppSpacing.s10.w,
-        vertical: AppSpacing.s3.h,
-      ),
-      decoration: BoxDecoration(
-        color: context.appColors.gray1,
-        borderRadius: BorderRadius.circular(AppSpacing.radius3.r),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AppImage(
-            'no_result.png',
-            width: AppSpacing.gap16.w,
-            height: AppSpacing.gap16.h,
-            color: context.appColors.fontGy2with60Opacity,
-          ),
-          SizedBox(width: AppSpacing.gap4.w),
-          Text(
-            floor.rooms.length.toString(),
-            style: context.appTextStyles.bodyMediumWith60Opacity,
-          ),
-        ],
-      ),
     );
   }
 
@@ -395,7 +366,8 @@ class _FloorListItem extends ConsumerWidget {
     const lastFourColsStart = _originalCols - _baseCols;
     const lastFiveRowsStart = _originalRows - _baseRows;
 
-    final isInLastRegion = roomLayout.minX >= lastFourColsStart &&
+    final isInLastRegion =
+        roomLayout.minX >= lastFourColsStart &&
         roomLayout.maxX < _originalCols &&
         roomLayout.minY >= lastFiveRowsStart &&
         roomLayout.maxY < _originalRows;

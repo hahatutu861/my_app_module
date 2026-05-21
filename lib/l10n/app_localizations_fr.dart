@@ -80,6 +80,13 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
+  String get wifiMapStatsTips => 'Conseils :';
+
+  @override
+  String get wifiMapStatsClickZonesHint =>
+      'Vous devez cliquer sur les zones pour tester le Wi-Fi.';
+
+  @override
   String get wifiMapPage => 'Carte Wi-Fi';
 
   @override

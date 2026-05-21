@@ -18,6 +18,7 @@ import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
+import 'package:my_app_module/widgets/room_count_badge.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
 class GridLayoutInfo {
@@ -567,13 +568,38 @@ class WifiMapPage extends HookConsumerWidget {
         top: AppSpacing.pad16.w,
         left: AppSpacing.pad16.w,
       ),
-      child: Text(
-        context.l10n.zonesCount(roomCount),
-        style: TextStyle(
-          fontSize: 16.sp,
-          fontWeight: FontWeight.w400,
-          color: context.appColors.fontGy1with90Opacity,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.zonesCount(roomCount),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: context.appColors.fontGy1with90Opacity,
+            ),
+          ),
+          SizedBox(height: AppSpacing.gap8.h),
+          RoomCountBadge(count: roomCount),
+          SizedBox(height: AppSpacing.gap16.h),
+          Text(
+            context.l10n.wifiMapStatsTips,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: context.appColors.fontGy1with90Opacity,
+            ),
+          ),
+          SizedBox(height: AppSpacing.gap4.h),
+          Text(
+            context.l10n.wifiMapStatsClickZonesHint,
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: context.appColors.fontGy2with60Opacity,
+            ),
+          ),
+        ],
       ),
     );
   }

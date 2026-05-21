@@ -137,6 +137,41 @@ context.l10n.save
 context.l10n.deleteZoneRoom
 ```
 
+### 国际化规范
+
+**强制要求**：所有用户可见的文本（包括按钮文字、标签、提示信息、弹窗内容等）必须使用国际化，禁止硬编码任何文字。
+
+#### 正确示例
+
+```dart
+Text(context.l10n.confirm)
+Text(context.l10n.cancel)
+Text(context.l10n.deleteConfirmTitle)
+```
+
+#### 错误示例
+
+```dart
+Text('确认')      // ❌ 硬编码中文
+Text('Cancel')    // ❌ 硬编码英文
+```
+
+#### 操作流程
+1. 在代码中使用 `context.l10n.变量名` 调用国际化文本
+2. 在对应的 `.arb` 文件中添加翻译键值对
+3. 键名命名规范：`功能_描述`（如 `confirm`、`deleteConfirmTitle`）
+
+#### 访问方式
+```dart
+context.l10n.roomNameLabel
+context.l10n.save
+context.l10n.deleteZoneRoom
+context.l10n.confirm
+context.l10n.cancel
+```
+
+---
+
 ### 交互组件规范
 ```dart
 // 点击手势
@@ -216,6 +251,7 @@ bool _hasPreviousFloorWithRoomsFor(FloorModel? floor) {
    - 禁止添加注释
    - 禁止硬编码颜色值（必须使用 context.appColors）
    - 禁止硬编码尺寸数值（必须使用 .w/.h 后缀）
+   - 禁止硬编码任何用户可见的文字（必须使用 context.l10n.xxx 国际化）
    - 禁止省略类型声明
 
 ---
