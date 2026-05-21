@@ -5,10 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/utils/date_utils.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
@@ -324,7 +324,7 @@ class _FloorListItem extends ConsumerWidget {
   Widget _buildUpdateTime(BuildContext context, FloorModel floor) {
     final displayTime = floor.updatedAt ?? floor.createdAt;
     return Text(
-      DateFormat('yyyy-MM-dd HH:mm').format(displayTime),
+      formatDateTime(displayTime),
       style: context.appTextStyles.bodyMediumWith60Opacity,
     );
   }

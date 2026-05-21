@@ -6,6 +6,7 @@ import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
+import 'package:my_app_module/utils/date_utils.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_spacing_extension.dart';
@@ -551,7 +552,7 @@ class WifiMapPage extends HookConsumerWidget {
       if (room == null) {
         return _buildStats(context, floorViewModel);
       }
-      return _buildSelectedRoomBar(context, room, floorViewModel.selectedRoomIndex!);
+      return _buildSelectedRoomBar(context, room, floorViewModel.selectedRoomIndex!, floorViewModel);
     } else {
       return _buildStats(context, floorViewModel);
     }
@@ -561,8 +562,14 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     RoomModel room,
     int index,
+    FloorViewModel floorViewModel,
   ) {
     final roomType = room.roomTypeEnum;
+    final updatedAt = floorViewModel.currentFloor?.updatedAt;
+    final displayTime = updatedAt ?? floorViewModel.currentFloor?.createdAt;
+    final timeText = displayTime != null
+        ? formatDateTime(displayTime)
+        : '';
 
     return GestureDetector(
       onTap: () => EditRoomBottomSheet.show(context, index),
@@ -570,18 +577,31 @@ class WifiMapPage extends HookConsumerWidget {
       child: Padding(
         padding: EdgeInsets.all(AppSpacing.pad16.w),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            AppImage(roomType.imagePath, width: 20.w, height: 20.w),
-            SizedBox(width: 4.w),
+            Row(
+              children: [
+                AppImage(roomType.imagePath, width: 20.w, height: 20.w),
+                SizedBox(width: 4.w),
+                Text(
+                  room.roomName,
+                  style: context.appTextStyles.titleWith90Opacity.copyWith(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                SizedBox(width: 4.w),
+                EditButton(),
+              ],
+            ),
             Text(
-              room.roomName,
-              style: context.appTextStyles.titleWith90Opacity.copyWith(
-                fontSize: 16.sp,
+              timeText,
+              style: TextStyle(
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
+                color: context.appColors.fontGy2with60Opacity,
               ),
             ),
-            SizedBox(width: 4.w),
-            EditButton(),
           ],
         ),
       ),
