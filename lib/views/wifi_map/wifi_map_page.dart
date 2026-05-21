@@ -13,6 +13,7 @@ import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
+import 'package:my_app_module/views/wifi_map/wifi_speed_dialog.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
@@ -384,11 +385,14 @@ class WifiMapPage extends HookConsumerWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppImage(
-                'info.png',
-                width: 24.w,
-                height: 24.w,
-                color: context.appColors.fontGy1with90Opacity,
+              GestureDetector(
+                onTap: () => WifiSpeedDialog.show(context),
+                child: AppImage(
+                  'info.png',
+                  width: 24.w,
+                  height: 24.w,
+                  color: context.appColors.fontGy1with90Opacity,
+                ),
               ),
               SizedBox(width: 8.w),
               _buildHideButton(

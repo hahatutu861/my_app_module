@@ -475,6 +475,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show previous floor reference.'**
   String get showPreviousFloorReference;
+
+  /// No description provided for @wifiSpeedDialogTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your Wi-Fi speed?'**
+  String get wifiSpeedDialogTitle;
+
+  /// No description provided for @wifiSpeedDialogSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the Wi-Fi speed between this device and your Wi-Fi equipment.'**
+  String get wifiSpeedDialogSubtitle;
+
+  /// No description provided for @wifiSpeedGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get wifiSpeedGood;
+
+  /// No description provided for @wifiSpeedGoodDescription.
+  ///
+  /// In en, this message translates to:
+  /// **': This zone has a good Wi-Fi coverage. Your devices should have a stable Wi-Fi connection for any content/usage.'**
+  String get wifiSpeedGoodDescription;
+
+  /// No description provided for @wifiSpeedModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get wifiSpeedModerate;
+
+  /// No description provided for @wifiSpeedModerateDescription.
+  ///
+  /// In en, this message translates to:
+  /// **': This zone\'s Wi-Fi connection should be still be fine but that is the limit of a good signal. Beyond that zone, an extender would be required.'**
+  String get wifiSpeedModerateDescription;
+
+  /// No description provided for @wifiSpeedWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get wifiSpeedWeak;
+
+  /// No description provided for @wifiSpeedWeakDescription.
+  ///
+  /// In en, this message translates to:
+  /// **': Your devices may experiment some problems. To improve this zone, you will need to bring your Wi-Fi equipment closer to this zone/room or add an extender close by*.'**
+  String get wifiSpeedWeakDescription;
+
+  /// No description provided for @wifiSpeedExtenderHint.
+  ///
+  /// In en, this message translates to:
+  /// **'*Adding an extender: \nIf you decide to add an extender, It should not be installed in yellow or red zone since it will also receive bad Wi-Fi (unless you are connecting it to your router with an Ethernet cable). Install it in a room that receive good Wi-Fi signal between this zone and your closest Wi-Fi equipment.'**
+  String get wifiSpeedExtenderHint;
 }
 
 class _AppLocalizationsDelegate

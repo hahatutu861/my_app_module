@@ -217,4 +217,36 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get showPreviousFloorReference =>
       'Afficher la référence de l\'étage précédent.';
+
+  @override
+  String get wifiSpeedDialogTitle => 'Quelle est votre vitesse Wi-Fi ?';
+
+  @override
+  String get wifiSpeedDialogSubtitle =>
+      'Il s\'agit de la vitesse Wi-Fi entre cet appareil et votre équipement Wi-Fi.';
+
+  @override
+  String get wifiSpeedGood => 'Bon';
+
+  @override
+  String get wifiSpeedGoodDescription =>
+      'Cette zone a une bonne couverture Wi-Fi. Vos appareils devraient avoir une connexion Wi-Fi stable pour tout contenu/utilisation.';
+
+  @override
+  String get wifiSpeedModerate => 'Modéré';
+
+  @override
+  String get wifiSpeedModerateDescription =>
+      'La connexion Wi-Fi de cette zone devrait être encore correcte mais c\'est la limite d\'un bon signal. Au-delà de cette zone, un extender serait nécessaire.';
+
+  @override
+  String get wifiSpeedWeak => 'Faible';
+
+  @override
+  String get wifiSpeedWeakDescription =>
+      'Vos appareils peuvent rencontrer des problèmes. Pour améliorer cette zone, vous devrez rapprocher votre équipement Wi-Fi de cette zone/pièce ou ajouter un extender à proximité*.';
+
+  @override
+  String get wifiSpeedExtenderHint =>
+      '*Ajout d\'un extender : \nSi vous décidez d\'ajouter un extender, il ne doit pas être installé dans une zone jaune ou rouge car il recevra également un mauvais Wi-Fi (sauf si vous le connectez à votre routeur avec un câble Ethernet). Installez-le dans une pièce qui reçoit un bon signal Wi-Fi entre cette zone et votre équipement Wi-Fi le plus proche.';
 }

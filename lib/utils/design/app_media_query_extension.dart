@@ -30,4 +30,7 @@ extension MediaQueryContextExtension on BuildContext {
 
   /// 对话框宽度（屏幕宽度的 85%）
   double get dialogWidth => screenWidth * 0.85;
+
+  /// 对话框高度（屏幕高度的 95%）
+  double get dialogHeight => screenHeight * 0.95;
 }

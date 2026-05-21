@@ -25,6 +25,8 @@ class EditRoomBottomSheet extends HookConsumerWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
       backgroundColor: context.appColors.fontWh1with100Opacity,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
@@ -37,7 +39,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(editRoomBottomSheetProvider);
     final viewModel = ref.read(editRoomBottomSheetProvider.notifier);
-    final sheetHeight = context.screenHeight * 0.95;
+    final sheetHeight = context.dialogHeight;
     final roomNameController = useTextEditingController();
     final floorState = ref.watch(floorViewModelProvider);
     final hasRoom = switch (floorState) {
