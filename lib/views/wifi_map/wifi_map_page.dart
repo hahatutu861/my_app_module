@@ -350,19 +350,31 @@ class WifiMapPage extends HookConsumerWidget {
       },
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: EdgeInsets.only(left: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Row(
+              children: [
+                Text(
+                  floorName,
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w500,
+                    color: context.appColors.fontGy1with90Opacity,
+                  ),
+                ),
+                Spacing.h2,
+                EditButton(),
+              ],
+            ),
             Text(
-              floorName,
+              context.l10n.wifiMapUnitMbps,
               style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w500,
-                color: context.appColors.fontGy1with90Opacity,
+                fontSize: 12.sp,
+                color: context.appColors.fontGy2with60Opacity,
               ),
             ),
-            Spacing.h2,
-            EditButton(),
           ],
         ),
       ),

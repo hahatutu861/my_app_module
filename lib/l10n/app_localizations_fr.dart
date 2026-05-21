@@ -248,5 +248,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wifiSpeedExtenderHint =>
-      '*Ajout d\'un extender : \nSi vous décidez d\'ajouter un extender, il ne doit pas être installé dans une zone jaune ou rouge car il recevra également un mauvais Wi-Fi (sauf si vous le connectez à votre routeur avec un câble Ethernet). Installez-le dans une pièce qui reçoit un bon signal Wi-Fi entre cette zone et votre équipement Wi-Fi le plus proche.';
+      '*Ajout d\'un extender : \nSi vous décidez d\'ajouter un extender, il ne doit pas être installé dans une zone jaune ou rouge car il recevra également un mauvais Wi-Fi (sauf si vous le connectez à votre routeur avec un câbles Ethernet). Installez-le dans une pièce qui reçoit un bon signal Wi-Fi entre cette zone et votre équipement Wi-Fi le plus proche.';
+
+  @override
+  String get wifiMapUnitMbps => '(Unité:Mbps)';
 }

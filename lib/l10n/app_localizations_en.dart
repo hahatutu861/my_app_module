@@ -246,4 +246,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wifiSpeedExtenderHint =>
       '*Adding an extender: \nIf you decide to add an extender, It should not be installed in yellow or red zone since it will also receive bad Wi-Fi (unless you are connecting it to your router with an Ethernet cable). Install it in a room that receive good Wi-Fi signal between this zone and your closest Wi-Fi equipment.';
+
+  @override
+  String get wifiMapUnitMbps => '(Unit:Mbps)';
 }
