@@ -197,5 +197,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteFloor => 'Delete';
 
   @override
+  String deleteFloorConfirmTitle(String floorName) {
+    return 'Delete $floorName?';
+  }
+
+  @override
+  String get deleteFloorConfirmDescription =>
+      'Once deleted, it cannot be restored.';
+
+  @override
   String get showPreviousFloorReference => 'Show previous floor reference.';
 }

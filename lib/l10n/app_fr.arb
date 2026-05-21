@@ -72,5 +72,14 @@
   "extender": "Extender",
   "deleteZoneRoom": "Supprimer cette zone/pièce",
   "deleteFloor": "Supprimer",
+  "deleteFloorConfirmTitle": "Supprimer {floorName} ?",
+  "@deleteFloorConfirmTitle": {
+    "placeholders": {
+      "floorName": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteFloorConfirmDescription": "Une fois supprimé, cela ne peut pas être restauré.",
   "showPreviousFloorReference": "Afficher la référence de l'étage précédent."
 }

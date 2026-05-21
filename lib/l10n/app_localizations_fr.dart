@@ -199,6 +199,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteFloor => 'Supprimer';
 
   @override
+  String deleteFloorConfirmTitle(String floorName) {
+    return 'Supprimer $floorName ?';
+  }
+
+  @override
+  String get deleteFloorConfirmDescription =>
+      'Une fois supprimé, cela ne peut pas être restauré.';
+
+  @override
   String get showPreviousFloorReference =>
       'Afficher la référence de l\'étage précédent.';
 }

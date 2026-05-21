@@ -446,6 +446,18 @@ abstract class AppLocalizations {
   /// **'Delete'**
   String get deleteFloor;
 
+  /// No description provided for @deleteFloorConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete {floorName}?'**
+  String deleteFloorConfirmTitle(String floorName);
+
+  /// No description provided for @deleteFloorConfirmDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Once deleted, it cannot be restored.'**
+  String get deleteFloorConfirmDescription;
+
   /// No description provided for @showPreviousFloorReference.
   ///
   /// In en, this message translates to:

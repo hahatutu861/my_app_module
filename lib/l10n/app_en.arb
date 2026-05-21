@@ -72,5 +72,14 @@
   "extender": "Extender",
   "deleteZoneRoom": "Delete this zone/room",
   "deleteFloor": "Delete",
+  "deleteFloorConfirmTitle": "Delete {floorName}?",
+  "@deleteFloorConfirmTitle": {
+    "placeholders": {
+      "floorName": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteFloorConfirmDescription": "Once deleted, it cannot be restored.",
   "showPreviousFloorReference": "Show previous floor reference."
 }

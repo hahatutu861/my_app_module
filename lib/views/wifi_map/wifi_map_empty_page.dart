@@ -14,6 +14,7 @@ import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/widgets/app_image.dart';
+import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 
 class WifiMapEmptyPage extends HookConsumerWidget {
@@ -234,8 +235,16 @@ class _FloorListItem extends ConsumerWidget {
         extentRatio: 0.25,
         children: [
           CustomSlidableAction(
-            onPressed: (context) {
-              ref.read(floorViewModelProvider.notifier).deleteFloor(floor.id);
+            onPressed: (context) async {
+              final confirmed = await showDialog<bool>(
+                context: context,
+                builder: (context) => DeleteFloorConfirmDialog(
+                  floorName: floor.floorName,
+                ),
+              );
+              if (confirmed == true) {
+                ref.read(floorViewModelProvider.notifier).deleteFloor(floor.id);
+              }
             },
             backgroundColor: context.appColors.error6Normal,
             child: Center(
