@@ -535,6 +535,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'(Unit:Mbps)'**
   String get wifiMapUnitMbps;
+
+  /// No description provided for @wifiSpeedMbps.
+  ///
+  /// In en, this message translates to:
+  /// **'Mbps'**
+  String get wifiSpeedMbps;
+
+  /// No description provided for @wifiSpeedGoodStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Wi-Fi'**
+  String get wifiSpeedGoodStatus;
+
+  /// No description provided for @wifiSpeedBand.
+  ///
+  /// In en, this message translates to:
+  /// **'Band'**
+  String get wifiSpeedBand;
+
+  /// No description provided for @wifiSpeedConnectedTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected to'**
+  String get wifiSpeedConnectedTo;
+
+  /// No description provided for @wifiSpeedHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get wifiSpeedHistory;
+
+  /// No description provided for @wifiSpeedTest.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Wi-Fi'**
+  String get wifiSpeedTest;
+
+  /// No description provided for @wifiSpeedStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get wifiSpeedStop;
 }
 
 class _AppLocalizationsDelegate

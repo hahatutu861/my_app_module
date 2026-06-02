@@ -249,4 +249,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wifiMapUnitMbps => '(Unit:Mbps)';
+
+  @override
+  String get wifiSpeedMbps => 'Mbps';
+
+  @override
+  String get wifiSpeedGoodStatus => 'Good Wi-Fi';
+
+  @override
+  String get wifiSpeedBand => 'Band';
+
+  @override
+  String get wifiSpeedConnectedTo => 'Connected to';
+
+  @override
+  String get wifiSpeedHistory => 'History';
+
+  @override
+  String get wifiSpeedTest => 'Test Wi-Fi';
+
+  @override
+  String get wifiSpeedStop => 'Stop';
 }

@@ -13,6 +13,7 @@ import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/views/wifi_map/wifi_speed_dialog.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
@@ -78,7 +79,13 @@ class WifiMapPage extends HookConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: statusBarHeight),
-          _buildHeader(context, ref, hideButtonSize, bubbleSize, floorViewModel),
+          _buildHeader(
+            context,
+            ref,
+            hideButtonSize,
+            bubbleSize,
+            floorViewModel,
+          ),
           _buildFloorTitle(context, floorViewModel),
           SizedBox(height: 16.h),
           _buildAutoSizeGrid(
@@ -88,7 +95,7 @@ class WifiMapPage extends HookConsumerWidget {
             floorViewModel,
             hasFittedToRooms,
           ),
-          _buildBottomBar(context, floorViewModel),
+          Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
         ],
       ),
     );
@@ -99,9 +106,11 @@ class WifiMapPage extends HookConsumerWidget {
     final double horizontalPadding = 16.w;
     final double availableWidth = screenWidth - horizontalPadding * 2;
     final double totalSpacingWidth = (crossAxisCount - 1) * spacing;
-    final double squareSize = (availableWidth - totalSpacingWidth) / crossAxisCount;
+    final double squareSize =
+        (availableWidth - totalSpacingWidth) / crossAxisCount;
     final int rowCount = (totalItemCount / crossAxisCount).ceil();
-    final double totalGridHeight = rowCount * squareSize + (rowCount - 1) * spacing;
+    final double totalGridHeight =
+        rowCount * squareSize + (rowCount - 1) * spacing;
 
     return GridLayoutInfo(
       squareSize: squareSize,
@@ -127,12 +136,14 @@ class WifiMapPage extends HookConsumerWidget {
     if (context.shouldFitToRooms && !hasFittedToRooms.value) {
       hasFittedToRooms.value = true;
       final targetRooms = floorViewModel.getTargetRoomsForFitting(context);
-      final shouldTranslate = context.hasCurrentRooms || context.shouldUseReference 
-          ? true 
+      final shouldTranslate =
+          context.hasCurrentRooms || context.shouldUseReference
+          ? true
           : (context.hasNoRoomsAtAll ? false : true);
       if (targetRooms.isEmpty && !shouldTranslate) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          transformationController.value = Matrix4.identity()..scaleByDouble(2.5, 2.5, 1.0, 1.0);
+          transformationController.value = Matrix4.identity()
+            ..scaleByDouble(2.5, 2.5, 1.0, 1.0);
         });
         return;
       }
@@ -163,10 +174,7 @@ class WifiMapPage extends HookConsumerWidget {
         final double screenWidth = constraints.maxWidth;
         final layout = _calculateGridLayout(screenWidth);
 
-        final fitContext = _buildRoomFitContext(
-          floorViewModel,
-          floorId,
-        );
+        final fitContext = _buildRoomFitContext(floorViewModel, floorId);
 
         _handleRoomFitting(
           fitContext,
@@ -191,7 +199,9 @@ class WifiMapPage extends HookConsumerWidget {
             boundaryMargin: EdgeInsets.zero,
             transformationController: transformationController,
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: layout.horizontalPadding),
+              padding: EdgeInsets.symmetric(
+                horizontal: layout.horizontalPadding,
+              ),
               child: _buildGrid(context, layout.squareSize, floorViewModel),
             ),
           ),
@@ -223,7 +233,7 @@ class WifiMapPage extends HookConsumerWidget {
         final room = roomsMap[index];
         final isReference = referenceIndices.contains(index);
         final isSelected = floorViewModel.selectedRoomIndex == index;
-        
+
         if (room != null) {
           return GestureDetector(
             onTap: () => floorViewModel.selectRoom(index),
@@ -330,11 +340,9 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildFloorTitle(
-    BuildContext context,
-    FloorViewModel floorViewModel,
-  ) {
-    final floorName = floorViewModel.currentFloor?.floorName ?? context.l10n.firstFloor;
+  Widget _buildFloorTitle(BuildContext context, FloorViewModel floorViewModel) {
+    final floorName =
+        floorViewModel.currentFloor?.floorName ?? context.l10n.firstFloor;
 
     return GestureDetector(
       onTap: () async {
@@ -435,10 +443,12 @@ class WifiMapPage extends HookConsumerWidget {
       return const SizedBox.shrink();
     }
 
-    final isHideButtonMeasured = hideButtonSize.value != null &&
+    final isHideButtonMeasured =
+        hideButtonSize.value != null &&
         hideButtonSize.value!.width > 0 &&
         hideButtonSize.value!.height > 0;
-    final isBubbleMeasured = bubbleSize.value != null &&
+    final isBubbleMeasured =
+        bubbleSize.value != null &&
         bubbleSize.value!.width > 0 &&
         bubbleSize.value!.height > 0;
 
@@ -542,23 +552,69 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildBottomBar(
-    BuildContext context,
-    FloorViewModel floorViewModel,
-  ) {
+  Widget _buildBottomBar(BuildContext context, WidgetRef ref, FloorViewModel floorViewModel) {
     final isSelected = floorViewModel.selectedRoomIndex != null;
     if (isSelected) {
-      final room = floorViewModel.getRoomByIndex(floorViewModel.selectedRoomIndex!);
+      final room = floorViewModel.getRoomByIndex(
+        floorViewModel.selectedRoomIndex!,
+      );
       if (room == null) {
         return _buildStats(context, floorViewModel);
       }
-      return _buildSelectedRoomBar(context, room, floorViewModel.selectedRoomIndex!, floorViewModel);
+      return _buildSelectedRoomBar(
+        context,
+        ref,
+        room,
+        floorViewModel.selectedRoomIndex!,
+        floorViewModel,
+      );
     } else {
       return _buildStats(context, floorViewModel);
     }
   }
 
   Widget _buildSelectedRoomBar(
+    BuildContext context,
+    WidgetRef ref,
+    RoomModel room,
+    int index,
+    FloorViewModel floorViewModel,
+  ) {
+    return Container(
+      color: context.appColors.fontWh1with100Opacity,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSelectedRoomTopRow(context, room, index, floorViewModel),
+            _buildSpeedRow(context, ref),
+            SizedBox(height: 7.h),
+            _buildSegmentedBar(context),
+            SizedBox(height: 7.h),
+            _buildInfoRow(
+              context,
+              context.l10n.wifiSpeedBand,
+              "5GHz (Ch 6, -42 dBm)",
+              'wifi.png',
+            ),
+            SizedBox(height: 8.h),
+            _buildInfoRow(
+              context,
+              context.l10n.wifiSpeedConnectedTo,
+              context.l10n.roomDiningRoom,
+              'connected_to.png',
+            ),
+            SizedBox(height: 16.h),
+            _buildActionButtons(context, ref),
+            SizedBox(height: 16.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSelectedRoomTopRow(
     BuildContext context,
     RoomModel room,
     int index,
@@ -567,15 +623,13 @@ class WifiMapPage extends HookConsumerWidget {
     final roomType = room.roomTypeEnum;
     final updatedAt = floorViewModel.currentFloor?.updatedAt;
     final displayTime = updatedAt ?? floorViewModel.currentFloor?.createdAt;
-    final timeText = displayTime != null
-        ? formatDateTime(displayTime)
-        : '';
+    final timeText = displayTime != null ? formatDateTime(displayTime) : '';
 
     return GestureDetector(
       onTap: () => EditRoomBottomSheet.show(context, index),
       behavior: HitTestBehavior.opaque,
       child: Padding(
-        padding: EdgeInsets.all(AppSpacing.pad16.w),
+        padding: EdgeInsets.symmetric(vertical: 22.h),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -591,7 +645,7 @@ class WifiMapPage extends HookConsumerWidget {
                   ),
                 ),
                 SizedBox(width: 4.w),
-                EditButton(),
+                const EditButton(),
               ],
             ),
             Text(
@@ -605,6 +659,190 @@ class WifiMapPage extends HookConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSpeedRow(BuildContext context, WidgetRef ref) {
+    final speedState = ref.watch(wifiSpeedViewModelProvider);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              speedState.displaySpeed,
+              style: TextStyle(
+                fontSize: 28.sp,
+                fontWeight: FontWeight.w500,
+                color: context.appColors.fontGy1with90Opacity,
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              context.l10n.wifiSpeedMbps,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: context.appColors.fontGy1with90Opacity,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            AppImage(
+              'good.png',
+              width: 16.w,
+              height: 16.w,
+              color: context.appColors.lime6,
+            ),
+            SizedBox(width: 4.w),
+            Text(
+              context.l10n.wifiSpeedGoodStatus,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: context.appColors.lime6,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSegmentedBar(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: context.appColors.lime6,
+              borderRadius: BorderRadius.circular(200.r),
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: Container(
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: context.appColors.lime6,
+              borderRadius: BorderRadius.circular(200.r),
+            ),
+          ),
+        ),
+        SizedBox(width: 8.w),
+        Expanded(
+          child: Container(
+            height: 4.h,
+            decoration: BoxDecoration(
+              color: context.appColors.lime6,
+              borderRadius: BorderRadius.circular(200.r),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(
+    BuildContext context,
+    String label,
+    String value,
+    String iconName,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: context.appTextStyles.bodyLargeWith90Opacity.copyWith(
+            fontSize: 14.sp,
+          ),
+        ),
+        Row(
+          children: [
+            AppImage(
+              iconName,
+              width: 16.w,
+              height: 16.w,
+              color: context.appColors.fontGy2with60Opacity,
+            ),
+            SizedBox(width: 2.w),
+            Text(value, style: context.appTextStyles.bodyMediumWith60Opacity),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(BuildContext context, WidgetRef ref) {
+    final speedState = ref.watch(wifiSpeedViewModelProvider);
+    final speedViewModel = ref.read(wifiSpeedViewModelProvider.notifier);
+
+    return Row(
+      children: [
+        ElevatedButton.icon(
+          onPressed: () {},
+          icon: AppImage(
+            'history.png',
+            width: 22.w,
+            height: 22.h,
+            color: context.appColors.fontGy1with90Opacity,
+          ),
+          label: Text(
+            context.l10n.wifiSpeedHistory,
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: context.appColors.gray3,
+            foregroundColor: context.appColors.fontGy1with90Opacity,
+            elevation: 0,
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100.r),
+            ),
+          ),
+        ),
+        SizedBox(width: 16.w),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: speedState.isTesting
+                ? () => speedViewModel.stopSpeedTest()
+                : () => speedViewModel.startSpeedTest(),
+            icon: AppImage(
+              'speed.png',
+              width: 22.w,
+              height: 22.w,
+              color: context.appColors.white,
+            ),
+            label: Text(
+              speedState.isTesting
+                  ? context.l10n.wifiSpeedStop
+                  : context.l10n.wifiSpeedTest,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: context.appColors.brand6Normal,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              padding: EdgeInsets.symmetric(vertical: 12.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(100.r),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
