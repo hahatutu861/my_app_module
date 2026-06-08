@@ -577,6 +577,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Stop'**
   String get wifiSpeedStop;
+
+  /// No description provided for @wifiSpeedTesting.
+  ///
+  /// In en, this message translates to:
+  /// **'Testing ({progress})'**
+  String wifiSpeedTesting(int progress);
+
+  /// No description provided for @connectToWifiConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to Wi-Fi network'**
+  String get connectToWifiConfirmTitle;
+
+  /// No description provided for @connectToWifiConfirmDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please go to your settings to connect to your Wi-Fi network.'**
+  String get connectToWifiConfirmDescription;
+
+  /// No description provided for @goToSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to settings'**
+  String get goToSettings;
 }
 
 class _AppLocalizationsDelegate

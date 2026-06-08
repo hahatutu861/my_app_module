@@ -100,5 +100,16 @@
   "wifiSpeedConnectedTo": "Connecté à",
   "wifiSpeedHistory": "Historique",
   "wifiSpeedTest": "Tester le Wi-Fi",
-  "wifiSpeedStop": "Arrêter"
+  "wifiSpeedStop": "Arrêter",
+  "wifiSpeedTesting": "Test en cours ({progress})",
+  "@wifiSpeedTesting": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "connectToWifiConfirmTitle": "Se connecter au réseau Wi-Fi",
+  "connectToWifiConfirmDescription": "Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi.",
+  "goToSettings": "Aller aux paramètres"
 }

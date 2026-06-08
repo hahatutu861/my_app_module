@@ -16,6 +16,7 @@ import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
+import 'package:my_app_module/widgets/room_count_badge.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 
 class WifiMapEmptyPage extends HookConsumerWidget {

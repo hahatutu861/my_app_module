@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
@@ -7,7 +8,16 @@ final wifiSpeedViewModelProvider =
   WifiSpeedViewModel.new,
 );
 
+enum SpeedTestAction {
+  startTest,
+  showWifiDialog,
+  closeApp,
+}
+
 class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
+  Timer? _testTimer;
+  Timer? _progressTimer;
+
   @override
   WifiSpeedState build() {
     ref.onDispose(() {
@@ -17,39 +27,108 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
   }
 
   void _cleanup() {
+    _cleanupTimers();
     NativeFlutterApi.setUp(null);
     NativeApi().stopWifiSpeedTest();
   }
 
+  Future<bool> checkWifiConnection() async {
+    return NativeApi().isConnectedToDeviceWifi();
+  }
+
+  Future<void> closeFlutterActivity() async {
+    await NativeApi().closeFlutterActivity();
+  }
+
+  Future<void> openWifiSettings() async {
+    await NativeApi().openWifiSettings();
+  }
+
+  Future<SpeedTestAction> checkAndPrepareSpeedTest() async {
+    final isConnected = await checkWifiConnection();
+    if (!isConnected) {
+      return SpeedTestAction.showWifiDialog;
+    }
+    return SpeedTestAction.startTest;
+  }
+
   Future<void> startSpeedTest() async {
-    state = state.copyWith(isTesting: true, errorMessage: null);
+    if (state.isTesting) return;
+
+    state = state.copyWith(
+      isTesting: true,
+      progress: 4,
+      samples: [],
+      errorMessage: null,
+    );
+
     NativeFlutterApi.setUp(_WifiSpeedCallback(
       onSpeedUpdated: (result) {
-        state = WifiSpeedState(
-          isTesting: false,
-          speed: result.speed,
-          isSuccess: result.isSuccess,
-          errorMessage: result.errorMessage,
-        );
+        if (result.isSuccess && result.speed >= 0) {
+          final newSamples = [...state.samples, result.speed];
+          state = state.copyWith(samples: newSamples);
+        }
       },
     ));
+
     try {
       await NativeApi().startWifiSpeedTest();
+      _progressTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (state.progress > 1) {
+          state = state.copyWith(progress: state.progress - 1);
+        } else {
+          state = state.copyWith(progress: 0);
+          timer.cancel();
+        }
+      });
+      _testTimer = Timer(const Duration(seconds: 5), () async {
+        await _finishSpeedTest();
+      });
     } catch (e) {
-      state = WifiSpeedState(
+      state = state.copyWith(
         isTesting: false,
         isSuccess: false,
         errorMessage: e.toString(),
       );
+      _cleanupTimers();
     }
   }
 
   Future<void> stopSpeedTest() async {
+    _cleanupTimers();
+    NativeFlutterApi.setUp(null);
     try {
       await NativeApi().stopWifiSpeedTest();
     } finally {
       state = state.copyWith(isTesting: false);
     }
+  }
+
+  Future<void> _finishSpeedTest() async {
+    _cleanupTimers();
+    NativeFlutterApi.setUp(null);
+    await NativeApi().stopWifiSpeedTest();
+    if (state.samples.isEmpty) {
+      state = state.copyWith(
+        isTesting: false,
+        isSuccess: true,
+      );
+      return;
+    }
+    final sortedSamples = [...state.samples]..sort();
+    final medianSpeed = sortedSamples[sortedSamples.length ~/ 2];
+    state = state.copyWith(
+      isTesting: false,
+      speed: medianSpeed,
+      isSuccess: true,
+    );
+  }
+
+  void _cleanupTimers() {
+    _testTimer?.cancel();
+    _progressTimer?.cancel();
+    _testTimer = null;
+    _progressTimer = null;
   }
 }
 

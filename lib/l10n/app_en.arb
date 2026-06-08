@@ -100,5 +100,16 @@
   "wifiSpeedConnectedTo": "Connected to",
   "wifiSpeedHistory": "History",
   "wifiSpeedTest": "Test Wi-Fi",
-  "wifiSpeedStop": "Stop"
+  "wifiSpeedStop": "Stop",
+  "wifiSpeedTesting": "Testing ({progress})",
+  "@wifiSpeedTesting": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "connectToWifiConfirmTitle": "Connect to Wi-Fi network",
+  "connectToWifiConfirmDescription": "Please go to your settings to connect to your Wi-Fi network.",
+  "goToSettings": "Go to settings"
 }

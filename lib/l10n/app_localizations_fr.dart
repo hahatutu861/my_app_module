@@ -273,4 +273,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wifiSpeedStop => 'Arrêter';
+
+  @override
+  String wifiSpeedTesting(int progress) {
+    return 'Test en cours ($progress)';
+  }
+
+  @override
+  String get connectToWifiConfirmTitle => 'Se connecter au réseau Wi-Fi';
+
+  @override
+  String get connectToWifiConfirmDescription =>
+      'Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi.';
+
+  @override
+  String get goToSettings => 'Aller aux paramètres';
 }

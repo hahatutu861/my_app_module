@@ -78,6 +78,9 @@ abstract class NativeApi {
   /// 优先返回 5G 主 WiFi，如果没有 5G 则返回第一个主 WiFi
   /// 返回 null 表示获取失败
   PrimaryWifiInfo? getPrimaryWifi();
+
+  /// 打开手机 WiFi 设置页面
+  void openWifiSettings();
 }
 
 /// Flutter 回调 API

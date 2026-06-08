@@ -270,4 +270,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wifiSpeedStop => 'Stop';
+
+  @override
+  String wifiSpeedTesting(int progress) {
+    return 'Testing ($progress)';
+  }
+
+  @override
+  String get connectToWifiConfirmTitle => 'Connect to Wi-Fi network';
+
+  @override
+  String get connectToWifiConfirmDescription =>
+      'Please go to your settings to connect to your Wi-Fi network.';
+
+  @override
+  String get goToSettings => 'Go to settings';
 }
