@@ -27,6 +27,17 @@ import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/room_count_badge.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
+extension SegmentedBarColorX on SegmentedBarColor {
+  Color resolve(BuildContext context) {
+    return switch (this) {
+      SegmentedBarColor.gray3 => context.appColors.gray3,
+      SegmentedBarColor.yellow6 => context.appColors.yellow6,
+      SegmentedBarColor.lime6 => context.appColors.lime6,
+      SegmentedBarColor.warning6Normal => context.appColors.warning6Normal,
+    };
+  }
+}
+
 class GridLayoutInfo {
   final double squareSize;
   final double gridHeight;
@@ -597,7 +608,7 @@ class WifiMapPage extends HookConsumerWidget {
             _buildSelectedRoomTopRow(context, room, index, floorViewModel),
             _buildSpeedRow(context, ref, room),
             SizedBox(height: 7.h),
-            _buildSegmentedBar(context),
+            _buildSegmentedBar(context, ref, room),
             SizedBox(height: 7.h),
             _buildInfoRow(
               context,
@@ -670,14 +681,28 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildSpeedRow(BuildContext context, WidgetRef ref, RoomModel room) {
-    final latestSpeed = room.speedValues.isNotEmpty
-        ? room.speedValues.last.toStringAsFixed(1)
-        : '--';
-    final statusColor = room.speedLevel == WifiSpeedLevel.good
-        ? context.appColors.lime6
-        : (room.speedLevel == WifiSpeedLevel.moderate
-            ? context.appColors.yellow6
-            : context.appColors.warning6Normal);
+    final speedState = ref.watch(wifiSpeedViewModelProvider);
+    final latestSpeed = speedState.isTesting
+        ? '--'
+        : (room.speedValues.isNotEmpty
+            ? room.speedValues.last.toStringAsFixed(1)
+            : '--');
+
+    final isTesting = speedState.isTesting;
+    final statusColor = isTesting
+        ? context.appColors.fontGy1with90Opacity
+        : (room.speedLevel == WifiSpeedLevel.good
+            ? context.appColors.lime6
+            : (room.speedLevel == WifiSpeedLevel.moderate
+                ? context.appColors.yellow6
+                : context.appColors.warning6Normal));
+    final statusText = isTesting
+        ? '--'
+        : (room.speedLevel == WifiSpeedLevel.good
+            ? context.l10n.wifiSpeedGoodStatus
+            : (room.speedLevel == WifiSpeedLevel.moderate
+                ? context.l10n.wifiSpeedModerateStatus
+                : context.l10n.wifiSpeedWeakStatus));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -708,19 +733,17 @@ class WifiMapPage extends HookConsumerWidget {
         ),
         Row(
           children: [
-            AppImage(
-              room.speedStatusIcon,
-              width: 16.w,
-              height: 16.w,
-              color: statusColor,
-            ),
-            SizedBox(width: 4.w),
+            if (!isTesting) ...[
+              AppImage(
+                room.speedStatusIcon,
+                width: 16.w,
+                height: 16.w,
+                color: statusColor,
+              ),
+              SizedBox(width: 4.w),
+            ],
             Text(
-              room.speedLevel == WifiSpeedLevel.good
-                  ? context.l10n.wifiSpeedGoodStatus
-                  : (room.speedLevel == WifiSpeedLevel.moderate
-                      ? context.l10n.wifiSpeedModerateStatus
-                      : context.l10n.wifiSpeedWeakStatus),
+              statusText,
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
@@ -733,38 +756,28 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildSegmentedBar(BuildContext context) {
+  Widget _buildSegmentedBar(BuildContext context, WidgetRef ref, RoomModel room) {
+    final isTesting = ref.watch(
+      wifiSpeedViewModelProvider.select((state) => state.isTesting),
+    );
+    final barColors = ref
+        .read(wifiSpeedViewModelProvider.notifier)
+        .segmentedBarColors(isTesting ? null : room.speedLevel);
+
     return Row(
       children: [
-        Expanded(
-          child: Container(
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: context.appColors.lime6,
-              borderRadius: BorderRadius.circular(200.r),
+        for (var i = 0; i < barColors.length; i++) ...[
+          if (i > 0) SizedBox(width: 8.w),
+          Expanded(
+            child: Container(
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: barColors[i].resolve(context),
+                borderRadius: BorderRadius.circular(200.r),
+              ),
             ),
           ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: Container(
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: context.appColors.lime6,
-              borderRadius: BorderRadius.circular(200.r),
-            ),
-          ),
-        ),
-        SizedBox(width: 8.w),
-        Expanded(
-          child: Container(
-            height: 4.h,
-            decoration: BoxDecoration(
-              color: context.appColors.lime6,
-              borderRadius: BorderRadius.circular(200.r),
-            ),
-          ),
-        ),
+        ],
       ],
     );
   }

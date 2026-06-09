@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
@@ -14,6 +15,8 @@ enum SpeedTestAction {
   showWifiDialog,
   closeApp,
 }
+
+enum SegmentedBarColor { gray3, yellow6, lime6, warning6Normal }
 
 class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
   Timer? _testTimer;
@@ -143,6 +146,21 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
     _progressTimer?.cancel();
     _testTimer = null;
     _progressTimer = null;
+  }
+
+  static const int _segmentCount = 3;
+
+  List<SegmentedBarColor> segmentedBarColors(WifiSpeedLevel? level) {
+    final (SegmentedBarColor activeColor, int activeCount) = switch (level) {
+      WifiSpeedLevel.good => (SegmentedBarColor.lime6, 3),
+      WifiSpeedLevel.moderate => (SegmentedBarColor.yellow6, 2),
+      WifiSpeedLevel.weak => (SegmentedBarColor.warning6Normal, 1),
+      null => (SegmentedBarColor.gray3, 0),
+    };
+    return List.generate(
+      _segmentCount,
+      (index) => index < activeCount ? activeColor : SegmentedBarColor.gray3,
+    );
   }
 }
 
