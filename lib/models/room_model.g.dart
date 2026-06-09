@@ -11,6 +11,11 @@ _RoomModel _$RoomModelFromJson(Map<String, dynamic> json) => _RoomModel(
   roomType: json['roomType'] as String,
   roomName: json['roomName'] as String,
   isGateway: json['isGateway'] as bool?,
+  speedValues:
+      (json['speedValues'] as List<dynamic>?)
+          ?.map((e) => (e as num).toDouble())
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$RoomModelToJson(_RoomModel instance) =>
@@ -19,4 +24,5 @@ Map<String, dynamic> _$RoomModelToJson(_RoomModel instance) =>
       'roomType': instance.roomType,
       'roomName': instance.roomName,
       'isGateway': instance.isGateway,
+      'speedValues': instance.speedValues,
     };

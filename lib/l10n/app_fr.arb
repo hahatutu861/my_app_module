@@ -96,6 +96,8 @@
   "wifiMapUnitMbps": "(Unité:Mbps)",
   "wifiSpeedMbps": "Mbps",
   "wifiSpeedGoodStatus": "Bon Wi-Fi",
+  "wifiSpeedModerateStatus": "Wi-Fi modéré",
+  "wifiSpeedWeakStatus": "Wi-Fi faible",
   "wifiSpeedBand": "Bande",
   "wifiSpeedConnectedTo": "Connecté à",
   "wifiSpeedHistory": "Historique",
@@ -110,6 +112,13 @@
     }
   },
   "connectToWifiConfirmTitle": "Se connecter au réseau Wi-Fi",
-  "connectToWifiConfirmDescription": "Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi.",
+  "connectToWifiConfirmDescription": "Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi {wifiName}.",
+  "@connectToWifiConfirmDescription": {
+    "placeholders": {
+      "wifiName": {
+        "type": "String"
+      }
+    }
+  },
   "goToSettings": "Aller aux paramètres"
 }

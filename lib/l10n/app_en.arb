@@ -96,6 +96,8 @@
   "wifiMapUnitMbps": "(Unit:Mbps)",
   "wifiSpeedMbps": "Mbps",
   "wifiSpeedGoodStatus": "Good Wi-Fi",
+  "wifiSpeedModerateStatus": "Moderate Wi-Fi",
+  "wifiSpeedWeakStatus": "Weak Wi-Fi",
   "wifiSpeedBand": "Band",
   "wifiSpeedConnectedTo": "Connected to",
   "wifiSpeedHistory": "History",
@@ -110,6 +112,13 @@
     }
   },
   "connectToWifiConfirmTitle": "Connect to Wi-Fi network",
-  "connectToWifiConfirmDescription": "Please go to your settings to connect to your Wi-Fi network.",
+  "connectToWifiConfirmDescription": "Please go to your settings to connect to your Wi-Fi network {wifiName}.",
+  "@connectToWifiConfirmDescription": {
+    "placeholders": {
+      "wifiName": {
+        "type": "String"
+      }
+    }
+  },
   "goToSettings": "Go to settings"
 }

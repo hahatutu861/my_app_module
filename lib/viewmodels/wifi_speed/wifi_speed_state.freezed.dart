@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WifiSpeedState {
 
- bool get isTesting; double? get speed; bool get isSuccess; String? get errorMessage; int get progress;// 倒计时进度，5-0
- List<double> get samples;
+ bool get isTesting; double? get speed; bool get isSuccess; String? get errorMessage; int get progress; List<double> get samples;
 /// Create a copy of WifiSpeedState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -214,9 +213,7 @@ class _WifiSpeedState extends WifiSpeedState {
 @override@JsonKey() final  bool isSuccess;
 @override@JsonKey() final  String? errorMessage;
 @override@JsonKey() final  int progress;
-// 倒计时进度，5-0
  final  List<double> _samples;
-// 倒计时进度，5-0
 @override@JsonKey() List<double> get samples {
   if (_samples is EqualUnmodifiableListView) return _samples;
   // ignore: implicit_dynamic_type

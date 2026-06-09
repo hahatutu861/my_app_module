@@ -548,6 +548,18 @@ abstract class AppLocalizations {
   /// **'Good Wi-Fi'**
   String get wifiSpeedGoodStatus;
 
+  /// No description provided for @wifiSpeedModerateStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate Wi-Fi'**
+  String get wifiSpeedModerateStatus;
+
+  /// No description provided for @wifiSpeedWeakStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak Wi-Fi'**
+  String get wifiSpeedWeakStatus;
+
   /// No description provided for @wifiSpeedBand.
   ///
   /// In en, this message translates to:
@@ -593,8 +605,8 @@ abstract class AppLocalizations {
   /// No description provided for @connectToWifiConfirmDescription.
   ///
   /// In en, this message translates to:
-  /// **'Please go to your settings to connect to your Wi-Fi network.'**
-  String get connectToWifiConfirmDescription;
+  /// **'Please go to your settings to connect to your Wi-Fi network {wifiName}.'**
+  String connectToWifiConfirmDescription(String wifiName);
 
   /// No description provided for @goToSettings.
   ///

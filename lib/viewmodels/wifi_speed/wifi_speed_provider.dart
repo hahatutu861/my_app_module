@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
+import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 
 final wifiSpeedViewModelProvider =
@@ -122,6 +123,19 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
       speed: medianSpeed,
       isSuccess: true,
     );
+    await _saveSpeedToRoom(medianSpeed);
+  }
+
+  Future<void> _saveSpeedToRoom(double speed) async {
+    final floorViewModel = ref.read(floorViewModelProvider.notifier);
+    final selectedIndex = floorViewModel.selectedRoomIndex;
+    if (selectedIndex == null) return;
+    final room = floorViewModel.getRoomByIndex(selectedIndex);
+    if (room == null) return;
+    final updatedRoom = room.copyWith(
+      speedValues: [...room.speedValues, speed],
+    );
+    await floorViewModel.updateRoom(selectedIndex, updatedRoom);
   }
 
   void _cleanupTimers() {

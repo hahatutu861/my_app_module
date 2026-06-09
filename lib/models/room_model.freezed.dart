@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoomModel {
 
- int get index; String get roomType; String get roomName; bool? get isGateway;
+ int get index; String get roomType; String get roomName; bool? get isGateway; List<double> get speedValues;
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RoomModelCopyWith<RoomModel> get copyWith => _$RoomModelCopyWithImpl<RoomModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&const DeepCollectionEquality().equals(other.speedValues, speedValues));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway);
+int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,const DeepCollectionEquality().hash(speedValues));
 
 @override
 String toString() {
-  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway)';
+  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, speedValues: $speedValues)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RoomModelCopyWith<$Res>  {
   factory $RoomModelCopyWith(RoomModel value, $Res Function(RoomModel) _then) = _$RoomModelCopyWithImpl;
 @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway
+ int index, String roomType, String roomName, bool? isGateway, List<double> speedValues
 });
 
 
@@ -65,13 +65,14 @@ class _$RoomModelCopyWithImpl<$Res>
 
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? speedValues = null,}) {
   return _then(_self.copyWith(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
 as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool?,speedValues: null == speedValues ? _self.speedValues : speedValues // ignore: cast_nullable_to_non_nullable
+as List<double>,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  List<double> speedValues)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.speedValues);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  List<double> speedValues)  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel():
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.speedValues);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  String roomType,  String roomName,  bool? isGateway)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  String roomType,  String roomName,  bool? isGateway,  List<double> speedValues)?  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.speedValues);case _:
   return null;
 
 }
@@ -212,13 +213,20 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway);case 
 @JsonSerializable()
 
 class _RoomModel implements RoomModel {
-  const _RoomModel({required this.index, required this.roomType, required this.roomName, this.isGateway});
+  const _RoomModel({required this.index, required this.roomType, required this.roomName, this.isGateway, final  List<double> speedValues = const []}): _speedValues = speedValues;
   factory _RoomModel.fromJson(Map<String, dynamic> json) => _$RoomModelFromJson(json);
 
 @override final  int index;
 @override final  String roomType;
 @override final  String roomName;
 @override final  bool? isGateway;
+ final  List<double> _speedValues;
+@override@JsonKey() List<double> get speedValues {
+  if (_speedValues is EqualUnmodifiableListView) return _speedValues;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_speedValues);
+}
+
 
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&const DeepCollectionEquality().equals(other._speedValues, _speedValues));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway);
+int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,const DeepCollectionEquality().hash(_speedValues));
 
 @override
 String toString() {
-  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway)';
+  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, speedValues: $speedValues)';
 }
 
 
@@ -253,7 +261,7 @@ abstract mixin class _$RoomModelCopyWith<$Res> implements $RoomModelCopyWith<$Re
   factory _$RoomModelCopyWith(_RoomModel value, $Res Function(_RoomModel) _then) = __$RoomModelCopyWithImpl;
 @override @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway
+ int index, String roomType, String roomName, bool? isGateway, List<double> speedValues
 });
 
 
@@ -270,13 +278,14 @@ class __$RoomModelCopyWithImpl<$Res>
 
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? speedValues = null,}) {
   return _then(_RoomModel(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
 as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
-as bool?,
+as bool?,speedValues: null == speedValues ? _self._speedValues : speedValues // ignore: cast_nullable_to_non_nullable
+as List<double>,
   ));
 }
 

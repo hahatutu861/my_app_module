@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
+import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/date_utils.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
@@ -594,7 +595,7 @@ class WifiMapPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildSelectedRoomTopRow(context, room, index, floorViewModel),
-            _buildSpeedRow(context, ref),
+            _buildSpeedRow(context, ref, room),
             SizedBox(height: 7.h),
             _buildSegmentedBar(context),
             SizedBox(height: 7.h),
@@ -668,8 +669,15 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildSpeedRow(BuildContext context, WidgetRef ref) {
-    final speedState = ref.watch(wifiSpeedViewModelProvider);
+  Widget _buildSpeedRow(BuildContext context, WidgetRef ref, RoomModel room) {
+    final latestSpeed = room.speedValues.isNotEmpty
+        ? room.speedValues.last.toStringAsFixed(1)
+        : '--';
+    final statusColor = room.speedLevel == WifiSpeedLevel.good
+        ? context.appColors.lime6
+        : (room.speedLevel == WifiSpeedLevel.moderate
+            ? context.appColors.yellow6
+            : context.appColors.warning6Normal);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -681,7 +689,7 @@ class WifiMapPage extends HookConsumerWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              speedState.displaySpeed,
+              latestSpeed,
               style: TextStyle(
                 fontSize: 28.sp,
                 fontWeight: FontWeight.w500,
@@ -701,18 +709,22 @@ class WifiMapPage extends HookConsumerWidget {
         Row(
           children: [
             AppImage(
-              'good.png',
+              room.speedStatusIcon,
               width: 16.w,
               height: 16.w,
-              color: context.appColors.lime6,
+              color: statusColor,
             ),
             SizedBox(width: 4.w),
             Text(
-              context.l10n.wifiSpeedGoodStatus,
+              room.speedLevel == WifiSpeedLevel.good
+                  ? context.l10n.wifiSpeedGoodStatus
+                  : (room.speedLevel == WifiSpeedLevel.moderate
+                      ? context.l10n.wifiSpeedModerateStatus
+                      : context.l10n.wifiSpeedWeakStatus),
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
-                color: context.appColors.lime6,
+                color: statusColor,
               ),
             ),
           ],
@@ -834,16 +846,20 @@ class WifiMapPage extends HookConsumerWidget {
     return ElevatedButton.icon(
       onPressed: () async {
         final action = await viewModel.checkAndPrepareSpeedTest();
+        if (!context.mounted) return;
         if (action == SpeedTestAction.showWifiDialog) {
+          final primaryWifi = await NativeApi().getPrimaryWifi();
           if (!context.mounted) return;
-          final result = await ConnectWifiConfirmDialog.show(context);
+          final result = await ConnectWifiConfirmDialog.show(
+            context,
+            wifiName: primaryWifi?.name,
+          );
           if (result == true) {
             if (!context.mounted) return;
             await viewModel.openWifiSettings();
           }
           return;
         }
-        if (!context.mounted) return;
         viewModel.startSpeedTest();
       },
       icon: AppImage(
@@ -960,6 +976,7 @@ class WifiMapPage extends HookConsumerWidget {
     final bool hasShown = prefs.getBool(_dialogShownKey) ?? false;
     if (!hasShown) {
       await prefs.setBool(_dialogShownKey, true);
+      if (!context.mounted) return;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,

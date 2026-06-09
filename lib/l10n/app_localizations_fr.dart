@@ -260,6 +260,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wifiSpeedGoodStatus => 'Bon Wi-Fi';
 
   @override
+  String get wifiSpeedModerateStatus => 'Wi-Fi modéré';
+
+  @override
+  String get wifiSpeedWeakStatus => 'Wi-Fi faible';
+
+  @override
   String get wifiSpeedBand => 'Bande';
 
   @override
@@ -283,8 +289,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get connectToWifiConfirmTitle => 'Se connecter au réseau Wi-Fi';
 
   @override
-  String get connectToWifiConfirmDescription =>
-      'Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi.';
+  String connectToWifiConfirmDescription(String wifiName) {
+    return 'Veuillez accéder à vos paramètres pour vous connecter à votre réseau Wi-Fi $wifiName.';
+  }
 
   @override
   String get goToSettings => 'Aller aux paramètres';

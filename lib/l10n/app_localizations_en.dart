@@ -257,6 +257,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wifiSpeedGoodStatus => 'Good Wi-Fi';
 
   @override
+  String get wifiSpeedModerateStatus => 'Moderate Wi-Fi';
+
+  @override
+  String get wifiSpeedWeakStatus => 'Weak Wi-Fi';
+
+  @override
   String get wifiSpeedBand => 'Band';
 
   @override
@@ -280,8 +286,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectToWifiConfirmTitle => 'Connect to Wi-Fi network';
 
   @override
-  String get connectToWifiConfirmDescription =>
-      'Please go to your settings to connect to your Wi-Fi network.';
+  String connectToWifiConfirmDescription(String wifiName) {
+    return 'Please go to your settings to connect to your Wi-Fi network $wifiName.';
+  }
 
   @override
   String get goToSettings => 'Go to settings';
