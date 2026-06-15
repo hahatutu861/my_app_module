@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:my_app_module/models/speed_test_record.dart';
 import 'package:my_app_module/utils/design/room_types.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 
@@ -13,7 +14,7 @@ abstract class RoomModel with _$RoomModel {
     required String roomType,
     required String roomName,
     bool? isGateway,
-    @Default([]) List<double> speedValues,
+    @Default([]) List<SpeedTestRecord> records,
   }) = _RoomModel;
 
   factory RoomModel.fromJson(Map<String, dynamic> json) => _$RoomModelFromJson(json);
@@ -28,8 +29,8 @@ extension RoomModelExtension on RoomModel {
   }
 
   WifiSpeedLevel? get speedLevel {
-    if (speedValues.isEmpty) return null;
-    final speed = speedValues.last;
+    if (records.isEmpty) return null;
+    final speed = records.last.speed;
     if (speed >= 50) return WifiSpeedLevel.good;
     if (speed >= 10) return WifiSpeedLevel.moderate;
     return WifiSpeedLevel.weak;

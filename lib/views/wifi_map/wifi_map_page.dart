@@ -599,10 +599,10 @@ class WifiMapPage extends HookConsumerWidget {
     int index,
     FloorViewModel floorViewModel,
   ) {
-    final bandInfo = ref.watch(wifiConnectionInfoProvider).maybeWhen(
-          data: (info) => formatWifiConnectionInfo(info),
-          orElse: () => '--',
-        );
+    final bandInfo = switch (ref.watch(wifiConnectionInfoProvider)) {
+      AsyncData(:final value) => formatWifiConnectionInfo(value),
+      _ => '--',
+    };
 
     return Container(
       color: context.appColors.fontWh1with100Opacity,
@@ -690,8 +690,8 @@ class WifiMapPage extends HookConsumerWidget {
     final speedState = ref.watch(wifiSpeedViewModelProvider);
     final latestSpeed = speedState.isTesting
         ? '--'
-        : (room.speedValues.isNotEmpty
-            ? room.speedValues.last.toStringAsFixed(1)
+        : (room.records.isNotEmpty
+            ? room.records.last.speed.toStringAsFixed(1)
             : '--');
 
     final isTesting = speedState.isTesting;

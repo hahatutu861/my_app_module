@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_app_module/models/speed_test_record.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_connection_info_provider.dart';
@@ -113,32 +113,41 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
     _cleanupTimers();
     NativeFlutterApi.setUp(null);
     await NativeApi().stopWifiSpeedTest();
-    ref.invalidate(wifiConnectionInfoProvider);
     if (state.samples.isEmpty) {
       state = state.copyWith(
         isTesting: false,
         isSuccess: true,
       );
+      ref.invalidate(wifiConnectionInfoProvider);
       return;
     }
     final sortedSamples = [...state.samples]..sort();
     final medianSpeed = sortedSamples[sortedSamples.length ~/ 2];
+    final wifiInfo = await NativeApi().getCurrentWifiConnectionInfo();
+    final record = SpeedTestRecord(
+      speed: medianSpeed,
+      band: wifiInfo?.band,
+      channel: wifiInfo?.channel,
+      rssi: wifiInfo?.rssi,
+      timestamp: DateTime.now(),
+    );
     state = state.copyWith(
       isTesting: false,
       speed: medianSpeed,
       isSuccess: true,
     );
-    await _saveSpeedToRoom(medianSpeed);
+    await _saveRecordToRoom(record);
+    ref.invalidate(wifiConnectionInfoProvider);
   }
 
-  Future<void> _saveSpeedToRoom(double speed) async {
+  Future<void> _saveRecordToRoom(SpeedTestRecord record) async {
     final floorViewModel = ref.read(floorViewModelProvider.notifier);
     final selectedIndex = floorViewModel.selectedRoomIndex;
     if (selectedIndex == null) return;
     final room = floorViewModel.getRoomByIndex(selectedIndex);
     if (room == null) return;
     final updatedRoom = room.copyWith(
-      speedValues: [...room.speedValues, speed],
+      records: [...room.records, record],
     );
     await floorViewModel.updateRoom(selectedIndex, updatedRoom);
   }
