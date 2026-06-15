@@ -599,10 +599,15 @@ class WifiMapPage extends HookConsumerWidget {
     int index,
     FloorViewModel floorViewModel,
   ) {
-    final bandInfo = switch (ref.watch(wifiConnectionInfoProvider)) {
-      AsyncData(:final value) => formatWifiConnectionInfo(value),
-      _ => '--',
-    };
+    final bandInfo = room.records.isNotEmpty
+        ? formatWifiConnectionInfo(
+            WifiConnectionInfo(
+              band: room.records.last.band,
+              channel: room.records.last.channel,
+              rssi: room.records.last.rssi,
+            ),
+          )
+        : '--';
 
     return Container(
       color: context.appColors.fontWh1with100Opacity,
@@ -621,6 +626,10 @@ class WifiMapPage extends HookConsumerWidget {
               context.l10n.wifiSpeedBand,
               bandInfo,
               'wifi.png',
+              hideIcon: bandInfo == '--',
+              valueColor: bandInfo == '--'
+                  ? context.appColors.fontGy1with90Opacity
+                  : null,
             ),
             SizedBox(height: 8.h),
             _buildInfoRow(
@@ -695,14 +704,15 @@ class WifiMapPage extends HookConsumerWidget {
             : '--');
 
     final isTesting = speedState.isTesting;
-    final statusColor = isTesting
+    final hasSpeed = room.records.isNotEmpty;
+    final statusColor = (isTesting || !hasSpeed)
         ? context.appColors.fontGy1with90Opacity
         : (room.speedLevel == WifiSpeedLevel.good
             ? context.appColors.lime6
             : (room.speedLevel == WifiSpeedLevel.moderate
                 ? context.appColors.yellow6
                 : context.appColors.warning6Normal));
-    final statusText = isTesting
+    final statusText = (isTesting || !hasSpeed)
         ? '--'
         : (room.speedLevel == WifiSpeedLevel.good
             ? context.l10n.wifiSpeedGoodStatus
@@ -739,7 +749,7 @@ class WifiMapPage extends HookConsumerWidget {
         ),
         Row(
           children: [
-            if (!isTesting) ...[
+            if (!isTesting && hasSpeed) ...[
               AppImage(
                 room.speedStatusIcon,
                 width: 16.w,
@@ -792,8 +802,10 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     String label,
     String value,
-    String iconName,
-  ) {
+    String iconName, {
+    bool hideIcon = false,
+    Color? valueColor,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -805,14 +817,23 @@ class WifiMapPage extends HookConsumerWidget {
         ),
         Row(
           children: [
-            AppImage(
-              iconName,
-              width: 16.w,
-              height: 16.w,
-              color: context.appColors.fontGy2with60Opacity,
+            if (!hideIcon) ...[
+              AppImage(
+                iconName,
+                width: 16.w,
+                height: 16.w,
+                color: context.appColors.fontGy2with60Opacity,
+              ),
+              SizedBox(width: 2.w),
+            ],
+            Text(
+              value,
+              style: valueColor != null
+                  ? context.appTextStyles.bodyMediumWith60Opacity.copyWith(
+                      color: valueColor,
+                    )
+                  : context.appTextStyles.bodyMediumWith60Opacity,
             ),
-            SizedBox(width: 2.w),
-            Text(value, style: context.appTextStyles.bodyMediumWith60Opacity),
           ],
         ),
       ],
