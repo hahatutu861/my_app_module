@@ -42,6 +42,23 @@ class PrimaryWifiInfo {
   });
 }
 
+/// 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
+/// 仅承载原生采集的原始值，展示格式（如 "5GHz (Ch 6, -42 dBm)"）由 Flutter 端拼接
+class WifiConnectionInfo {
+  /// 频段 (2.4G, 5G, 6G)，来自 WifiUtils.checkCurrentWifiBand()，获取失败为 null
+  String? band;
+  /// 信道，来自 WifiUtils.getChannelByFrequency(frequency)，获取失败为 null
+  int? channel;
+  /// 信号强度 (dBm)，来自 wifiInfo.getRssi()，获取失败为 null
+  int? rssi;
+
+  WifiConnectionInfo({
+    this.band,
+    this.channel,
+    this.rssi,
+  });
+}
+
 /// 原生平台 API
 /// 由原生端实现，Flutter 端调用
 @HostApi()
@@ -81,6 +98,10 @@ abstract class NativeApi {
 
   /// 打开手机 WiFi 设置页面
   void openWifiSettings();
+
+  /// 获取当前连接 WiFi 的链路信息（频段、信道、信号强度）
+  /// 返回 null 表示未连接 WiFi 或获取失败
+  WifiConnectionInfo? getCurrentWifiConnectionInfo();
 }
 
 /// Flutter 回调 API

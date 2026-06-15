@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/wifi_speed/wifi_connection_info_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 
 final wifiSpeedViewModelProvider =
@@ -112,6 +113,7 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
     _cleanupTimers();
     NativeFlutterApi.setUp(null);
     await NativeApi().stopWifiSpeedTest();
+    ref.invalidate(wifiConnectionInfoProvider);
     if (state.samples.isEmpty) {
       state = state.copyWith(
         isTesting: false,

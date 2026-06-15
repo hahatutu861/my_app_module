@@ -14,6 +14,7 @@ import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/wifi_speed/wifi_connection_info_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
@@ -598,6 +599,11 @@ class WifiMapPage extends HookConsumerWidget {
     int index,
     FloorViewModel floorViewModel,
   ) {
+    final bandInfo = ref.watch(wifiConnectionInfoProvider).maybeWhen(
+          data: (info) => formatWifiConnectionInfo(info),
+          orElse: () => '--',
+        );
+
     return Container(
       color: context.appColors.fontWh1with100Opacity,
       child: SingleChildScrollView(
@@ -613,7 +619,7 @@ class WifiMapPage extends HookConsumerWidget {
             _buildInfoRow(
               context,
               context.l10n.wifiSpeedBand,
-              "5GHz (Ch 6, -42 dBm)",
+              bandInfo,
               'wifi.png',
             ),
             SizedBox(height: 8.h),
