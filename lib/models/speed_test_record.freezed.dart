@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SpeedTestRecord {
 
- double get speed; String? get band; int? get channel; int? get rssi; DateTime get timestamp;
+ double get speed; String? get band; int? get channel; int? get rssi; String? get deviceName; DateTime get timestamp;
 /// Create a copy of SpeedTestRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $SpeedTestRecordCopyWith<SpeedTestRecord> get copyWith => _$SpeedTestRecordCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpeedTestRecord&&(identical(other.speed, speed) || other.speed == speed)&&(identical(other.band, band) || other.band == band)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.rssi, rssi) || other.rssi == rssi)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SpeedTestRecord&&(identical(other.speed, speed) || other.speed == speed)&&(identical(other.band, band) || other.band == band)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.rssi, rssi) || other.rssi == rssi)&&(identical(other.deviceName, deviceName) || other.deviceName == deviceName)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,speed,band,channel,rssi,timestamp);
+int get hashCode => Object.hash(runtimeType,speed,band,channel,rssi,deviceName,timestamp);
 
 @override
 String toString() {
-  return 'SpeedTestRecord(speed: $speed, band: $band, channel: $channel, rssi: $rssi, timestamp: $timestamp)';
+  return 'SpeedTestRecord(speed: $speed, band: $band, channel: $channel, rssi: $rssi, deviceName: $deviceName, timestamp: $timestamp)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $SpeedTestRecordCopyWith<$Res>  {
   factory $SpeedTestRecordCopyWith(SpeedTestRecord value, $Res Function(SpeedTestRecord) _then) = _$SpeedTestRecordCopyWithImpl;
 @useResult
 $Res call({
- double speed, String? band, int? channel, int? rssi, DateTime timestamp
+ double speed, String? band, int? channel, int? rssi, String? deviceName, DateTime timestamp
 });
 
 
@@ -65,13 +65,14 @@ class _$SpeedTestRecordCopyWithImpl<$Res>
 
 /// Create a copy of SpeedTestRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? speed = null,Object? band = freezed,Object? channel = freezed,Object? rssi = freezed,Object? timestamp = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? speed = null,Object? band = freezed,Object? channel = freezed,Object? rssi = freezed,Object? deviceName = freezed,Object? timestamp = null,}) {
   return _then(_self.copyWith(
 speed: null == speed ? _self.speed : speed // ignore: cast_nullable_to_non_nullable
 as double,band: freezed == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
 as String?,channel: freezed == channel ? _self.channel : channel // ignore: cast_nullable_to_non_nullable
 as int?,rssi: freezed == rssi ? _self.rssi : rssi // ignore: cast_nullable_to_non_nullable
-as int?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,deviceName: freezed == deviceName ? _self.deviceName : deviceName // ignore: cast_nullable_to_non_nullable
+as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double speed,  String? band,  int? channel,  int? rssi,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double speed,  String? band,  int? channel,  int? rssi,  String? deviceName,  DateTime timestamp)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SpeedTestRecord() when $default != null:
-return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp);case _:
+return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.deviceName,_that.timestamp);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp)
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double speed,  String? band,  int? channel,  int? rssi,  DateTime timestamp)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double speed,  String? band,  int? channel,  int? rssi,  String? deviceName,  DateTime timestamp)  $default,) {final _that = this;
 switch (_that) {
 case _SpeedTestRecord():
-return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp);case _:
+return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.deviceName,_that.timestamp);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp)
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double speed,  String? band,  int? channel,  int? rssi,  DateTime timestamp)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double speed,  String? band,  int? channel,  int? rssi,  String? deviceName,  DateTime timestamp)?  $default,) {final _that = this;
 switch (_that) {
 case _SpeedTestRecord() when $default != null:
-return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp);case _:
+return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.deviceName,_that.timestamp);case _:
   return null;
 
 }
@@ -213,13 +214,14 @@ return $default(_that.speed,_that.band,_that.channel,_that.rssi,_that.timestamp)
 @JsonSerializable()
 
 class _SpeedTestRecord implements SpeedTestRecord {
-  const _SpeedTestRecord({required this.speed, this.band, this.channel, this.rssi, required this.timestamp});
+  const _SpeedTestRecord({required this.speed, this.band, this.channel, this.rssi, this.deviceName, required this.timestamp});
   factory _SpeedTestRecord.fromJson(Map<String, dynamic> json) => _$SpeedTestRecordFromJson(json);
 
 @override final  double speed;
 @override final  String? band;
 @override final  int? channel;
 @override final  int? rssi;
+@override final  String? deviceName;
 @override final  DateTime timestamp;
 
 /// Create a copy of SpeedTestRecord
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpeedTestRecord&&(identical(other.speed, speed) || other.speed == speed)&&(identical(other.band, band) || other.band == band)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.rssi, rssi) || other.rssi == rssi)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SpeedTestRecord&&(identical(other.speed, speed) || other.speed == speed)&&(identical(other.band, band) || other.band == band)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.rssi, rssi) || other.rssi == rssi)&&(identical(other.deviceName, deviceName) || other.deviceName == deviceName)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,speed,band,channel,rssi,timestamp);
+int get hashCode => Object.hash(runtimeType,speed,band,channel,rssi,deviceName,timestamp);
 
 @override
 String toString() {
-  return 'SpeedTestRecord(speed: $speed, band: $band, channel: $channel, rssi: $rssi, timestamp: $timestamp)';
+  return 'SpeedTestRecord(speed: $speed, band: $band, channel: $channel, rssi: $rssi, deviceName: $deviceName, timestamp: $timestamp)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$SpeedTestRecordCopyWith<$Res> implements $SpeedTestRecord
   factory _$SpeedTestRecordCopyWith(_SpeedTestRecord value, $Res Function(_SpeedTestRecord) _then) = __$SpeedTestRecordCopyWithImpl;
 @override @useResult
 $Res call({
- double speed, String? band, int? channel, int? rssi, DateTime timestamp
+ double speed, String? band, int? channel, int? rssi, String? deviceName, DateTime timestamp
 });
 
 
@@ -272,13 +274,14 @@ class __$SpeedTestRecordCopyWithImpl<$Res>
 
 /// Create a copy of SpeedTestRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? speed = null,Object? band = freezed,Object? channel = freezed,Object? rssi = freezed,Object? timestamp = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? speed = null,Object? band = freezed,Object? channel = freezed,Object? rssi = freezed,Object? deviceName = freezed,Object? timestamp = null,}) {
   return _then(_SpeedTestRecord(
 speed: null == speed ? _self.speed : speed // ignore: cast_nullable_to_non_nullable
 as double,band: freezed == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
 as String?,channel: freezed == channel ? _self.channel : channel // ignore: cast_nullable_to_non_nullable
 as int?,rssi: freezed == rssi ? _self.rssi : rssi // ignore: cast_nullable_to_non_nullable
-as int?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
+as int?,deviceName: freezed == deviceName ? _self.deviceName : deviceName // ignore: cast_nullable_to_non_nullable
+as String?,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }

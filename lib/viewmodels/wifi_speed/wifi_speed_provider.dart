@@ -3,13 +3,39 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/speed_test_record.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
-import 'package:my_app_module/viewmodels/wifi_speed/wifi_connection_info_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 
 final wifiSpeedViewModelProvider =
     NotifierProvider<WifiSpeedViewModel, WifiSpeedState>(
   WifiSpeedViewModel.new,
 );
+
+/// 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
+/// 反映手机实时连接状态，随房间栏展示时拉取，隐藏后自动释放
+final wifiConnectionInfoProvider =
+    FutureProvider.autoDispose<WifiConnectionInfo?>((ref) async {
+  return NativeApi().getCurrentWifiConnectionInfo();
+});
+
+/// 当前连接设备的名称 (deviceName)
+/// 反映手机实时连接状态，随房间栏展示时拉取，隐藏后自动释放
+final connectedDeviceNameProvider =
+    FutureProvider.autoDispose<String?>((ref) async {
+  return NativeApi().getConnectedDeviceName();
+});
+
+/// 将原生原始值拼接为展示字符串，例如 "5GHz (Ch 6, -42 dBm)"
+/// 单位与格式集中在此控制，原生侧只负责采集
+String formatWifiConnectionInfo(WifiConnectionInfo? info) {
+  if (info == null) return '--';
+  final band = (info.band ?? '').replaceAll('G', 'GHz');
+  final parts = <String>[];
+  if (info.channel != null) parts.add('Ch ${info.channel}');
+  if (info.rssi != null) parts.add('${info.rssi} dBm');
+  if (band.isEmpty && parts.isEmpty) return '--';
+  final detail = parts.isEmpty ? '' : ' (${parts.join(', ')})';
+  return '$band$detail';
+}
 
 enum SpeedTestAction {
   startTest,
@@ -123,12 +149,18 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
     }
     final sortedSamples = [...state.samples]..sort();
     final medianSpeed = sortedSamples[sortedSamples.length ~/ 2];
-    final wifiInfo = await NativeApi().getCurrentWifiConnectionInfo();
+    final results = await Future.wait([
+      NativeApi().getCurrentWifiConnectionInfo(),
+      NativeApi().getConnectedDeviceName(),
+    ]);
+    final wifiInfo = results[0] as WifiConnectionInfo?;
+    final deviceName = results[1] as String?;
     final record = SpeedTestRecord(
       speed: medianSpeed,
       band: wifiInfo?.band,
       channel: wifiInfo?.channel,
       rssi: wifiInfo?.rssi,
+      deviceName: deviceName,
       timestamp: DateTime.now(),
     );
     state = state.copyWith(

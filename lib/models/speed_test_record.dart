@@ -11,6 +11,7 @@ abstract class SpeedTestRecord with _$SpeedTestRecord {
     String? band,
     int? channel,
     int? rssi,
+    String? deviceName,
     required DateTime timestamp,
   }) = _SpeedTestRecord;
 

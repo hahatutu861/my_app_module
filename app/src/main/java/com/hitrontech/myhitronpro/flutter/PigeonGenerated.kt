@@ -310,6 +310,56 @@ data class PrimaryWifiInfo (
     return result
   }
 }
+
+/**
+ * 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
+ * 仅承载原生采集的原始值，展示格式（如 "5GHz (Ch 6, -42 dBm)"）由 Flutter 端拼接
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class WifiConnectionInfo (
+  /** 频段 (2.4G, 5G, 6G)，来自 WifiUtils.checkCurrentWifiBand()，获取失败为 null */
+  val band: String? = null,
+  /** 信道，来自 WifiUtils.getChannelByFrequency(frequency)，获取失败为 null */
+  val channel: Long? = null,
+  /** 信号强度 (dBm)，来自 wifiInfo.getRssi()，获取失败为 null */
+  val rssi: Long? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): WifiConnectionInfo {
+      val band = pigeonVar_list[0] as String?
+      val channel = pigeonVar_list[1] as Long?
+      val rssi = pigeonVar_list[2] as Long?
+      return WifiConnectionInfo(band, channel, rssi)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      band,
+      channel,
+      rssi,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as WifiConnectionInfo
+    return PigeonGeneratedPigeonUtils.deepEquals(this.band, other.band) && PigeonGeneratedPigeonUtils.deepEquals(this.channel, other.channel) && PigeonGeneratedPigeonUtils.deepEquals(this.rssi, other.rssi)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.band)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.channel)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.rssi)
+    return result
+  }
+}
 private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -328,6 +378,11 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
           PrimaryWifiInfo.fromList(it)
         }
       }
+      132.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          WifiConnectionInfo.fromList(it)
+        }
+      }
       else -> super.readValueOfType(type, buffer)
     }
   }
@@ -343,6 +398,10 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       is PrimaryWifiInfo -> {
         stream.write(131)
+        writeValue(stream, value.toList())
+      }
+      is WifiConnectionInfo -> {
+        stream.write(132)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -389,6 +448,18 @@ interface NativeApi {
    * 返回 null 表示获取失败
    */
   fun getPrimaryWifi(): PrimaryWifiInfo?
+  /** 打开手机 WiFi 设置页面 */
+  fun openWifiSettings()
+  /**
+   * 获取当前连接 WiFi 的链路信息（频段、信道、信号强度）
+   * 返回 null 表示未连接 WiFi 或获取失败
+   */
+  fun getCurrentWifiConnectionInfo(): WifiConnectionInfo?
+  /**
+   * 获取当前连接设备的硬件型号 (hwModel)
+   * 返回 null 表示未连接设备或获取失败
+   */
+  fun getConnectedHwModel(): String?
 
   companion object {
     /** The codec used by NativeApi. */
@@ -528,6 +599,52 @@ interface NativeApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.getPrimaryWifi())
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.openWifiSettings$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              api.openWifiSettings()
+              listOf(null)
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getCurrentWifiConnectionInfo$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getCurrentWifiConnectionInfo())
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getConnectedHwModel$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getConnectedHwModel())
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }

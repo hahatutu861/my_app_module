@@ -12,6 +12,7 @@ _SpeedTestRecord _$SpeedTestRecordFromJson(Map<String, dynamic> json) =>
       band: json['band'] as String?,
       channel: (json['channel'] as num?)?.toInt(),
       rssi: (json['rssi'] as num?)?.toInt(),
+      deviceName: json['deviceName'] as String?,
       timestamp: DateTime.parse(json['timestamp'] as String),
     );
 
@@ -21,5 +22,6 @@ Map<String, dynamic> _$SpeedTestRecordToJson(_SpeedTestRecord instance) =>
       'band': instance.band,
       'channel': instance.channel,
       'rssi': instance.rssi,
+      'deviceName': instance.deviceName,
       'timestamp': instance.timestamp.toIso8601String(),
     };

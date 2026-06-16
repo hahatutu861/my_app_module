@@ -102,6 +102,10 @@ abstract class NativeApi {
   /// 获取当前连接 WiFi 的链路信息（频段、信道、信号强度）
   /// 返回 null 表示未连接 WiFi 或获取失败
   WifiConnectionInfo? getCurrentWifiConnectionInfo();
+
+  /// 获取当前连接设备的名称 (deviceName)
+  /// 返回 null 表示未连接设备或获取失败
+  String? getConnectedDeviceName();
 }
 
 /// Flutter 回调 API

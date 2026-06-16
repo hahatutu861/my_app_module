@@ -14,7 +14,6 @@ import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
-import 'package:my_app_module/viewmodels/wifi_speed/wifi_connection_info_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
@@ -599,15 +598,23 @@ class WifiMapPage extends HookConsumerWidget {
     int index,
     FloorViewModel floorViewModel,
   ) {
-    final bandInfo = room.records.isNotEmpty
-        ? formatWifiConnectionInfo(
+    final isTesting = ref.watch(
+      wifiSpeedViewModelProvider.select((state) => state.isTesting),
+    );
+    final bandInfo = (isTesting || room.records.isEmpty)
+        ? '--'
+        : formatWifiConnectionInfo(
             WifiConnectionInfo(
               band: room.records.last.band,
               channel: room.records.last.channel,
               rssi: room.records.last.rssi,
             ),
-          )
-        : '--';
+          );
+    final deviceName = (isTesting ||
+            room.records.isEmpty ||
+            (room.records.last.deviceName?.isEmpty ?? true))
+        ? '--'
+        : room.records.last.deviceName!;
 
     return Container(
       color: context.appColors.fontWh1with100Opacity,
@@ -635,8 +642,12 @@ class WifiMapPage extends HookConsumerWidget {
             _buildInfoRow(
               context,
               context.l10n.wifiSpeedConnectedTo,
-              context.l10n.roomDiningRoom,
+              deviceName,
               'connected_to.png',
+              hideIcon: deviceName == '--',
+              valueColor: deviceName == '--'
+                  ? context.appColors.fontGy1with90Opacity
+                  : null,
             ),
             SizedBox(height: 16.h),
             _buildActionButtons(context, ref),
