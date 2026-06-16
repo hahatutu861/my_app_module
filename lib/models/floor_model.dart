@@ -13,6 +13,7 @@ abstract class FloorModel with _$FloorModel {
     required DateTime createdAt,
     DateTime? updatedAt,
     @Default([]) List<RoomModel> rooms,
+    String? deviceId,
   }) = _FloorModel;
 
   factory FloorModel.fromJson(Map<String, dynamic> json) =>

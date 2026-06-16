@@ -19,6 +19,7 @@ _FloorModel _$FloorModelFromJson(Map<String, dynamic> json) => _FloorModel(
           ?.map((e) => RoomModel.fromJson(e as Map<String, dynamic>))
           .toList() ??
       const [],
+  deviceId: json['deviceId'] as String?,
 );
 
 Map<String, dynamic> _$FloorModelToJson(_FloorModel instance) =>
@@ -29,4 +30,5 @@ Map<String, dynamic> _$FloorModelToJson(_FloorModel instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'rooms': instance.rooms,
+      'deviceId': instance.deviceId,
     };

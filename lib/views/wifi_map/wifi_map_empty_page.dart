@@ -102,32 +102,6 @@ class WifiMapEmptyPage extends HookConsumerWidget {
   }
 }
 
-class _BackIcon extends StatelessWidget {
-  const _BackIcon();
-
-  @override
-  Widget build(BuildContext context) {
-    return AppImage(
-      'chevron_left.png',
-      width: AppSpacing.icon24.w,
-      height: AppSpacing.icon24.h,
-      color: context.appColors.fontGy1with90Opacity,
-    );
-  }
-}
-
-class _BackText extends StatelessWidget {
-  const _BackText();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      context.l10n.back,
-      style: context.appTextStyles.bodyLargeWith90Opacity,
-    );
-  }
-}
-
 Widget _buildBackButton(BuildContext context) {
   return GestureDetector(
     onTap: () async {
@@ -143,9 +117,17 @@ Widget _buildBackButton(BuildContext context) {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const _BackIcon(),
+          AppImage(
+            'chevron_left.png',
+            width: AppSpacing.icon24.w,
+            height: AppSpacing.icon24.h,
+            color: context.appColors.fontGy1with90Opacity,
+          ),
           SizedBox(width: AppSpacing.gap8.w),
-          const _BackText(),
+          Text(
+            context.l10n.back,
+            style: context.appTextStyles.bodyLargeWith90Opacity,
+          ),
         ],
       ),
     ),

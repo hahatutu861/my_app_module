@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FloorModel {
 
- String get id; String get floorName; int get zoneCount; DateTime get createdAt; DateTime? get updatedAt; List<RoomModel> get rooms;
+ String get id; String get floorName; int get zoneCount; DateTime get createdAt; DateTime? get updatedAt; List<RoomModel> get rooms; String? get deviceId;
 /// Create a copy of FloorModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $FloorModelCopyWith<FloorModel> get copyWith => _$FloorModelCopyWithImpl<FloorMo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.rooms, rooms));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.rooms, rooms)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(rooms));
+int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(rooms),deviceId);
 
 @override
 String toString() {
-  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
+  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms, deviceId: $deviceId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $FloorModelCopyWith<$Res>  {
   factory $FloorModelCopyWith(FloorModel value, $Res Function(FloorModel) _then) = _$FloorModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms
+ String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms, String? deviceId
 });
 
 
@@ -65,7 +65,7 @@ class _$FloorModelCopyWithImpl<$Res>
 
 /// Create a copy of FloorModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,Object? deviceId = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,floorName: null == floorName ? _self.floorName : floorName // ignore: cast_nullable_to_non_nullable
@@ -73,7 +73,8 @@ as String,zoneCount: null == zoneCount ? _self.zoneCount : zoneCount // ignore: 
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,rooms: null == rooms ? _self.rooms : rooms // ignore: cast_nullable_to_non_nullable
-as List<RoomModel>,
+as List<RoomModel>,deviceId: freezed == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms,  String? deviceId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FloorModel() when $default != null:
-return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms,_that.deviceId);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.u
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms,  String? deviceId)  $default,) {final _that = this;
 switch (_that) {
 case _FloorModel():
-return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms,_that.deviceId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.u
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String floorName,  int zoneCount,  DateTime createdAt,  DateTime? updatedAt,  List<RoomModel> rooms,  String? deviceId)?  $default,) {final _that = this;
 switch (_that) {
 case _FloorModel() when $default != null:
-return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms);case _:
+return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.updatedAt,_that.rooms,_that.deviceId);case _:
   return null;
 
 }
@@ -214,7 +215,7 @@ return $default(_that.id,_that.floorName,_that.zoneCount,_that.createdAt,_that.u
 @JsonSerializable()
 
 class _FloorModel implements FloorModel {
-  const _FloorModel({required this.id, required this.floorName, this.zoneCount = 0, required this.createdAt, this.updatedAt, final  List<RoomModel> rooms = const []}): _rooms = rooms;
+  const _FloorModel({required this.id, required this.floorName, this.zoneCount = 0, required this.createdAt, this.updatedAt, final  List<RoomModel> rooms = const [], this.deviceId}): _rooms = rooms;
   factory _FloorModel.fromJson(Map<String, dynamic> json) => _$FloorModelFromJson(json);
 
 @override final  String id;
@@ -229,6 +230,7 @@ class _FloorModel implements FloorModel {
   return EqualUnmodifiableListView(_rooms);
 }
 
+@override final  String? deviceId;
 
 /// Create a copy of FloorModel
 /// with the given fields replaced by the non-null parameter values.
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._rooms, _rooms));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FloorModel&&(identical(other.id, id) || other.id == id)&&(identical(other.floorName, floorName) || other.floorName == floorName)&&(identical(other.zoneCount, zoneCount) || other.zoneCount == zoneCount)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._rooms, _rooms)&&(identical(other.deviceId, deviceId) || other.deviceId == deviceId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(_rooms));
+int get hashCode => Object.hash(runtimeType,id,floorName,zoneCount,createdAt,updatedAt,const DeepCollectionEquality().hash(_rooms),deviceId);
 
 @override
 String toString() {
-  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms)';
+  return 'FloorModel(id: $id, floorName: $floorName, zoneCount: $zoneCount, createdAt: $createdAt, updatedAt: $updatedAt, rooms: $rooms, deviceId: $deviceId)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$FloorModelCopyWith<$Res> implements $FloorModelCopyWith<$
   factory _$FloorModelCopyWith(_FloorModel value, $Res Function(_FloorModel) _then) = __$FloorModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms
+ String id, String floorName, int zoneCount, DateTime createdAt, DateTime? updatedAt, List<RoomModel> rooms, String? deviceId
 });
 
 
@@ -280,7 +282,7 @@ class __$FloorModelCopyWithImpl<$Res>
 
 /// Create a copy of FloorModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? floorName = null,Object? zoneCount = null,Object? createdAt = null,Object? updatedAt = freezed,Object? rooms = null,Object? deviceId = freezed,}) {
   return _then(_FloorModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,floorName: null == floorName ? _self.floorName : floorName // ignore: cast_nullable_to_non_nullable
@@ -288,7 +290,8 @@ as String,zoneCount: null == zoneCount ? _self.zoneCount : zoneCount // ignore: 
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,rooms: null == rooms ? _self._rooms : rooms // ignore: cast_nullable_to_non_nullable
-as List<RoomModel>,
+as List<RoomModel>,deviceId: freezed == deviceId ? _self.deviceId : deviceId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

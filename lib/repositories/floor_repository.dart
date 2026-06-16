@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/services/database/database_service.dart';
+import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 
 final floorRepositoryProvider = Provider<FloorRepository>((ref) {
   debugPrint('=== floorRepositoryProvider ===');
@@ -20,11 +21,18 @@ class FloorRepository {
 
   Future<FloorModel> createFloor(String floorName) async {
     final db = await _database;
+    String? deviceId;
+    try {
+      deviceId = await NativeApi().getDeviceId();
+    } catch (e) {
+      debugPrint('getDeviceId failed: $e');
+    }
     final floor = FloorModel(
       id: const Uuid().v4(),
       floorName: floorName,
       zoneCount: 0,
       createdAt: DateTime.now(),
+      deviceId: deviceId,
     );
 
     try {
@@ -53,8 +61,16 @@ class FloorRepository {
 
   Future<List<FloorModel>> getAllFloors() async {
     final db = await _database;
+    String? deviceId;
+    try {
+      deviceId = await NativeApi().getDeviceId();
+    } catch (e) {
+      debugPrint('getDeviceId failed: $e');
+    }
     final results = await db.query(
       _table,
+      where: 'device_id = ?',
+      whereArgs: [deviceId],
       orderBy: 'created_at DESC',
     );
     if (results.isEmpty) return [];
@@ -127,6 +143,7 @@ class FloorRepository {
         'created_at': floor.createdAt.toIso8601String(),
         'updated_at': floor.updatedAt?.toIso8601String(),
         'rooms': jsonEncode(floor.rooms.map((r) => r.toJson()).toList()),
+        'device_id': floor.deviceId,
       };
 
   FloorModel _fromDbMap(Map<String, dynamic> map) => FloorModel(
@@ -142,5 +159,6 @@ class FloorRepository {
                 .map((r) => RoomModel.fromJson(r as Map<String, dynamic>))
                 .toList()
             : [],
+        deviceId: map['device_id'] as String?,
       );
 }
