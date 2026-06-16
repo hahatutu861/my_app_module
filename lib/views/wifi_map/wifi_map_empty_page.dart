@@ -45,7 +45,10 @@ class WifiMapEmptyPage extends HookConsumerWidget {
           ),
           Padding(
             padding: EdgeInsets.only(left: AppSpacing.pad16.w),
-            child: const _PageTitle(),
+            child: Text(
+              context.l10n.wifiMap,
+              style: context.appTextStyles.titleWith90Opacity,
+            ),
           ),
           Expanded(
             child: floorsAsync.when(
@@ -162,18 +165,6 @@ Widget _buildAddFloorButton(BuildContext context, WidgetRef ref) {
       ),
     ),
   );
-}
-
-class _PageTitle extends StatelessWidget {
-  const _PageTitle();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      context.l10n.wifiMap,
-      style: context.appTextStyles.titleWith90Opacity,
-    );
-  }
 }
 
 class _EmptyStateTitle extends StatelessWidget {
