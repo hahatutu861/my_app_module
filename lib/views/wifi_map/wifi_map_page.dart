@@ -89,27 +89,39 @@ class WifiMapPage extends HookConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.appColors.fontWh1with100Opacity,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        clipBehavior: Clip.none,
         children: [
-          SizedBox(height: statusBarHeight),
-          _buildHeader(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: statusBarHeight),
+              _buildHeader(
+                context,
+                ref,
+                hideButtonSize,
+                bubbleSize,
+                floorViewModel,
+              ),
+              _buildFloorTitle(context, floorViewModel),
+              SizedBox(height: 16.h),
+              _buildAutoSizeGrid(
+                context,
+                ref,
+                transformationController,
+                floorViewModel,
+                hasFittedToRooms,
+              ),
+              Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
+            ],
+          ),
+          _buildBubbleOverlay(
             context,
-            ref,
+            statusBarHeight,
             hideButtonSize,
             bubbleSize,
             floorViewModel,
           ),
-          _buildFloorTitle(context, floorViewModel),
-          SizedBox(height: 16.h),
-          _buildAutoSizeGrid(
-            context,
-            ref,
-            transformationController,
-            floorViewModel,
-            hasFittedToRooms,
-          ),
-          Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
         ],
       ),
     );
@@ -492,22 +504,37 @@ class WifiMapPage extends HookConsumerWidget {
       );
     }
 
-    return Stack(
-      alignment: Alignment.topCenter,
-      clipBehavior: Clip.none,
-      children: [
-        _buildHideButtonIcon(context, ref, floorViewModel),
-        if (floorViewModel.bubbleTrigger > 0)
-          Positioned(
-            top: hideButtonSize.value!.height + 4,
-            left: hideButtonSize.value!.width - bubbleSize.value!.width,
-            child: AppAnimatedBubbleTip(
-              key: ValueKey(floorViewModel.bubbleTrigger),
-              text: context.l10n.showPreviousFloorReference,
-              targetWidgetSize: hideButtonSize.value,
-            ),
-          ),
-      ],
+    return _buildHideButtonIcon(context, ref, floorViewModel);
+  }
+
+  Widget _buildBubbleOverlay(
+    BuildContext context,
+    double statusBarHeight,
+    ValueNotifier<Size?> hideButtonSize,
+    ValueNotifier<Size?> bubbleSize,
+    FloorViewModel floorViewModel,
+  ) {
+    if (floorViewModel.bubbleTrigger <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    final hideButtonValue = hideButtonSize.value;
+    final bubbleValue = bubbleSize.value;
+    if (hideButtonValue == null ||
+        bubbleValue == null ||
+        hideButtonValue.height <= 0 ||
+        bubbleValue.width <= 0) {
+      return const SizedBox.shrink();
+    }
+
+    return Positioned(
+      top: statusBarHeight + 16.w + hideButtonValue.height + 4,
+      right: 16.w,
+      child: AppAnimatedBubbleTip(
+        key: ValueKey(floorViewModel.bubbleTrigger),
+        text: context.l10n.showPreviousFloorReference,
+        targetWidgetSize: hideButtonValue,
+      ),
     );
   }
 
