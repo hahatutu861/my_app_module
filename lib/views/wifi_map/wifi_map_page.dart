@@ -269,17 +269,28 @@ class WifiMapPage extends HookConsumerWidget {
 
         if (isReference) {
           return GestureDetector(
-            onTap: () => EditRoomBottomSheet.show(context, index),
+            onTap: () => _editRoom(context, index, floorViewModel),
             child: _buildEmptyCell(context, color: context.appColors.gray4),
           );
         }
 
         return GestureDetector(
-          onTap: () => EditRoomBottomSheet.show(context, index),
+          onTap: () => _editRoom(context, index, floorViewModel),
           child: _buildEmptyCell(context),
         );
       },
     );
+  }
+
+  Future<void> _editRoom(
+    BuildContext context,
+    int index,
+    FloorViewModel floorViewModel,
+  ) async {
+    final saved = await EditRoomBottomSheet.show(context, index);
+    if (saved == true) {
+      floorViewModel.selectRoom(index);
+    }
   }
 
   Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected) {
@@ -697,7 +708,7 @@ class WifiMapPage extends HookConsumerWidget {
     final timeText = displayTime != null ? formatDateTime(displayTime) : '';
 
     return GestureDetector(
-      onTap: () => EditRoomBottomSheet.show(context, index),
+      onTap: () => _editRoom(context, index, floorViewModel),
       behavior: HitTestBehavior.opaque,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 22.h),

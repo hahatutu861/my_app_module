@@ -21,8 +21,8 @@ class EditRoomBottomSheet extends HookConsumerWidget {
 
   const EditRoomBottomSheet({super.key, this.index});
 
-  static Future<void> show(BuildContext context, int index) {
-    return showModalBottomSheet(
+  static Future<bool?> show(BuildContext context, int index) {
+    return showModalBottomSheet<bool>(
       context: context,
       isScrollControlled: true,
       isDismissible: false,
@@ -310,8 +310,10 @@ class EditRoomBottomSheet extends HookConsumerWidget {
                     isGateway: state.isGateway,
                   );
                   ref.read(floorViewModelProvider.notifier).updateRoom(index!, room);
+                  Navigator.of(context).pop(true);
+                } else {
+                  Navigator.of(context).pop();
                 }
-                Navigator.of(context).pop();
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: context.appColors.brand6Normal,
