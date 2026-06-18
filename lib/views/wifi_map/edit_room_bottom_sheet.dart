@@ -303,11 +303,11 @@ class EditRoomBottomSheet extends HookConsumerWidget {
                       ? state.roomName
                       : state.selectedRoom!.getDisplayName(context);
                   final existingRoom = switch (floorState) {
-                    FloorStateLoaded(:final floor) =>
-                      floor?.rooms.firstWhere((r) => r.index == index),
+                    FloorStateLoaded(:final floor) => floor?.rooms
+                        .where((r) => r.index == index)
+                        .firstOrNull,
                     _ => null,
                   };
-
                   final room = RoomModel(
                     index: index!,
                     roomType: state.selectedRoom!.name,
