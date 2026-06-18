@@ -294,8 +294,19 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected) {
-    final roomType = room.roomTypeEnum;
+    final speedLevel = room.speedLevel;
+    if (speedLevel == null) {
+      return _buildRoomCellPlaceholder(context, room, isSelected);
+    }
+    return _buildRoomCellWithSpeed(context, room, isSelected, speedLevel);
+  }
 
+  Widget _buildRoomCellPlaceholder(
+    BuildContext context,
+    RoomModel room,
+    bool isSelected,
+  ) {
+    final roomType = room.roomTypeEnum;
     return Container(
       decoration: BoxDecoration(
         color: context.appColors.gray4,
@@ -345,6 +356,101 @@ class WifiMapPage extends HookConsumerWidget {
                         ),
                       ],
                     ),
+                  ),
+                ),
+              ),
+              if (room.isGateway != null)
+                Positioned(
+                  top: isSelected ? 0.2.w : 0,
+                  right: isSelected ? 0.2.w : 0,
+                  child: SizedBox(
+                    height: badgeHeight,
+                    child: AppBadge(
+                      label: room.isGateway == true
+                          ? context.l10n.router
+                          : context.l10n.extender,
+                    ),
+                  ),
+                ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildRoomCellWithSpeed(
+    BuildContext context,
+    RoomModel room,
+    bool isSelected,
+    WifiSpeedLevel speedLevel,
+  ) {
+    final roomType = room.roomTypeEnum;
+    final backgroundColor = switch (speedLevel) {
+      WifiSpeedLevel.good => context.appColors.lime6,
+      WifiSpeedLevel.moderate => context.appColors.yellow6,
+      WifiSpeedLevel.weak => context.appColors.warning6Normal,
+    };
+    final foregroundColor = context.appColors.fontWh1with100Opacity;
+    final speedText = room.records.last.speed.toStringAsFixed(1);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6.r),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final cellHeight = constraints.maxHeight;
+          final badgeHeight = cellHeight * 0.25;
+          return Stack(
+            children: [
+              if (isSelected)
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6.r),
+                      border: Border.all(
+                        color: context.appColors.fontGy1with90Opacity,
+                        width: 1.2.w,
+                      ),
+                    ),
+                  ),
+                ),
+              FittedBox(
+                fit: BoxFit.contain,
+                child: SizedBox(
+                  width: 80.w,
+                  height: 80.w,
+                  child: Stack(
+                    children: [
+                      Align(
+                        alignment: Alignment.center,
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text(
+                            speedText,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w400,
+                              color: foregroundColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 4.w,
+                        bottom: 4.w,
+                        child: AppImage(
+                          roomType.imagePath,
+                          width: 24.w,
+                          height: 24.w,
+                          color: context.appColors.fontWh2with55Opacity,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
