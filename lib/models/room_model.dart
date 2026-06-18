@@ -14,6 +14,7 @@ abstract class RoomModel with _$RoomModel {
     required String roomType,
     required String roomName,
     bool? isGateway,
+    DateTime? updatedAt,
     @Default([]) List<SpeedTestRecord> records,
   }) = _RoomModel;
 

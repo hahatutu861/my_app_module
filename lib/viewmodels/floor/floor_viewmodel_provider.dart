@@ -149,11 +149,12 @@ class FloorViewModel extends Notifier<FloorState> {
 
     try {
       final rooms = List<RoomModel>.from(currentFloor.rooms);
+      final stampedRoom = room.copyWith(updatedAt: DateTime.now());
       final existingIndex = rooms.indexWhere((r) => r.index == index);
       if (existingIndex >= 0) {
-        rooms[existingIndex] = room;
+        rooms[existingIndex] = stampedRoom;
       } else {
-        rooms.add(room);
+        rooms.add(stampedRoom);
       }
       final updatedFloor = await _repository.updateRooms(
         currentFloor.id,

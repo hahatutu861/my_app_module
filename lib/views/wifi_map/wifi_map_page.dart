@@ -703,8 +703,7 @@ class WifiMapPage extends HookConsumerWidget {
     FloorViewModel floorViewModel,
   ) {
     final roomType = room.roomTypeEnum;
-    final updatedAt = floorViewModel.currentFloor?.updatedAt;
-    final displayTime = updatedAt ?? floorViewModel.currentFloor?.createdAt;
+    final displayTime = room.updatedAt;
     final timeText = displayTime != null ? formatDateTime(displayTime) : '';
 
     return GestureDetector(

@@ -11,6 +11,9 @@ _RoomModel _$RoomModelFromJson(Map<String, dynamic> json) => _RoomModel(
   roomType: json['roomType'] as String,
   roomName: json['roomName'] as String,
   isGateway: json['isGateway'] as bool?,
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
   records:
       (json['records'] as List<dynamic>?)
           ?.map((e) => SpeedTestRecord.fromJson(e as Map<String, dynamic>))
@@ -24,5 +27,6 @@ Map<String, dynamic> _$RoomModelToJson(_RoomModel instance) =>
       'roomType': instance.roomType,
       'roomName': instance.roomName,
       'isGateway': instance.isGateway,
+      'updatedAt': instance.updatedAt?.toIso8601String(),
       'records': instance.records,
     };
