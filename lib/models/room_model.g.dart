@@ -11,6 +11,9 @@ _RoomModel _$RoomModelFromJson(Map<String, dynamic> json) => _RoomModel(
   roomType: json['roomType'] as String,
   roomName: json['roomName'] as String,
   isGateway: json['isGateway'] as bool?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
@@ -27,6 +30,7 @@ Map<String, dynamic> _$RoomModelToJson(_RoomModel instance) =>
       'roomType': instance.roomType,
       'roomName': instance.roomName,
       'isGateway': instance.isGateway,
+      'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'records': instance.records,
     };

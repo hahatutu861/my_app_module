@@ -302,12 +302,19 @@ class EditRoomBottomSheet extends HookConsumerWidget {
                   final roomName = state.roomName.isNotEmpty
                       ? state.roomName
                       : state.selectedRoom!.getDisplayName(context);
+                  final existingRoom = switch (floorState) {
+                    FloorStateLoaded(:final floor) =>
+                      floor?.rooms.firstWhere((r) => r.index == index),
+                    _ => null,
+                  };
 
                   final room = RoomModel(
                     index: index!,
                     roomType: state.selectedRoom!.name,
                     roomName: roomName,
                     isGateway: state.isGateway,
+                    createdAt: existingRoom?.createdAt ?? DateTime.now(),
+                    updatedAt: DateTime.now(),
                   );
                   ref.read(floorViewModelProvider.notifier).updateRoom(index!, room);
                   Navigator.of(context).pop(true);

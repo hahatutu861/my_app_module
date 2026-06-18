@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoomModel {
 
- int get index; String get roomType; String get roomName; bool? get isGateway; DateTime? get updatedAt; List<SpeedTestRecord> get records;
+ int get index; String get roomType; String get roomName; bool? get isGateway; DateTime? get createdAt; DateTime? get updatedAt; List<SpeedTestRecord> get records;
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RoomModelCopyWith<RoomModel> get copyWith => _$RoomModelCopyWithImpl<RoomModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.records, records));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other.records, records));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,updatedAt,const DeepCollectionEquality().hash(records));
+int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,createdAt,updatedAt,const DeepCollectionEquality().hash(records));
 
 @override
 String toString() {
-  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, updatedAt: $updatedAt, records: $records)';
+  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, createdAt: $createdAt, updatedAt: $updatedAt, records: $records)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RoomModelCopyWith<$Res>  {
   factory $RoomModelCopyWith(RoomModel value, $Res Function(RoomModel) _then) = _$RoomModelCopyWithImpl;
 @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway, DateTime? updatedAt, List<SpeedTestRecord> records
+ int index, String roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
 });
 
 
@@ -65,13 +65,14 @@ class _$RoomModelCopyWithImpl<$Res>
 
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? updatedAt = freezed,Object? records = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? records = null,}) {
   return _then(_self.copyWith(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
 as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
-as bool?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,records: null == records ? _self.records : records // ignore: cast_nullable_to_non_nullable
 as List<SpeedTestRecord>,
   ));
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.updatedAt,_that.records);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? updatedAt,  List<SpeedTestRecord> records)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel():
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.updatedAt,_that.records);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
-return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.updatedAt,_that.records);case _:
+return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
   return null;
 
 }
@@ -214,13 +215,14 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.
 @JsonSerializable()
 
 class _RoomModel implements RoomModel {
-  const _RoomModel({required this.index, required this.roomType, required this.roomName, this.isGateway, this.updatedAt, final  List<SpeedTestRecord> records = const []}): _records = records;
+  const _RoomModel({required this.index, required this.roomType, required this.roomName, this.isGateway, this.createdAt, this.updatedAt, final  List<SpeedTestRecord> records = const []}): _records = records;
   factory _RoomModel.fromJson(Map<String, dynamic> json) => _$RoomModelFromJson(json);
 
 @override final  int index;
 @override final  String roomType;
 @override final  String roomName;
 @override final  bool? isGateway;
+@override final  DateTime? createdAt;
 @override final  DateTime? updatedAt;
  final  List<SpeedTestRecord> _records;
 @override@JsonKey() List<SpeedTestRecord> get records {
@@ -243,16 +245,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._records, _records));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoomModel&&(identical(other.index, index) || other.index == index)&&(identical(other.roomType, roomType) || other.roomType == roomType)&&(identical(other.roomName, roomName) || other.roomName == roomName)&&(identical(other.isGateway, isGateway) || other.isGateway == isGateway)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&const DeepCollectionEquality().equals(other._records, _records));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,updatedAt,const DeepCollectionEquality().hash(_records));
+int get hashCode => Object.hash(runtimeType,index,roomType,roomName,isGateway,createdAt,updatedAt,const DeepCollectionEquality().hash(_records));
 
 @override
 String toString() {
-  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, updatedAt: $updatedAt, records: $records)';
+  return 'RoomModel(index: $index, roomType: $roomType, roomName: $roomName, isGateway: $isGateway, createdAt: $createdAt, updatedAt: $updatedAt, records: $records)';
 }
 
 
@@ -263,7 +265,7 @@ abstract mixin class _$RoomModelCopyWith<$Res> implements $RoomModelCopyWith<$Re
   factory _$RoomModelCopyWith(_RoomModel value, $Res Function(_RoomModel) _then) = __$RoomModelCopyWithImpl;
 @override @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway, DateTime? updatedAt, List<SpeedTestRecord> records
+ int index, String roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
 });
 
 
@@ -280,13 +282,14 @@ class __$RoomModelCopyWithImpl<$Res>
 
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? updatedAt = freezed,Object? records = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? index = null,Object? roomType = null,Object? roomName = null,Object? isGateway = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? records = null,}) {
   return _then(_RoomModel(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
 as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
-as bool?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,records: null == records ? _self._records : records // ignore: cast_nullable_to_non_nullable
 as List<SpeedTestRecord>,
   ));
