@@ -101,6 +101,14 @@
   "wifiSpeedBand": "Band",
   "wifiSpeedConnectedTo": "Connected to",
   "wifiSpeedHistory": "History",
+  "wifiSpeedHistoryTitle": "{roomName}’s history list",
+  "@wifiSpeedHistoryTitle": {
+    "placeholders": {
+      "roomName": {
+        "type": "String"
+      }
+    }
+  },
   "wifiSpeedTest": "Test Wi-Fi",
   "wifiSpeedStop": "Stop",
   "wifiSpeedTesting": "Testing ({progress})",

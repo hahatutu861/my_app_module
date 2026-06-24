@@ -578,6 +578,12 @@ abstract class AppLocalizations {
   /// **'History'**
   String get wifiSpeedHistory;
 
+  /// No description provided for @wifiSpeedHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{roomName}’s history list'**
+  String wifiSpeedHistoryTitle(String roomName);
+
   /// No description provided for @wifiSpeedTest.
   ///
   /// In en, this message translates to:

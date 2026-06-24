@@ -272,6 +272,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wifiSpeedHistory => 'History';
 
   @override
+  String wifiSpeedHistoryTitle(String roomName) {
+    return '$roomName’s history list';
+  }
+
+  @override
   String get wifiSpeedTest => 'Test Wi-Fi';
 
   @override

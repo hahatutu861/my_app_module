@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
@@ -18,10 +19,10 @@ import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/views/wifi_map/wifi_speed_dialog.dart';
+import 'package:my_app_module/views/wifi_map/wifi_speed_test_button.dart';
 import 'package:my_app_module/widgets/app_bubble_tip.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
-import 'package:my_app_module/widgets/connect_wifi_confirm_dialog.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/room_count_badge.dart';
@@ -763,7 +764,8 @@ class WifiMapPage extends HookConsumerWidget {
               rssi: room.records.last.rssi,
             ),
           );
-    final deviceName = (isTesting ||
+    final deviceName =
+        (isTesting ||
             room.records.isEmpty ||
             (room.records.last.deviceName?.isEmpty ?? true))
         ? '--'
@@ -803,7 +805,7 @@ class WifiMapPage extends HookConsumerWidget {
                   : null,
             ),
             SizedBox(height: 16.h),
-            _buildActionButtons(context, ref),
+            _buildActionButtons(context, ref, index),
             SizedBox(height: 16.h),
           ],
         ),
@@ -863,25 +865,25 @@ class WifiMapPage extends HookConsumerWidget {
     final latestSpeed = speedState.isTesting
         ? '--'
         : (room.records.isNotEmpty
-            ? room.records.last.speed.toStringAsFixed(1)
-            : '--');
+              ? room.records.last.speed.toStringAsFixed(1)
+              : '--');
 
     final isTesting = speedState.isTesting;
     final hasSpeed = room.records.isNotEmpty;
     final statusColor = (isTesting || !hasSpeed)
         ? context.appColors.fontGy1with90Opacity
         : (room.speedLevel == WifiSpeedLevel.good
-            ? context.appColors.lime6
-            : (room.speedLevel == WifiSpeedLevel.moderate
-                ? context.appColors.yellow6
-                : context.appColors.warning6Normal));
+              ? context.appColors.lime6
+              : (room.speedLevel == WifiSpeedLevel.moderate
+                    ? context.appColors.yellow6
+                    : context.appColors.warning6Normal));
     final statusText = (isTesting || !hasSpeed)
         ? '--'
         : (room.speedLevel == WifiSpeedLevel.good
-            ? context.l10n.wifiSpeedGoodStatus
-            : (room.speedLevel == WifiSpeedLevel.moderate
-                ? context.l10n.wifiSpeedModerateStatus
-                : context.l10n.wifiSpeedWeakStatus));
+              ? context.l10n.wifiSpeedGoodStatus
+              : (room.speedLevel == WifiSpeedLevel.moderate
+                    ? context.l10n.wifiSpeedModerateStatus
+                    : context.l10n.wifiSpeedWeakStatus));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -935,7 +937,11 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildSegmentedBar(BuildContext context, WidgetRef ref, RoomModel room) {
+  Widget _buildSegmentedBar(
+    BuildContext context,
+    WidgetRef ref,
+    RoomModel room,
+  ) {
     final isTesting = ref.watch(
       wifiSpeedViewModelProvider.select((state) => state.isTesting),
     );
@@ -1003,14 +1009,11 @@ class WifiMapPage extends HookConsumerWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, WidgetRef ref) {
-    final speedState = ref.watch(wifiSpeedViewModelProvider);
-    final speedViewModel = ref.read(wifiSpeedViewModelProvider.notifier);
-
+  Widget _buildActionButtons(BuildContext context, WidgetRef ref, int index) {
     return Row(
       children: [
         ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: () => context.push('/wifi-history?roomIndex=$index'),
           icon: AppImage(
             'history.png',
             width: 22.w,
@@ -1032,101 +1035,8 @@ class WifiMapPage extends HookConsumerWidget {
           ),
         ),
         SizedBox(width: 16.w),
-        Expanded(
-          child: speedState.isTesting
-              ? _buildTestingButton(context, speedState, speedViewModel)
-              : _buildSpeedTestButton(context, speedState, speedViewModel),
-        ),
+        const Expanded(child: WifiSpeedTestButton()),
       ],
-    );
-  }
-
-  Widget _buildSpeedTestButton(
-    BuildContext context,
-    WifiSpeedState state,
-    WifiSpeedViewModel viewModel,
-  ) {
-    return ElevatedButton.icon(
-      onPressed: () async {
-        final action = await viewModel.checkAndPrepareSpeedTest();
-        if (!context.mounted) return;
-        if (action == SpeedTestAction.showWifiDialog) {
-          final primaryWifi = await NativeApi().getPrimaryWifi();
-          if (!context.mounted) return;
-          final result = await ConnectWifiConfirmDialog.show(
-            context,
-            wifiName: primaryWifi?.name,
-          );
-          if (result == true) {
-            if (!context.mounted) return;
-            await viewModel.openWifiSettings();
-          }
-          return;
-        }
-        viewModel.startSpeedTest();
-      },
-      icon: AppImage(
-        'speed.png',
-        width: 22.w,
-        height: 22.w,
-        color: context.appColors.white,
-      ),
-      label: Text(
-        context.l10n.wifiSpeedTest,
-        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: context.appColors.brand6Normal,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100.r),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTestingButton(
-    BuildContext context,
-    WifiSpeedState state,
-    WifiSpeedViewModel viewModel,
-  ) {
-    final stage = 5 - state.progress;
-    final progress = (stage * 0.2).clamp(0.0, 1.0);
-    return GestureDetector(
-      onTap: () => viewModel.stopSpeedTest(),
-      child: Container(
-        height: 48.h,
-        decoration: BoxDecoration(
-          color: context.appColors.brand6Normal,
-          borderRadius: BorderRadius.circular(60.r),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: FractionallySizedBox(
-                widthFactor: progress,
-                child: Container(
-                  color: context.appColors.brand1Light.withValues(alpha: 0.5),
-                ),
-              ),
-            ),
-            Text(
-              context.l10n.wifiSpeedTesting(state.progress + 1),
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w500,
-                color: Colors.white,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
     );
   }
 

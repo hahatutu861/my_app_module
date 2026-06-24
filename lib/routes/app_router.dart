@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/views/counter/counter_page.dart';
 
+import 'package:my_app_module/views/wifi_map/wifi_history_page.dart';
 import 'package:my_app_module/views/wifi_map/wifi_map_empty_page.dart';
 import 'package:my_app_module/views/wifi_map/wifi_map_page.dart';
 
@@ -34,6 +35,16 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         path: '/wifi-map-empty',
         name: 'wifiMapEmpty',
         builder: (context, state) => const WifiMapEmptyPage(),
+      ),
+      GoRoute(
+        path: '/wifi-history',
+        name: 'wifiHistory',
+        builder: (context, state) {
+          final roomIndex = int.tryParse(
+            state.uri.queryParameters['roomIndex'] ?? '',
+          );
+          return WifiHistoryPage(roomIndex: roomIndex);
+        },
       ),
     ],
     errorBuilder: (context, state) =>
