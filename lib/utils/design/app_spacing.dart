@@ -104,6 +104,10 @@ class AppSpacing {
   /// 用于：完成按钮的水平内边距
   static const double pad24 = 24.0;
 
+  /// 超大内边距 - 40pt
+  /// 用于：空状态文案的水平内边距
+  static const double pad40 = 40.0;
+
   // ============== 外边距 (Margin) ==============
   /// 小外边距 - 4pt
   static const double margin4 = 4.0;

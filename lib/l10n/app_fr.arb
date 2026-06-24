@@ -128,5 +128,7 @@
       }
     }
   },
-  "goToSettings": "Aller aux paramètres"
+  "goToSettings": "Aller aux paramètres",
+  "wifiSpeedHistoryEmptyTitle": "Aucun test de débit enregistré",
+  "wifiSpeedHistoryEmptyDescription": "Rendez-vous dans cette zone/pièce pour tester son débit Wi-Fi."
 }

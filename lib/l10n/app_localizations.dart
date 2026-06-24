@@ -619,6 +619,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to settings'**
   String get goToSettings;
+
+  /// No description provided for @wifiSpeedHistoryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No speed tests recorded'**
+  String get wifiSpeedHistoryEmptyTitle;
+
+  /// No description provided for @wifiSpeedHistoryEmptyDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to that zone/room to test its Wi-Fi speed.'**
+  String get wifiSpeedHistoryEmptyDescription;
 }
 
 class _AppLocalizationsDelegate

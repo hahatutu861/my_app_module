@@ -128,5 +128,7 @@
       }
     }
   },
-  "goToSettings": "Go to settings"
+  "goToSettings": "Go to settings",
+  "wifiSpeedHistoryEmptyTitle": "No speed tests recorded",
+  "wifiSpeedHistoryEmptyDescription": "Go to that zone/room to test its Wi-Fi speed."
 }

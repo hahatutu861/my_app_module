@@ -300,4 +300,11 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get goToSettings => 'Aller aux paramètres';
+
+  @override
+  String get wifiSpeedHistoryEmptyTitle => 'Aucun test de débit enregistré';
+
+  @override
+  String get wifiSpeedHistoryEmptyDescription =>
+      'Rendez-vous dans cette zone/pièce pour tester son débit Wi-Fi.';
 }

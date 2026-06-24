@@ -109,7 +109,7 @@ class WifiHistoryPage extends HookConsumerWidget {
   Widget _buildList(BuildContext context, WidgetRef ref, RoomModel room) {
     final records = room.records;
     if (records.isEmpty) {
-      return const SizedBox();
+      return _buildEmpty(context);
     }
     final orderedIndices = List<int>.generate(
       records.length,
@@ -127,6 +127,31 @@ class WifiHistoryPage extends HookConsumerWidget {
           recordIndex: recordIndex,
         );
       },
+    );
+  }
+
+  Widget _buildEmpty(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.pad40.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              context.l10n.wifiSpeedHistoryEmptyTitle,
+              textAlign: TextAlign.center,
+              style: context.appTextStyles.bodyMediumWith90Opacity,
+            ),
+            SizedBox(height: AppSpacing.gap4.h),
+            Text(
+              context.l10n.wifiSpeedHistoryEmptyDescription,
+              textAlign: TextAlign.center,
+              style: context.appTextStyles.bodyMediumWith60Opacity,
+            ),
+          ],
+        ),
+      ),
     );
   }
 

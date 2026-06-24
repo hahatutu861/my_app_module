@@ -297,4 +297,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goToSettings => 'Go to settings';
+
+  @override
+  String get wifiSpeedHistoryEmptyTitle => 'No speed tests recorded';
+
+  @override
+  String get wifiSpeedHistoryEmptyDescription =>
+      'Go to that zone/room to test its Wi-Fi speed.';
 }
