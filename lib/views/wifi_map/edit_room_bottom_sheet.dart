@@ -77,18 +77,24 @@ class EditRoomBottomSheet extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildNavBar(context),
-            _buildTitle(context),
-            _buildSubtitle(context),
-            _buildRoomNameLabel(context),
-            _buildInputField(context, roomNameController, ref),
-            _buildRoomTypeLabel(context),
             Expanded(
-              child: _buildRoomGrid(context, state, viewModel),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTitle(context),
+                    _buildSubtitle(context),
+                    _buildRoomDetailsLabel(context),
+                    _buildInputField(context, roomNameController, ref),
+                    _buildWifiApTitle(context),
+                    _buildRadioGroup(context, state, viewModel),
+                    _buildRoomTypeLabel(context),
+                    _buildRoomGrid(context, state, viewModel),
+                  ],
+                ),
+              ),
             ),
-            _buildWifiApTitle(context),
-            SizedBox(height: AppSpacing.pad24.w),
-            _buildRadioGroup(context, state, viewModel),
-            SizedBox(height: AppSpacing.pad24.w),
+            SizedBox(height: AppSpacing.gap12.w),
             _buildButtons(context, ref, state, hasRoom, floorState, viewModel),
             SizedBox(height: AppSpacing.pad16.w),
           ],
@@ -120,17 +126,20 @@ class EditRoomBottomSheet extends HookConsumerWidget {
   }
 
   Widget _buildSubtitle(BuildContext context) {
-    return Text(
-      context.l10n.addNameAndIconHint,
-      style: context.appTextStyles.subtitleWith60Opacity,
+    return Padding(
+      padding: EdgeInsets.only(top: 8.w),
+      child: Text(
+        context.l10n.addNameAndIconHint,
+        style: context.appTextStyles.subtitleWith60Opacity,
+      ),
     );
   }
 
-  Widget _buildRoomNameLabel(BuildContext context) {
+  Widget _buildRoomDetailsLabel(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 32.w),
       child: Text(
-        context.l10n.roomNameLabel,
+        context.l10n.roomDetailsLabel,
         style: context.appTextStyles.labelWith90Opacity,
       ),
     );
@@ -147,13 +156,103 @@ class EditRoomBottomSheet extends HookConsumerWidget {
         ),
         borderRadius: BorderRadius.circular(8.r),
       ),
-      child: Center(
-        child: HintTextField(
-          hintText: context.l10n.roomNameHint,
-          controller: roomNameController,
-          onChanged: (value) {
-            ref.read(editRoomBottomSheetProvider.notifier).updateRoomName(value);
-          },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            context.l10n.roomNameLabel,
+            style: context.appTextStyles.bodyMediumWith90Opacity,
+          ),
+          SizedBox(height: 8.w),
+          HintTextField(
+            hintText: context.l10n.roomNameHint,
+            controller: roomNameController,
+            onChanged: (value) {
+              ref.read(editRoomBottomSheetProvider.notifier).updateRoomName(value);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildWifiApTitle(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: 24.w, left: 16.w, right: 16.w),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: context.l10n.wifiAccessPointQuestion,
+              style: context.appTextStyles.bodyMediumWith90Opacity,
+            ),
+            TextSpan(text: ' ', style: context.appTextStyles.bodyMediumWith90Opacity),
+            TextSpan(
+              text: context.l10n.optional,
+              style: context.appTextStyles.captionWith60Opacity.copyWith(
+                color: context.appColors.warning6Normal,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRadioGroup(BuildContext context, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
+    return Padding(
+      padding: EdgeInsets.only(top: 8.w),
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildRadioItem(context, true, context.l10n.gateway, 'room_gateway.webp', state, viewModel),
+          ),
+          SizedBox(width: 8.w),
+          Expanded(
+            child: _buildRadioItem(context, false, context.l10n.extender, 'room_extender.webp', state, viewModel),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRadioItem(BuildContext context, bool value, String label, String iconAsset, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
+    final isSelected = state.isGateway == value;
+
+    return GestureDetector(
+      onTap: () {
+        if (isSelected) {
+          viewModel.setIsGateway(null);
+        } else {
+          viewModel.setIsGateway(value);
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16.w),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? context.appColors.brand1Light
+              : context.appColors.fontWh1with100Opacity,
+          borderRadius: BorderRadius.circular(6.r),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppImage(
+              iconAsset,
+              width: 24.w,
+              height: 24.w,
+              color: context.appColors.fontGy1with90Opacity,
+            ),
+            SizedBox(width: 8.w),
+            Text(
+              label,
+              style: context.appTextStyles.captionWith90Opacity.copyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -175,17 +274,11 @@ class EditRoomBottomSheet extends HookConsumerWidget {
       margin: EdgeInsets.only(top: 8.w, bottom: 20.w),
       child: GridView.count(
         crossAxisCount: 4,
-        childAspectRatio: 0.85,
+        childAspectRatio: 85.75 / 96,
         shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         children: RoomType.values.map((room) => _buildRoomItem(context, room, state, viewModel)).toList(),
       ),
-    );
-  }
-
-  Widget _buildWifiApTitle(BuildContext context) {
-    return Text(
-      context.l10n.wifiAccessPointQuestion,
-      style: context.appTextStyles.labelWith90Opacity,
     );
   }
 
@@ -205,7 +298,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
           color: isSelected
               ? context.appColors.brand1Light
               : context.appColors.fontWh1with100Opacity,
-          borderRadius: BorderRadius.circular(6.r),
+          borderRadius: BorderRadius.circular(8.r),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -222,65 +315,6 @@ class EditRoomBottomSheet extends HookConsumerWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRadioGroup(BuildContext context, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
-    return Row(
-      children: [
-        _buildRadioItem(context, true, context.l10n.gateway, state, viewModel),
-        SizedBox(width: 12.w),
-        _buildRadioItem(context, false, context.l10n.extender, state, viewModel),
-      ],
-    );
-  }
-
-  Widget _buildRadioItem(BuildContext context, bool value, String label, EditRoomBottomSheetState state, EditRoomBottomSheetViewModel viewModel) {
-    final isSelected = state.isGateway == value;
-
-    return GestureDetector(
-      onTap: () {
-        if (isSelected) {
-          viewModel.setIsGateway(null);
-        } else {
-          viewModel.setIsGateway(value);
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isSelected
-                ? context.appColors.brand6Normal
-                : Colors.transparent,
-            width: 1.5.w,
-          ),
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: Stack(
-          children: [
-            if (isSelected)
-              Positioned(
-                left: 0,
-                top: 0,
-                child: AppImage(
-                  'check_filled.png',
-                  width: 28.w,
-                  height: 28.w,
-                  color: context.appColors.brand6Normal,
-                ),
-              ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Text(
-                  label,
-                  style: context.appTextStyles.bodyWith90Opacity,
-                ),
-              ),
             ),
           ],
         ),
@@ -336,7 +370,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
               ),
             ),
           ),
-          SizedBox(height: AppSpacing.gap8.w),
+          SizedBox(height: AppSpacing.gap16.w),
           if (hasRoom)
             SizedBox(
               width: double.infinity,

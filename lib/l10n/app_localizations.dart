@@ -404,6 +404,12 @@ abstract class AppLocalizations {
   /// **'Add a name and icon so you can find your room later on.'**
   String get addNameAndIconHint;
 
+  /// No description provided for @roomDetailsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room details'**
+  String get roomDetailsLabel;
+
   /// No description provided for @roomNameLabel.
   ///
   /// In en, this message translates to:
@@ -427,6 +433,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Is there a Wi-Fi access point?'**
   String get wifiAccessPointQuestion;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'(Optional)'**
+  String get optional;
 
   /// No description provided for @gateway.
   ///

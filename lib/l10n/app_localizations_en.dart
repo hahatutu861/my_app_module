@@ -177,6 +177,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Add a name and icon so you can find your room later on.';
 
   @override
+  String get roomDetailsLabel => 'Room details';
+
+  @override
   String get roomNameLabel => 'Room name';
 
   @override
@@ -187,6 +190,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wifiAccessPointQuestion => 'Is there a Wi-Fi access point?';
+
+  @override
+  String get optional => '(Optional)';
 
   @override
   String get gateway => 'Gateway';

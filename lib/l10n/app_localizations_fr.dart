@@ -179,6 +179,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Ajoutez un nom et une icône pour retrouver votre pièce plus tard.';
 
   @override
+  String get roomDetailsLabel => 'Détails de la pièce';
+
+  @override
   String get roomNameLabel => 'Nom de la pièce';
 
   @override
@@ -189,6 +192,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get wifiAccessPointQuestion => 'Y a-t-il un point d\'accès Wi-Fi ?';
+
+  @override
+  String get optional => '(Facultatif)';
 
   @override
   String get gateway => 'Passerelle';
