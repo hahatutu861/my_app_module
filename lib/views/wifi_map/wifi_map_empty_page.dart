@@ -13,10 +13,11 @@ import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
+import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
-import 'package:my_app_module/widgets/room_count_badge.dart';
+import 'package:my_app_module/widgets/room_status_badge.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 
 class WifiMapEmptyPage extends HookConsumerWidget {
@@ -279,9 +280,55 @@ class _FloorListItem extends ConsumerWidget {
         children: [
           _buildFloorNameRow(context, floor),
           _buildUpdateTime(context, floor),
-          RoomCountBadge(count: floor.rooms.length),
+          _buildStatusBadges(context, floor.rooms),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatusBadges(BuildContext context, List<RoomModel> rooms) {
+    final Map<WifiSpeedLevel?, int> counts = rooms.speedLevelCounts;
+
+    final List<({WifiSpeedLevel? level, String icon, Color bg, Color fg})>
+    configs = [
+      (
+        level: WifiSpeedLevel.good,
+        icon: 'good.png',
+        bg: context.appColors.lime1,
+        fg: context.appColors.lime6,
+      ),
+      (
+        level: WifiSpeedLevel.moderate,
+        icon: 'warning.webp',
+        bg: context.appColors.yellow1,
+        fg: context.appColors.yellow6,
+      ),
+      (
+        level: WifiSpeedLevel.weak,
+        icon: 'weak.webp',
+        bg: context.appColors.warning1Light,
+        fg: context.appColors.warning6Normal,
+      ),
+      (
+        level: null,
+        icon: 'no_result.png',
+        bg: context.appColors.gray1,
+        fg: context.appColors.fontGy2with60Opacity,
+      ),
+    ];
+
+    return Wrap(
+      spacing: AppSpacing.gap8.w,
+      runSpacing: AppSpacing.gap8.h,
+      children: [
+        for (final config in configs)
+          RoomStatusBadge(
+            count: counts[config.level] ?? 0,
+            iconPath: config.icon,
+            backgroundColor: config.bg,
+            foregroundColor: config.fg,
+          ),
+      ],
     );
   }
 

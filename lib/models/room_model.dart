@@ -52,3 +52,19 @@ extension RoomModelExtension on RoomModel {
     return 'wifiSpeedWeakStatus';
   }
 }
+
+extension RoomListSpeedStats on List<RoomModel> {
+  Map<WifiSpeedLevel?, int> get speedLevelCounts {
+    final Map<WifiSpeedLevel?, int> counts = {
+      WifiSpeedLevel.good: 0,
+      WifiSpeedLevel.moderate: 0,
+      WifiSpeedLevel.weak: 0,
+      null: 0,
+    };
+    for (final RoomModel room in this) {
+      final WifiSpeedLevel? level = room.speedLevel;
+      counts[level] = (counts[level] ?? 0) + 1;
+    }
+    return counts;
+  }
+}

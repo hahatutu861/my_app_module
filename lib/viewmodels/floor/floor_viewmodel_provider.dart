@@ -4,6 +4,7 @@ import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/repositories/floor_repository.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
+import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 
 final floorViewModelProvider = NotifierProvider<FloorViewModel, FloorState>(
   FloorViewModel.new,
@@ -249,6 +250,9 @@ class FloorViewModel extends Notifier<FloorState> {
   List<RoomModel> get currentRooms {
     return currentFloor?.rooms ?? [];
   }
+
+  Map<WifiSpeedLevel?, int> get roomSpeedLevelCounts =>
+      currentRooms.speedLevelCounts;
 
   bool get hasCurrentFloorRooms {
     return currentRooms.isNotEmpty;

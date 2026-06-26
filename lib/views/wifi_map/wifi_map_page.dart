@@ -25,7 +25,7 @@ import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
-import 'package:my_app_module/widgets/room_count_badge.dart';
+import 'package:my_app_module/widgets/room_status_badge.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
 extension SegmentedBarColorX on SegmentedBarColor {
@@ -1060,7 +1060,7 @@ class WifiMapPage extends HookConsumerWidget {
             ),
           ),
           SizedBox(height: AppSpacing.gap8.h),
-          RoomCountBadge(count: roomCount),
+          _buildStatusBadges(context, floorViewModel),
           SizedBox(height: AppSpacing.gap16.h),
           Text(
             context.l10n.wifiMapStatsTips,
@@ -1082,6 +1082,61 @@ class WifiMapPage extends HookConsumerWidget {
         ],
       ),
     );
+  }
+
+  Widget _buildStatusBadges(
+    BuildContext context,
+    FloorViewModel floorViewModel,
+  ) {
+    final Map<WifiSpeedLevel?, int> counts =
+        floorViewModel.roomSpeedLevelCounts;
+
+    final List<({WifiSpeedLevel? level, String icon, Color bg, Color fg})>
+    configs = [
+      (
+        level: WifiSpeedLevel.good,
+        icon: 'good.png',
+        bg: context.appColors.lime1,
+        fg: context.appColors.lime6,
+      ),
+      (
+        level: WifiSpeedLevel.moderate,
+        icon: 'warning.webp',
+        bg: context.appColors.yellow1,
+        fg: context.appColors.yellow6,
+      ),
+      (
+        level: WifiSpeedLevel.weak,
+        icon: 'weak.webp',
+        bg: context.appColors.warning1Light,
+        fg: context.appColors.warning6Normal,
+      ),
+      (
+        level: null,
+        icon: 'no_result.png',
+        bg: context.appColors.gray1,
+        fg: context.appColors.fontGy2with60Opacity,
+      ),
+    ];
+
+    final List<Widget> badges = [];
+    for (final config in configs) {
+      final int count = counts[config.level] ?? 0;
+      if (count <= 0) continue;
+      if (badges.isNotEmpty) {
+        badges.add(SizedBox(width: AppSpacing.gap8.w));
+      }
+      badges.add(
+        RoomStatusBadge(
+          count: count,
+          iconPath: config.icon,
+          backgroundColor: config.bg,
+          foregroundColor: config.fg,
+        ),
+      );
+    }
+
+    return Row(mainAxisSize: MainAxisSize.min, children: badges);
   }
 
   Future<void> _checkAndShowDialog(BuildContext context, WidgetRef ref) async {
