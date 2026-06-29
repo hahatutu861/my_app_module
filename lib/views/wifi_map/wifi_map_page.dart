@@ -530,13 +530,15 @@ class WifiMapPage extends HookConsumerWidget {
                 EditButton(),
               ],
             ),
-            Text(
-              context.l10n.wifiMapUnitMbps,
-              style: TextStyle(
-                fontSize: 12.sp,
-                color: context.appColors.fontGy2with60Opacity,
-              ),
-            ),
+            floorViewModel.currentFloor?.rooms.isNotEmpty == true
+                ? Text(
+                    context.l10n.wifiMapUnitMbps,
+                    style: TextStyle(
+                      fontSize: 12.sp,
+                      color: context.appColors.fontGy2with60Opacity,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ],
         ),
       ),
@@ -1088,24 +1090,26 @@ class WifiMapPage extends HookConsumerWidget {
           ),
           SizedBox(height: AppSpacing.gap8.h),
           _buildStatusBadges(context, floorViewModel),
-          SizedBox(height: AppSpacing.gap16.h),
-          Text(
-            context.l10n.wifiMapStatsTips,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w400,
-              color: context.appColors.fontGy1with90Opacity,
+          if (roomCount > 0) ...[
+            SizedBox(height: AppSpacing.gap16.h),
+            Text(
+              context.l10n.wifiMapStatsTips,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+                color: context.appColors.fontGy1with90Opacity,
+              ),
             ),
-          ),
-          SizedBox(height: AppSpacing.gap4.h),
-          Text(
-            hintText,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w400,
-              color: context.appColors.fontGy2with60Opacity,
+            SizedBox(height: AppSpacing.gap4.h),
+            Text(
+              hintText,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w400,
+                color: context.appColors.fontGy2with60Opacity,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );
