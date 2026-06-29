@@ -1010,23 +1010,41 @@ class WifiMapPage extends HookConsumerWidget {
   }
 
   Widget _buildActionButtons(BuildContext context, WidgetRef ref, int index) {
+    final isTesting = ref.watch(
+      wifiSpeedViewModelProvider.select((state) => state.isTesting),
+    );
+
     return Row(
       children: [
         ElevatedButton.icon(
-          onPressed: () => context.push('/wifi-history?roomIndex=$index'),
+          onPressed: isTesting
+              ? null
+              : () => context.push('/wifi-history?roomIndex=$index'),
           icon: AppImage(
             'history.png',
             width: 22.w,
             height: 22.h,
-            color: context.appColors.fontGy1with90Opacity,
+            color: isTesting
+                ? context.appColors.fontGy4with26Opacity
+                : context.appColors.fontGy1with90Opacity,
           ),
           label: Text(
             context.l10n.wifiSpeedHistory,
-            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w600,
+              color: isTesting
+                  ? context.appColors.fontGy4with26Opacity
+                  : context.appColors.fontGy1with90Opacity,
+            ),
           ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: context.appColors.gray3,
-            foregroundColor: context.appColors.fontGy1with90Opacity,
+            backgroundColor: isTesting
+                ? context.appColors.gray2
+                : context.appColors.gray3,
+            foregroundColor: isTesting
+                ? context.appColors.fontGy4with26Opacity
+                : context.appColors.fontGy1with90Opacity,
             elevation: 0,
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
             shape: RoundedRectangleBorder(
