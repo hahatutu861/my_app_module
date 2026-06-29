@@ -103,8 +103,14 @@ class FloorViewModel extends Notifier<FloorState> {
   Future<FloorModel?> createFloor(String floorName) async {
     try {
       final floor = await _repository.createFloor(floorName);
-      state = FloorState.loaded(floor: floor);
       _refreshAllFloors();
+      final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
+      final isReferenceEnabled = floor.rooms.isEmpty && hasPrevFloor;
+      state = FloorState.loaded(
+        floor: floor,
+        isReferenceEnabled: isReferenceEnabled,
+        bubbleTrigger: isReferenceEnabled ? 1 : 0,
+      );
       return floor;
     } catch (e) {
       state = FloorState.error(message: e.toString());
@@ -330,6 +336,11 @@ class FloorViewModel extends Notifier<FloorState> {
     final loadedState = state is FloorStateLoaded ? state : null;
     final isFloorMatch = currentFloorId != null && loadedState is FloorStateLoaded && loadedState.floor?.id == currentFloorId;
     final hasNoRoomsAtAll = !hasCurrentRooms && !hasReferenceRooms;
+    final allFloorsAsync = _ref.read(allFloorsProvider);
+    final allFloorsContainsCurrent =
+        allFloorsAsync.hasValue &&
+        (allFloorsAsync.value?.any((f) => f.id == currentFloorId) ?? false);
+    final isDataReady = hasCurrentRooms || allFloorsContainsCurrent;
 
     return RoomFitContext(
       hasCurrentRooms: hasCurrentRooms,
@@ -337,6 +348,7 @@ class FloorViewModel extends Notifier<FloorState> {
       shouldUseReference: shouldUseReference,
       isFloorMatch: isFloorMatch,
       hasNoRoomsAtAll: hasNoRoomsAtAll,
+      isDataReady: isDataReady,
       previousFloorRooms: previousFloor?.rooms,
     );
   }

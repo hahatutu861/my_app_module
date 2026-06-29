@@ -10,6 +10,7 @@ class RoomFitContext {
   final bool shouldUseReference;
   final bool isFloorMatch;
   final bool hasNoRoomsAtAll;
+  final bool isDataReady;
   final List<RoomModel>? previousFloorRooms;
 
   const RoomFitContext({
@@ -18,10 +19,11 @@ class RoomFitContext {
     required this.shouldUseReference,
     required this.isFloorMatch,
     required this.hasNoRoomsAtAll,
+    required this.isDataReady,
     this.previousFloorRooms,
   });
 
-  bool get shouldFitToRooms => isFloorMatch;
+  bool get shouldFitToRooms => isFloorMatch && isDataReady;
 }
 
 @freezed
