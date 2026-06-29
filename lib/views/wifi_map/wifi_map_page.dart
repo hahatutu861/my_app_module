@@ -1042,6 +1042,15 @@ class WifiMapPage extends HookConsumerWidget {
 
   Widget _buildStats(BuildContext context, FloorViewModel floorViewModel) {
     final roomCount = floorViewModel.currentRooms.length;
+    final counts = floorViewModel.roomSpeedLevelCounts;
+    final hasTestedRoom =
+        (counts[WifiSpeedLevel.good] ?? 0) +
+            (counts[WifiSpeedLevel.moderate] ?? 0) +
+            (counts[WifiSpeedLevel.weak] ?? 0) >
+        0;
+    final hintText = hasTestedRoom
+        ? context.l10n.wifiMapStatsWalkHint
+        : context.l10n.wifiMapStatsClickZonesHint;
 
     return Padding(
       padding: EdgeInsets.only(
@@ -1072,7 +1081,7 @@ class WifiMapPage extends HookConsumerWidget {
           ),
           SizedBox(height: AppSpacing.gap4.h),
           Text(
-            context.l10n.wifiMapStatsClickZonesHint,
+            hintText,
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w400,

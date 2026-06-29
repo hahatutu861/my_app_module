@@ -224,6 +224,12 @@ abstract class AppLocalizations {
   /// **'You must click zones to test Wi-Fi.'**
   String get wifiMapStatsClickZonesHint;
 
+  /// No description provided for @wifiMapStatsWalkHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Walk to into zone/room and select it to test the Wi-Fi speed at that location.'**
+  String get wifiMapStatsWalkHint;
+
   /// No description provided for @wifiMapPage.
   ///
   /// In en, this message translates to:

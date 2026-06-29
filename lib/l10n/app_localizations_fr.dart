@@ -87,6 +87,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Vous devez cliquer sur les zones pour tester le Wi-Fi.';
 
   @override
+  String get wifiMapStatsWalkHint =>
+      'Marchez jusqu\'à une zone/pièce et sélectionnez-la pour tester la vitesse du Wi-Fi à cet endroit.';
+
+  @override
   String get wifiMapPage => 'Carte Wi-Fi';
 
   @override

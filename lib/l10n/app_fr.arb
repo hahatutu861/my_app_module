@@ -35,6 +35,7 @@
   },
   "wifiMapStatsTips": "Conseils :",
   "wifiMapStatsClickZonesHint": "Vous devez cliquer sur les zones pour tester le Wi-Fi.",
+  "wifiMapStatsWalkHint": "Marchez jusqu'à une zone/pièce et sélectionnez-la pour tester la vitesse du Wi-Fi à cet endroit.",
   "wifiMapPage": "Carte Wi-Fi",
   "noZones": "0 zones",
   "wifiMapDialogTips": "Conseils",

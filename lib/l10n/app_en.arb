@@ -35,6 +35,7 @@
   },
   "wifiMapStatsTips": "Tips:",
   "wifiMapStatsClickZonesHint": "You must click zones to test Wi-Fi.",
+  "wifiMapStatsWalkHint": "Walk to into zone/room and select it to test the Wi-Fi speed at that location.",
   "wifiMapPage": "Wi-Fi Map",
   "noZones": "0 zones",
   "wifiMapDialogTips": "Tips",
