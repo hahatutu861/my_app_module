@@ -51,8 +51,8 @@ class FloorViewModel extends Notifier<FloorState> {
     try {
       _repository
           .getActiveFloor()
-          .then((floor) {
-            final hasPrevFloor = _hasPreviousFloorWithRoomsFor(floor);
+          .then((floor) async {
+            final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
             final isReferenceEnabled =
                 floor != null && floor.rooms.isEmpty && hasPrevFloor;
             state = FloorState.loaded(
@@ -74,8 +74,8 @@ class FloorViewModel extends Notifier<FloorState> {
     try {
       _repository
           .getFloorById(id)
-          .then((floor) {
-            final hasPrevFloor = _hasPreviousFloorWithRoomsFor(floor);
+          .then((floor) async {
+            final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
             final isReferenceEnabled =
                 floor != null && floor.rooms.isEmpty && hasPrevFloor;
             state = FloorState.loaded(
@@ -262,7 +262,17 @@ class FloorViewModel extends Notifier<FloorState> {
     return getPreviousFloorWithRooms() != null;
   }
 
-  bool _hasPreviousFloorWithRoomsFor(FloorModel? floor) {
+  Future<bool> _hasPreviousFloorWithRoomsForAsync(FloorModel? floor) async {
+    if (floor == null) return false;
+    final allFloorsAsync = _ref.read(allFloorsProvider);
+    final allFloors = allFloorsAsync.hasValue ? allFloorsAsync.value : null;
+    if (allFloors == null || allFloors.every((f) => f.id != floor.id)) {
+      _ref.invalidate(allFloorsProvider);
+      final refreshedAsync = await _ref.read(allFloorsProvider.future);
+      if (refreshedAsync.every((f) => f.id != floor.id)) {
+        return false;
+      }
+    }
     return getPreviousFloorWithRooms(floor) != null;
   }
 
