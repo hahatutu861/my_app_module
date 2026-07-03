@@ -81,7 +81,6 @@ class WifiMapPage extends HookConsumerWidget {
     final statusBarHeight = MediaQuery.of(context).padding.top;
     final hideButtonSize = useState<Size?>(null);
     final bubbleSize = useState<Size?>(null);
-    final hasFittedToRooms = useState<bool>(false);
     final transformationController = useMemoized(() {
       final controller = TransformationController();
       return controller;
@@ -111,7 +110,6 @@ class WifiMapPage extends HookConsumerWidget {
                 ref,
                 transformationController,
                 floorViewModel,
-                hasFittedToRooms,
               ),
               Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
             ],
@@ -158,24 +156,25 @@ class WifiMapPage extends HookConsumerWidget {
     FloorViewModel floorViewModel,
     TransformationController transformationController,
     GridLayoutInfo layout,
-    ValueNotifier<bool> hasFittedToRooms,
   ) {
-    if (context.shouldFitToRooms && !hasFittedToRooms.value) {
-      hasFittedToRooms.value = true;
+    if (context.shouldFitToRooms && !floorViewModel.hasFittedToRooms) {
       final targetRooms = floorViewModel.getTargetRoomsForFitting(context);
       final shouldTranslate =
           context.hasCurrentRooms || context.shouldUseReference
           ? true
           : (context.hasNoRoomsAtAll ? false : true);
-      if (targetRooms.isEmpty && !shouldTranslate) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          transformationController.value = Matrix4.identity()
-            ..scaleByDouble(2.5, 2.5, 1.0, 1.0);
-        });
+      if (targetRooms.isEmpty) {
+        if (!shouldTranslate) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            floorViewModel.markFittedToRooms();
+            transformationController.value = Matrix4.identity()
+              ..scaleByDouble(2.5, 2.5, 1.0, 1.0);
+          });
+        }
         return;
       }
-
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        floorViewModel.markFittedToRooms();
         final transform = floorViewModel.calculateFitTransform(
           roomsMap: targetRooms,
           viewportSize: Size(layout.screenWidth, layout.gridHeight),
@@ -194,7 +193,6 @@ class WifiMapPage extends HookConsumerWidget {
     WidgetRef ref,
     TransformationController transformationController,
     FloorViewModel floorViewModel,
-    ValueNotifier<bool> hasFittedToRooms,
   ) {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -213,7 +211,6 @@ class WifiMapPage extends HookConsumerWidget {
             horizontalPadding: layout.horizontalPadding,
             screenWidth: screenWidth,
           ),
-          hasFittedToRooms,
         );
 
         return SizedBox(

@@ -125,12 +125,12 @@ return error(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>({TResult Function()?  initial,TResult Function()?  loading,TResult Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger,  bool hasFittedToRooms)?  loaded,TResult Function( String message)?  error,required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case FloorStateInitial() when initial != null:
 return initial();case FloorStateLoading() when loading != null:
 return loading();case FloorStateLoaded() when loaded != null:
-return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger);case FloorStateError() when error != null:
+return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger,_that.hasFittedToRooms);case FloorStateError() when error != null:
 return error(_that.message);case _:
   return orElse();
 
@@ -149,12 +149,12 @@ return error(_that.message);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger)  loaded,required TResult Function( String message)  error,}) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>({required TResult Function()  initial,required TResult Function()  loading,required TResult Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger,  bool hasFittedToRooms)  loaded,required TResult Function( String message)  error,}) {final _that = this;
 switch (_that) {
 case FloorStateInitial():
 return initial();case FloorStateLoading():
 return loading();case FloorStateLoaded():
-return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger);case FloorStateError():
+return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger,_that.hasFittedToRooms);case FloorStateError():
 return error(_that.message);}
 }
 /// A variant of `when` that fallback to returning `null`
@@ -169,12 +169,12 @@ return error(_that.message);}
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>({TResult? Function()?  initial,TResult? Function()?  loading,TResult? Function( FloorModel? floor,  int? selectedRoomIndex,  bool isReferenceEnabled,  int bubbleTrigger,  bool hasFittedToRooms)?  loaded,TResult? Function( String message)?  error,}) {final _that = this;
 switch (_that) {
 case FloorStateInitial() when initial != null:
 return initial();case FloorStateLoading() when loading != null:
 return loading();case FloorStateLoaded() when loaded != null:
-return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger);case FloorStateError() when error != null:
+return loaded(_that.floor,_that.selectedRoomIndex,_that.isReferenceEnabled,_that.bubbleTrigger,_that.hasFittedToRooms);case FloorStateError() when error != null:
 return error(_that.message);case _:
   return null;
 
@@ -251,13 +251,14 @@ String toString() {
 
 
 class FloorStateLoaded implements FloorState {
-  const FloorStateLoaded({this.floor, this.selectedRoomIndex, this.isReferenceEnabled = false, this.bubbleTrigger = 0});
+  const FloorStateLoaded({this.floor, this.selectedRoomIndex, this.isReferenceEnabled = false, this.bubbleTrigger = 0, this.hasFittedToRooms = false});
   
 
  final  FloorModel? floor;
  final  int? selectedRoomIndex;
 @JsonKey() final  bool isReferenceEnabled;
 @JsonKey() final  int bubbleTrigger;
+@JsonKey() final  bool hasFittedToRooms;
 
 /// Create a copy of FloorState
 /// with the given fields replaced by the non-null parameter values.
@@ -269,16 +270,16 @@ $FloorStateLoadedCopyWith<FloorStateLoaded> get copyWith => _$FloorStateLoadedCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FloorStateLoaded&&(identical(other.floor, floor) || other.floor == floor)&&(identical(other.selectedRoomIndex, selectedRoomIndex) || other.selectedRoomIndex == selectedRoomIndex)&&(identical(other.isReferenceEnabled, isReferenceEnabled) || other.isReferenceEnabled == isReferenceEnabled)&&(identical(other.bubbleTrigger, bubbleTrigger) || other.bubbleTrigger == bubbleTrigger));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FloorStateLoaded&&(identical(other.floor, floor) || other.floor == floor)&&(identical(other.selectedRoomIndex, selectedRoomIndex) || other.selectedRoomIndex == selectedRoomIndex)&&(identical(other.isReferenceEnabled, isReferenceEnabled) || other.isReferenceEnabled == isReferenceEnabled)&&(identical(other.bubbleTrigger, bubbleTrigger) || other.bubbleTrigger == bubbleTrigger)&&(identical(other.hasFittedToRooms, hasFittedToRooms) || other.hasFittedToRooms == hasFittedToRooms));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,floor,selectedRoomIndex,isReferenceEnabled,bubbleTrigger);
+int get hashCode => Object.hash(runtimeType,floor,selectedRoomIndex,isReferenceEnabled,bubbleTrigger,hasFittedToRooms);
 
 @override
 String toString() {
-  return 'FloorState.loaded(floor: $floor, selectedRoomIndex: $selectedRoomIndex, isReferenceEnabled: $isReferenceEnabled, bubbleTrigger: $bubbleTrigger)';
+  return 'FloorState.loaded(floor: $floor, selectedRoomIndex: $selectedRoomIndex, isReferenceEnabled: $isReferenceEnabled, bubbleTrigger: $bubbleTrigger, hasFittedToRooms: $hasFittedToRooms)';
 }
 
 
@@ -289,7 +290,7 @@ abstract mixin class $FloorStateLoadedCopyWith<$Res> implements $FloorStateCopyW
   factory $FloorStateLoadedCopyWith(FloorStateLoaded value, $Res Function(FloorStateLoaded) _then) = _$FloorStateLoadedCopyWithImpl;
 @useResult
 $Res call({
- FloorModel? floor, int? selectedRoomIndex, bool isReferenceEnabled, int bubbleTrigger
+ FloorModel? floor, int? selectedRoomIndex, bool isReferenceEnabled, int bubbleTrigger, bool hasFittedToRooms
 });
 
 
@@ -306,13 +307,14 @@ class _$FloorStateLoadedCopyWithImpl<$Res>
 
 /// Create a copy of FloorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? floor = freezed,Object? selectedRoomIndex = freezed,Object? isReferenceEnabled = null,Object? bubbleTrigger = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? floor = freezed,Object? selectedRoomIndex = freezed,Object? isReferenceEnabled = null,Object? bubbleTrigger = null,Object? hasFittedToRooms = null,}) {
   return _then(FloorStateLoaded(
 floor: freezed == floor ? _self.floor : floor // ignore: cast_nullable_to_non_nullable
 as FloorModel?,selectedRoomIndex: freezed == selectedRoomIndex ? _self.selectedRoomIndex : selectedRoomIndex // ignore: cast_nullable_to_non_nullable
 as int?,isReferenceEnabled: null == isReferenceEnabled ? _self.isReferenceEnabled : isReferenceEnabled // ignore: cast_nullable_to_non_nullable
 as bool,bubbleTrigger: null == bubbleTrigger ? _self.bubbleTrigger : bubbleTrigger // ignore: cast_nullable_to_non_nullable
-as int,
+as int,hasFittedToRooms: null == hasFittedToRooms ? _self.hasFittedToRooms : hasFittedToRooms // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

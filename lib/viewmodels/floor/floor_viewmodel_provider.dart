@@ -27,19 +27,20 @@ class FloorViewModel extends Notifier<FloorState> {
     return const FloorState.initial();
   }
 
+  void _updateLoaded(FloorStateLoaded Function(FloorStateLoaded loaded) update) {
+    final current = state;
+    if (current is FloorStateLoaded) {
+      state = update(current);
+    }
+  }
+
   int? get selectedRoomIndex => switch (state) {
     FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
     _ => null,
   };
 
   void selectRoom(int? index) {
-    state = switch (state) {
-      FloorStateLoaded(:final floor) => FloorState.loaded(
-        floor: floor,
-        selectedRoomIndex: index,
-      ),
-      _ => state,
-    };
+    _updateLoaded((loaded) => loaded.copyWith(selectedRoomIndex: index));
   }
 
   void _refreshAllFloors() {
@@ -132,13 +133,7 @@ class FloorViewModel extends Notifier<FloorState> {
         newName,
       );
       if (updatedFloor != null) {
-        state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
-            floor: updatedFloor,
-            selectedRoomIndex: selectedRoomIndex,
-          ),
-          _ => FloorState.loaded(floor: updatedFloor),
-        };
+        _updateLoaded((loaded) => loaded.copyWith(floor: updatedFloor));
         _refreshAllFloors();
       }
     } catch (e) {
@@ -168,13 +163,7 @@ class FloorViewModel extends Notifier<FloorState> {
         rooms,
       );
       if (updatedFloor != null) {
-        state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
-            floor: updatedFloor,
-            selectedRoomIndex: selectedRoomIndex,
-          ),
-          _ => FloorState.loaded(floor: updatedFloor),
-        };
+        _updateLoaded((loaded) => loaded.copyWith(floor: updatedFloor));
         _refreshAllFloors();
       }
     } catch (e) {
@@ -198,13 +187,7 @@ class FloorViewModel extends Notifier<FloorState> {
         rooms,
       );
       if (updatedFloor != null) {
-        state = switch (state) {
-          FloorStateLoaded(:final selectedRoomIndex) => FloorState.loaded(
-            floor: updatedFloor,
-            selectedRoomIndex: selectedRoomIndex,
-          ),
-          _ => FloorState.loaded(floor: updatedFloor),
-        };
+        _updateLoaded((loaded) => loaded.copyWith(floor: updatedFloor));
         _refreshAllFloors();
       }
     } catch (e) {
@@ -294,21 +277,12 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   void toggleReference() {
-    state = switch (state) {
-      FloorStateLoaded(
-        :final floor,
-        :final selectedRoomIndex,
-        :final isReferenceEnabled,
-        :final bubbleTrigger
-      ) =>
-        FloorState.loaded(
-          floor: floor,
-          selectedRoomIndex: selectedRoomIndex,
-          isReferenceEnabled: !isReferenceEnabled,
-          bubbleTrigger: bubbleTrigger + 1,
-        ),
-      _ => state,
-    };
+    _updateLoaded(
+      (loaded) => loaded.copyWith(
+        isReferenceEnabled: !loaded.isReferenceEnabled,
+        bubbleTrigger: loaded.bubbleTrigger + 1,
+      ),
+    );
   }
 
   bool get isReferenceEnabled => switch (state) {
@@ -320,6 +294,15 @@ class FloorViewModel extends Notifier<FloorState> {
     FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
     _ => 0,
   };
+
+  bool get hasFittedToRooms => switch (state) {
+    FloorStateLoaded(:final hasFittedToRooms) => hasFittedToRooms,
+    _ => false,
+  };
+
+  void markFittedToRooms() {
+    _updateLoaded((loaded) => loaded.copyWith(hasFittedToRooms: true));
+  }
 
   Set<int> get referenceIndices {
     if (!isReferenceEnabled) return {};

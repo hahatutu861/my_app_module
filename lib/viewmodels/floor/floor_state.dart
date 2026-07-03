@@ -35,6 +35,7 @@ sealed class FloorState with _$FloorState {
     int? selectedRoomIndex,
     @Default(false) bool isReferenceEnabled,
     @Default(0) int bubbleTrigger,
+    @Default(false) bool hasFittedToRooms,
   }) = FloorStateLoaded;
   const factory FloorState.error({required String message}) = FloorStateError;
 }
