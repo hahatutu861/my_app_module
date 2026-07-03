@@ -27,7 +27,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
       isScrollControlled: true,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: context.appColors.fontWh1with100Opacity,
+      backgroundColor: context.appColors.popupTextBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
       ),
@@ -113,6 +113,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
           'close.png',
           width: 24.w,
           height: 24.w,
+          color: context.appColors.fontGy1with90Opacity,
         ),
       ),
     );
@@ -232,7 +233,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? context.appColors.brand1Light
-              : context.appColors.fontWh1with100Opacity,
+              : context.appColors.popupTextBg,
           borderRadius: BorderRadius.circular(6.r),
         ),
         child: Row(
@@ -297,7 +298,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? context.appColors.brand1Light
-              : context.appColors.fontWh1with100Opacity,
+              : context.appColors.popupTextBg,
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Column(
@@ -307,6 +308,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
               room.imagePath,
               width: 32.w,
               height: 32.w,
+              color: context.appColors.fontGy1with90Opacity,
             ),
             SizedBox(height: 8.w),
             Text(

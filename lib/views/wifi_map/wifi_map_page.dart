@@ -834,7 +834,12 @@ class WifiMapPage extends HookConsumerWidget {
           children: [
             Row(
               children: [
-                AppImage(roomType.imagePath, width: 20.w, height: 20.w),
+                AppImage(
+                  roomType.imagePath,
+                  width: 20.w,
+                  height: 20.w,
+                  color: context.appColors.fontGy1with90Opacity,
+                ),
                 SizedBox(width: 4.w),
                 Text(
                   room.roomName,

@@ -19,7 +19,7 @@ class AppDialogButtonStyle {
         padding ?? const EdgeInsets.symmetric(vertical: 16),
       ),
       backgroundColor: WidgetStateProperty.all(
-        context.appColors.fontWh1with100Opacity,
+        Colors.transparent,
       ),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       elevation: WidgetStateProperty.all(0),

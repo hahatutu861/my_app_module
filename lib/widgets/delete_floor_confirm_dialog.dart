@@ -19,7 +19,7 @@ class DeleteConfirmDialog extends ConsumerWidget {
       child: Container(
         width: context.dialogWidth,
         decoration: BoxDecoration(
-          color: context.appColors.fontWh1with100Opacity,
+          color: context.appColors.popupTextBg,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Column(

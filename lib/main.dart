@@ -62,7 +62,7 @@ class MyAppModule extends ConsumerWidget {
           designSize: const Size(375, 812),
           child: Builder(
             builder: (context) {
-              final brightness = MediaQuery.of(context).platformBrightness;
+              final brightness = Theme.of(context).brightness;
               final isDark = brightness == Brightness.dark;
               return AnnotatedRegion<SystemUiOverlayStyle>(
                 value: isDark

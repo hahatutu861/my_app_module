@@ -202,7 +202,7 @@ class AppColors {
   static const int fontWh1with0Opacity = 0x00FFFFFF;
 
   // ============== 特殊用途颜色 ==============
-  /// 弹窗文字背景色 #FFFFFFFF
+  /// 弹窗背景色 #FFFFFFFF
   static const int popupTextBg = 0xFFFFFFFF;
 
   /// 按钮文字色 #FFFFFFFF
@@ -385,7 +385,7 @@ class AppColorsDark {
 
   // ============== 基础色 - 暗色模式 ==============
   /// 白色(暗色模式下为黑色) #FF000000
-  static const int white = 0xFF000000;
+  static const int white = 0xFFFFFFFF;
 
   /// 黑色(暗色模式下为白色) #FFFFFFFF
   static const int black = 0xFFFFFFFF;
@@ -419,7 +419,7 @@ class AppColorsDark {
   static const int fontWh1with0Opacity = 0xE6000000;
 
   // ============== 特殊用途颜色 - 暗色模式 ==============
-  /// 弹窗文字背景色 #FF2C2C2C
+  /// 弹窗背景色 #FF2C2C2C
   static const int popupTextBg = 0xFF2C2C2C;
 
   /// 按钮文字色 #FFFFFFFF

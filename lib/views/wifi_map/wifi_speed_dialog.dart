@@ -17,7 +17,7 @@ class WifiSpeedDialog extends StatelessWidget {
       isScrollControlled: true,
       isDismissible: false,
       enableDrag: false,
-      backgroundColor: context.appColors.fontWh1with100Opacity,
+      backgroundColor: context.appColors.popupTextBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
       ),
