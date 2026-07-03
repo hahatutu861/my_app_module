@@ -116,7 +116,7 @@ class WifiSpeedTestButton extends ConsumerWidget {
                 child: FractionallySizedBox(
                   widthFactor: progress,
                   child: Container(
-                    color: context.appColors.brand1Light.withValues(alpha: 0.5),
+                    color: context.appColors.white.withValues(alpha: 0.2),
                   ),
                 ),
               ),
