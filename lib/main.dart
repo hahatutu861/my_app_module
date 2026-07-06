@@ -10,19 +10,27 @@ import 'shared/ui/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
 import 'services/database/database_service.dart';
+import 'shared/bridges/pigeon_generated.dart';
 
 /// Flutter Module 主入口
 /// 用于嵌入到原生应用中
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  ThemeMode initialThemeMode;
+  try {
+    final nativeApi = NativeApi();
+    final modeEnum = await nativeApi.getThemeMode();
+    initialThemeMode = convertToThemeMode(modeEnum);
+  } catch (e) {
+    initialThemeMode = ThemeMode.system;
+  }
   final prefs = await SharedPreferences.getInstance();
-
   await DatabaseService.instance.database;
-
   runApp(
     ProviderScope(
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
+        themeModeProvider.overrideWith(() => ThemeModeNotifier(initialMode: initialThemeMode)),
       ],
       child: MyAppModule(),
     ),
