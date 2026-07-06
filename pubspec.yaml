@@ -68,6 +68,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/dark/
     - assets/images/lottie_images/
 
   fonts:

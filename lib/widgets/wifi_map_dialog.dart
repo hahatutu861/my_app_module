@@ -62,15 +62,15 @@ class WifiMapDialog extends HookConsumerWidget {
                 },
                 children: [
                   AppImage(
-                    'select_tile.png',
+                    'select_tile.webp',
                     fit: BoxFit.contain,
                   ),
                   AppImage(
-                    'out.png',
+                    'zoom_inout.webp',
                     fit: BoxFit.contain,
                   ),
                   AppImage(
-                    'move_grid.png',
+                    'move_grid.webp',
                     fit: BoxFit.contain,
                   ),
                 ],
