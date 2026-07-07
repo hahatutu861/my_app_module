@@ -16,6 +16,8 @@ class DisplaySettingsDialog extends ConsumerWidget {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      enableDrag: false,
+      isDismissible: false,
       backgroundColor: context.appColors.popupTextBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(12.r)),
