@@ -649,6 +649,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to that zone/room to test its Wi-Fi speed.'**
   String get wifiSpeedHistoryEmptyDescription;
+
+  /// No description provided for @display.
+  ///
+  /// In en, this message translates to:
+  /// **'Display'**
+  String get display;
+
+  /// No description provided for @viewMode.
+  ///
+  /// In en, this message translates to:
+  /// **'View mode'**
+  String get viewMode;
+
+  /// No description provided for @viewModeQuality.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality'**
+  String get viewModeQuality;
+
+  /// No description provided for @viewModeQualityDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Wi-Fi quality'**
+  String get viewModeQualityDescription;
+
+  /// No description provided for @viewModeSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get viewModeSpeed;
+
+  /// No description provided for @viewModeSpeedDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Show estimated speed (Mbps)'**
+  String get viewModeSpeedDescription;
+
+  /// No description provided for @showPreviousFloorReferenceDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Overlay the previous floor as a layout reference.'**
+  String get showPreviousFloorReferenceDescription;
 }
 
 class _AppLocalizationsDelegate

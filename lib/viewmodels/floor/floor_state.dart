@@ -4,6 +4,8 @@ import 'package:my_app_module/models/room_model.dart';
 
 part 'floor_state.freezed.dart';
 
+enum WifiViewMode { quality, speed }
+
 class RoomFitContext {
   final bool hasCurrentRooms;
   final bool hasReferenceRooms;
@@ -36,6 +38,7 @@ sealed class FloorState with _$FloorState {
     @Default(false) bool isReferenceEnabled,
     @Default(0) int bubbleTrigger,
     @Default(false) bool hasFittedToRooms,
+    @Default(WifiViewMode.quality) WifiViewMode wifiViewMode,
   }) = FloorStateLoaded;
   const factory FloorState.error({required String message}) = FloorStateError;
 }

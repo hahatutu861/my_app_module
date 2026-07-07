@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:measure_size/measure_size.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
@@ -19,14 +18,16 @@ import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/views/wifi_map/wifi_speed_dialog.dart';
+import 'package:my_app_module/views/wifi_map/display_settings_dialog.dart';
 import 'package:my_app_module/views/wifi_map/wifi_speed_test_button.dart';
-import 'package:my_app_module/widgets/app_bubble_tip.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
 import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/room_status_badge.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
+
+import '../../utils/design/app_media_query_extension.dart';
 
 extension SegmentedBarColorX on SegmentedBarColor {
   Color resolve(BuildContext context) {
@@ -78,9 +79,7 @@ class WifiMapPage extends HookConsumerWidget {
       return null;
     }, [floorId]);
 
-    final statusBarHeight = MediaQuery.of(context).padding.top;
-    final hideButtonSize = useState<Size?>(null);
-    final bubbleSize = useState<Size?>(null);
+    final statusBarHeight = context.statusBarHeight;
     final transformationController = useMemoized(() {
       final controller = TransformationController();
       return controller;
@@ -89,38 +88,20 @@ class WifiMapPage extends HookConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: context.appColors.fontWh1with100Opacity,
-      body: Stack(
-        clipBehavior: Clip.none,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: statusBarHeight),
-              _buildHeader(
-                context,
-                ref,
-                hideButtonSize,
-                bubbleSize,
-                floorViewModel,
-              ),
-              _buildFloorTitle(context, floorViewModel),
-              SizedBox(height: 16.h),
-              _buildAutoSizeGrid(
-                context,
-                ref,
-                transformationController,
-                floorViewModel,
-              ),
-              Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
-            ],
-          ),
-          _buildBubbleOverlay(
+          SizedBox(height: statusBarHeight),
+          _buildHeader(context, ref, floorViewModel),
+          _buildFloorTitle(context, floorViewModel),
+          SizedBox(height: 16.h),
+          _buildAutoSizeGrid(
             context,
-            statusBarHeight,
-            hideButtonSize,
-            bubbleSize,
+            ref,
+            transformationController,
             floorViewModel,
           ),
+          Expanded(child: _buildBottomBar(context, ref, floorViewModel)),
         ],
       ),
     );
@@ -226,7 +207,7 @@ class WifiMapPage extends HookConsumerWidget {
               padding: EdgeInsets.symmetric(
                 horizontal: layout.horizontalPadding,
               ),
-              child: _buildGrid(context, layout.squareSize, floorViewModel),
+              child: _buildGrid(context, layout.squareSize, floorViewModel, floorViewModel.wifiViewMode),
             ),
           ),
         );
@@ -238,6 +219,7 @@ class WifiMapPage extends HookConsumerWidget {
     BuildContext context,
     double squareSize,
     FloorViewModel floorViewModel,
+    WifiViewMode viewMode,
   ) {
     final roomsMap = floorViewModel.roomsMap;
     final referenceIndices = floorViewModel.referenceIndices;
@@ -261,7 +243,7 @@ class WifiMapPage extends HookConsumerWidget {
         if (room != null) {
           return GestureDetector(
             onTap: () => floorViewModel.selectRoom(index),
-            child: _buildRoomCell(context, room, isSelected),
+            child: _buildRoomCell(context, room, isSelected, viewMode),
           );
         }
 
@@ -291,12 +273,12 @@ class WifiMapPage extends HookConsumerWidget {
     }
   }
 
-  Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected) {
+  Widget _buildRoomCell(BuildContext context, RoomModel room, bool isSelected, WifiViewMode viewMode) {
     final speedLevel = room.speedLevel;
     if (speedLevel == null) {
       return _buildRoomCellPlaceholder(context, room, isSelected);
     }
-    return _buildRoomCellWithSpeed(context, room, isSelected, speedLevel);
+    return _buildRoomCellWithSpeed(context, room, isSelected, speedLevel, viewMode);
   }
 
   Widget _buildRoomCellPlaceholder(
@@ -382,6 +364,7 @@ class WifiMapPage extends HookConsumerWidget {
     RoomModel room,
     bool isSelected,
     WifiSpeedLevel speedLevel,
+    WifiViewMode viewMode,
   ) {
     final roomType = room.roomTypeEnum;
     final backgroundColor = switch (speedLevel) {
@@ -391,6 +374,7 @@ class WifiMapPage extends HookConsumerWidget {
     };
     final foregroundColor = context.appColors.fontWh1with100Opacity;
     final speedText = room.records.last.speed.toStringAsFixed(1);
+    final showSpeed = viewMode == WifiViewMode.speed;
 
     return Container(
       decoration: BoxDecoration(
@@ -445,21 +429,22 @@ class WifiMapPage extends HookConsumerWidget {
                   height: 80.w,
                   child: Stack(
                     children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Text(
-                            speedText,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w400,
-                              color: foregroundColor,
+                      if (showSpeed)
+                        Align(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              speedText,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w400,
+                                color: foregroundColor,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
                           ),
                         ),
-                      ),
                       Positioned(
                         bottom: isSelected ? 5.8.w : 4.w,
                         right: isSelected ? 5.8.w : 4.w,
@@ -545,8 +530,6 @@ class WifiMapPage extends HookConsumerWidget {
   Widget _buildHeader(
     BuildContext context,
     WidgetRef ref,
-    ValueNotifier<Size?> hideButtonSize,
-    ValueNotifier<Size?> bubbleSize,
     FloorViewModel floorViewModel,
   ) {
     return Padding(
@@ -570,130 +553,18 @@ class WifiMapPage extends HookConsumerWidget {
                 ),
               if (floorViewModel.currentFloor?.rooms.isNotEmpty == true)
                 SizedBox(width: 8.w),
-              _buildHideButton(
-                context,
-                ref,
-                hideButtonSize,
-                bubbleSize,
-                floorViewModel,
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHideButton(
-    BuildContext context,
-    WidgetRef ref,
-    ValueNotifier<Size?> hideButtonSize,
-    ValueNotifier<Size?> bubbleSize,
-    FloorViewModel floorViewModel,
-  ) {
-    final hasPreviousFloorWithRooms = floorViewModel.hasPreviousFloorWithRooms;
-
-    if (!hasPreviousFloorWithRooms) {
-      return const SizedBox.shrink();
-    }
-
-    final isHideButtonMeasured =
-        hideButtonSize.value != null &&
-        hideButtonSize.value!.width > 0 &&
-        hideButtonSize.value!.height > 0;
-    final isBubbleMeasured =
-        bubbleSize.value != null &&
-        bubbleSize.value!.width > 0 &&
-        bubbleSize.value!.height > 0;
-
-    final isReady = isHideButtonMeasured && isBubbleMeasured;
-
-    if (!isReady) {
-      return Opacity(
-        opacity: 0,
-        child: ExcludeSemantics(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MeasureSize(
-                onChange: (size) => hideButtonSize.value = size,
-                child: _buildHideButtonIcon(context, ref, floorViewModel),
-              ),
-              MeasureSize(
-                onChange: (size) => bubbleSize.value = size,
-                child: AppBubbleTip(
-                  text: context.l10n.showPreviousFloorReference,
-                  targetWidgetSize: const Size(32, 32),
+              GestureDetector(
+                onTap: () => DisplaySettingsDialog.show(context),
+                child: AppImage(
+                  'tune.webp',
+                  width: 24.w,
+                  height: 24.w,
+                  color: context.appColors.fontGy1with90Opacity,
                 ),
               ),
             ],
           ),
-        ),
-      );
-    }
-
-    return _buildHideButtonIcon(context, ref, floorViewModel);
-  }
-
-  Widget _buildBubbleOverlay(
-    BuildContext context,
-    double statusBarHeight,
-    ValueNotifier<Size?> hideButtonSize,
-    ValueNotifier<Size?> bubbleSize,
-    FloorViewModel floorViewModel,
-  ) {
-    if (floorViewModel.bubbleTrigger <= 0) {
-      return const SizedBox.shrink();
-    }
-
-    final hideButtonValue = hideButtonSize.value;
-    final bubbleValue = bubbleSize.value;
-    if (hideButtonValue == null ||
-        bubbleValue == null ||
-        hideButtonValue.height <= 0 ||
-        bubbleValue.width <= 0) {
-      return const SizedBox.shrink();
-    }
-
-    return Positioned(
-      top: statusBarHeight + 16.w + hideButtonValue.height + 4,
-      right: 16.w,
-      child: AppAnimatedBubbleTip(
-        key: ValueKey(floorViewModel.bubbleTrigger),
-        text: context.l10n.showPreviousFloorReference,
-        targetWidgetSize: hideButtonValue,
-      ),
-    );
-  }
-
-  Widget _buildHideButtonIcon(
-    BuildContext context,
-    WidgetRef ref,
-    FloorViewModel floorViewModel,
-  ) {
-    final isSelected = floorViewModel.isReferenceEnabled;
-
-    return GestureDetector(
-      onTap: () => floorViewModel.toggleReference(),
-      child: Container(
-        width: 32.w,
-        height: 32.w,
-        decoration: BoxDecoration(
-          color: isSelected
-              ? context.appColors.brand1Light
-              : context.appColors.gray3,
-          shape: BoxShape.circle,
-        ),
-        child: Center(
-          child: AppImage(
-            'hide.png',
-            width: 18.w,
-            height: 18.w,
-            color: isSelected
-                ? context.appColors.brand6Normal
-                : context.appColors.fontGy1with90Opacity,
-          ),
-        ),
+        ],
       ),
     );
   }

@@ -76,7 +76,9 @@ class AppThemeColors {
       _c(AppColors.success6Normal, AppColorsDark.success6Normal);
   Color get lightGreen5 => _c(AppColors.lightGreen5, AppColorsDark.lightGreen5);
   Color get lime1 => _c(AppColors.lime1, AppColorsDark.lime1);
+  Color get lime2 => _c(AppColors.lime2, AppColorsDark.lime2);
   Color get lime6 => _c(AppColors.lime6, AppColorsDark.lime6);
+  Color get lime9 => _c(AppColors.lime9, AppColorsDark.lime9);
   Color get green => _c(AppColors.green, AppColorsDark.green);
   Color get teal6 => _c(AppColors.teal6, AppColorsDark.teal6);
 
@@ -88,8 +90,11 @@ class AppThemeColors {
   Color get warning4 => _c(AppColors.warning4, AppColorsDark.warning4);
   Color get warning6Normal =>
       _c(AppColors.warning6Normal, AppColorsDark.warning6Normal);
+  Color get warning9 => _c(AppColors.warning9, AppColorsDark.warning9);
   Color get yellow1 => _c(AppColors.yellow1, AppColorsDark.yellow1);
+  Color get yellow2 => _c(AppColors.yellow2, AppColorsDark.yellow2);
   Color get yellow6 => _c(AppColors.yellow6, AppColorsDark.yellow6);
+  Color get yellow9 => _c(AppColors.yellow9, AppColorsDark.yellow9);
 
   // ============== 红色系 (Error) ==============
   Color get error1Light => _c(AppColors.error1Light, AppColorsDark.error1Light);

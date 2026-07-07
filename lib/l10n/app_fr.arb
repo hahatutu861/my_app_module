@@ -133,5 +133,12 @@
   },
   "goToSettings": "Aller aux paramètres",
   "wifiSpeedHistoryEmptyTitle": "Aucun test de débit enregistré",
-  "wifiSpeedHistoryEmptyDescription": "Rendez-vous dans cette zone/pièce pour tester son débit Wi-Fi."
+  "wifiSpeedHistoryEmptyDescription": "Rendez-vous dans cette zone/pièce pour tester son débit Wi-Fi.",
+  "display": "Affichage",
+  "viewMode": "Mode de vue",
+  "viewModeQuality": "Qualité",
+  "viewModeQualityDescription": "Afficher la qualité Wi-Fi",
+  "viewModeSpeed": "Vitesse",
+  "viewModeSpeedDescription": "Afficher la vitesse estimée (Mbps)",
+  "showPreviousFloorReferenceDescription": "Superposer l'étage précédent comme référence de mise en page."
 }

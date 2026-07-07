@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
+import 'package:my_app_module/providers/shared_preferences_provider.dart';
 import 'package:my_app_module/repositories/floor_repository.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
+
+const String _wifiViewModeKey = 'wifi_view_mode';
 
 final floorViewModelProvider = NotifierProvider<FloorViewModel, FloorState>(
   FloorViewModel.new,
@@ -23,8 +26,13 @@ class FloorViewModel extends Notifier<FloorState> {
   FloorState build() {
     _repository = ref.read(floorRepositoryProvider);
     _ref = ref;
-    loadActiveFloor();
-    return const FloorState.initial();
+    return FloorState.loaded(wifiViewMode: _loadInitialViewMode());
+  }
+
+  WifiViewMode _loadInitialViewMode() {
+    final prefs = ref.read(sharedPreferencesProvider);
+    final viewModeIndex = prefs.getInt(_wifiViewModeKey) ?? 0;
+    return WifiViewMode.values[viewModeIndex.clamp(0, WifiViewMode.values.length - 1)];
   }
 
   void _updateLoaded(FloorStateLoaded Function(FloorStateLoaded loaded) update) {
@@ -35,9 +43,9 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   int? get selectedRoomIndex => switch (state) {
-    FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
-    _ => null,
-  };
+        FloorStateLoaded(:final selectedRoomIndex) => selectedRoomIndex,
+        _ => null,
+      };
 
   void selectRoom(int? index) {
     _updateLoaded((loaded) => loaded.copyWith(selectedRoomIndex: index));
@@ -47,50 +55,29 @@ class FloorViewModel extends Notifier<FloorState> {
     _ref.invalidate(allFloorsProvider);
   }
 
-  void loadActiveFloor() {
+  void _loadFloorWithState(Future<FloorModel?> floorFuture) {
+    final currentViewMode = wifiViewMode;
     state = const FloorState.loading();
-    try {
-      _repository
-          .getActiveFloor()
-          .then((floor) async {
-            final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
-            final isReferenceEnabled =
-                floor != null && floor.rooms.isEmpty && hasPrevFloor;
-            state = FloorState.loaded(
-              floor: floor,
-              isReferenceEnabled: isReferenceEnabled,
-              bubbleTrigger: isReferenceEnabled ? 1 : 0,
-            );
-          })
-          .catchError((e) {
-            state = FloorState.error(message: e.toString());
-          });
-    } catch (e) {
+    floorFuture.then((floor) async {
+      final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
+      final isReferenceEnabled = floor != null && floor.rooms.isEmpty && hasPrevFloor;
+      state = FloorState.loaded(
+        floor: floor,
+        isReferenceEnabled: isReferenceEnabled,
+        bubbleTrigger: isReferenceEnabled ? 1 : 0,
+        wifiViewMode: currentViewMode,
+      );
+    }).catchError((e) {
       state = FloorState.error(message: e.toString());
-    }
+    });
+  }
+
+  void loadActiveFloor() {
+    _loadFloorWithState(_repository.getActiveFloor());
   }
 
   void loadFloorById(String id) {
-    state = const FloorState.loading();
-    try {
-      _repository
-          .getFloorById(id)
-          .then((floor) async {
-            final hasPrevFloor = await _hasPreviousFloorWithRoomsForAsync(floor);
-            final isReferenceEnabled =
-                floor != null && floor.rooms.isEmpty && hasPrevFloor;
-            state = FloorState.loaded(
-              floor: floor,
-              isReferenceEnabled: isReferenceEnabled,
-              bubbleTrigger: isReferenceEnabled ? 1 : 0,
-            );
-          })
-          .catchError((e) {
-            state = FloorState.error(message: e.toString());
-          });
-    } catch (e) {
-      state = FloorState.error(message: e.toString());
-    }
+    _loadFloorWithState(_repository.getFloorById(id));
   }
 
   void loadFloor(String? floorId) {
@@ -102,6 +89,7 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   Future<FloorModel?> createFloor(String floorName) async {
+    final currentViewMode = wifiViewMode;
     try {
       final floor = await _repository.createFloor(floorName);
       _refreshAllFloors();
@@ -111,6 +99,7 @@ class FloorViewModel extends Notifier<FloorState> {
         floor: floor,
         isReferenceEnabled: isReferenceEnabled,
         bubbleTrigger: isReferenceEnabled ? 1 : 0,
+        wifiViewMode: currentViewMode,
       );
       return floor;
     } catch (e) {
@@ -208,8 +197,7 @@ class FloorViewModel extends Notifier<FloorState> {
     final allFloorsAsync = _ref.read(allFloorsProvider);
     final allFloors = allFloorsAsync.hasValue ? allFloorsAsync.value : null;
     if (allFloors == null) return null;
-    final targetFloor =
-        forFloor ??
+    final targetFloor = forFloor ??
         switch (state) {
           FloorStateLoaded(:final floor) => floor,
           _ => null,
@@ -240,8 +228,7 @@ class FloorViewModel extends Notifier<FloorState> {
     return currentFloor?.rooms ?? [];
   }
 
-  Map<WifiSpeedLevel?, int> get roomSpeedLevelCounts =>
-      currentRooms.speedLevelCounts;
+  Map<WifiSpeedLevel?, int> get roomSpeedLevelCounts => currentRooms.speedLevelCounts;
 
   bool get hasCurrentFloorRooms {
     return currentRooms.isNotEmpty;
@@ -286,19 +273,19 @@ class FloorViewModel extends Notifier<FloorState> {
   }
 
   bool get isReferenceEnabled => switch (state) {
-    FloorStateLoaded(:final isReferenceEnabled) => isReferenceEnabled,
-    _ => false,
-  };
+        FloorStateLoaded(:final isReferenceEnabled) => isReferenceEnabled,
+        _ => false,
+      };
 
   int get bubbleTrigger => switch (state) {
-    FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
-    _ => 0,
-  };
+        FloorStateLoaded(:final bubbleTrigger) => bubbleTrigger,
+        _ => 0,
+      };
 
   bool get hasFittedToRooms => switch (state) {
-    FloorStateLoaded(:final hasFittedToRooms) => hasFittedToRooms,
-    _ => false,
-  };
+        FloorStateLoaded(:final hasFittedToRooms) => hasFittedToRooms,
+        _ => false,
+      };
 
   void markFittedToRooms() {
     _updateLoaded((loaded) => loaded.copyWith(hasFittedToRooms: true));
@@ -419,5 +406,16 @@ class FloorViewModel extends Notifier<FloorState> {
       ..setEntry(0, 0, scale)
       ..setEntry(1, 1, scale)
       ..setEntry(2, 2, 1.0);
+  }
+
+  WifiViewMode get wifiViewMode => switch (state) {
+        FloorStateLoaded(:final wifiViewMode) => wifiViewMode,
+        _ => _loadInitialViewMode(),
+      };
+
+  Future<void> setWifiViewMode(WifiViewMode mode) async {
+    _updateLoaded((loaded) => loaded.copyWith(wifiViewMode: mode));
+    final prefs = ref.read(sharedPreferencesProvider);
+    await prefs.setInt(_wifiViewModeKey, mode.index);
   }
 }

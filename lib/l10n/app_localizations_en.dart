@@ -314,4 +314,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get wifiSpeedHistoryEmptyDescription =>
       'Go to that zone/room to test its Wi-Fi speed.';
+
+  @override
+  String get display => 'Display';
+
+  @override
+  String get viewMode => 'View mode';
+
+  @override
+  String get viewModeQuality => 'Quality';
+
+  @override
+  String get viewModeQualityDescription => 'Show Wi-Fi quality';
+
+  @override
+  String get viewModeSpeed => 'Speed';
+
+  @override
+  String get viewModeSpeedDescription => 'Show estimated speed (Mbps)';
+
+  @override
+  String get showPreviousFloorReferenceDescription =>
+      'Overlay the previous floor as a layout reference.';
 }

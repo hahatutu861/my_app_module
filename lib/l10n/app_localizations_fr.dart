@@ -317,4 +317,26 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wifiSpeedHistoryEmptyDescription =>
       'Rendez-vous dans cette zone/pièce pour tester son débit Wi-Fi.';
+
+  @override
+  String get display => 'Affichage';
+
+  @override
+  String get viewMode => 'Mode de vue';
+
+  @override
+  String get viewModeQuality => 'Qualité';
+
+  @override
+  String get viewModeQualityDescription => 'Afficher la qualité Wi-Fi';
+
+  @override
+  String get viewModeSpeed => 'Vitesse';
+
+  @override
+  String get viewModeSpeedDescription => 'Afficher la vitesse estimée (Mbps)';
+
+  @override
+  String get showPreviousFloorReferenceDescription =>
+      'Superposer l\'étage précédent comme référence de mise en page.';
 }

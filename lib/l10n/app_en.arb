@@ -133,5 +133,12 @@
   },
   "goToSettings": "Go to settings",
   "wifiSpeedHistoryEmptyTitle": "No speed tests recorded",
-  "wifiSpeedHistoryEmptyDescription": "Go to that zone/room to test its Wi-Fi speed."
+  "wifiSpeedHistoryEmptyDescription": "Go to that zone/room to test its Wi-Fi speed.",
+  "display": "Display",
+  "viewMode": "View mode",
+  "viewModeQuality": "Quality",
+  "viewModeQualityDescription": "Show Wi-Fi quality",
+  "viewModeSpeed": "Speed",
+  "viewModeSpeedDescription": "Show estimated speed (Mbps)",
+  "showPreviousFloorReferenceDescription": "Overlay the previous floor as a layout reference."
 }

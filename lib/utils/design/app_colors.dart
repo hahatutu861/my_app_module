@@ -97,8 +97,14 @@ class AppColors {
   /// 柠檬绿1 #F2FAE6
   static const int lime1 = 0xFFF2FAE6;
 
+  /// 柠檬绿2 #E2F4C4
+  static const int lime2 = 0xFFE2F4C4;
+
   /// 柠檬绿6 #98C902
   static const int lime6 = 0xFF98C902;
+
+  /// 柠檬绿9 #476500
+  static const int lime9 = 0xFF476500;
 
   /// 绿色 #7FBB21
   static const int green = 0xFF7FBB21;
@@ -119,11 +125,20 @@ class AppColors {
   /// 警告正常色 #F28103
   static const int warning6Normal = 0xFFF28103;
 
+  /// 警告9 #792E00
+  static const int warning9 = 0xFF792E00;
+
   /// 黄色1 #FEFCEA
   static const int yellow1 = 0xFFFEFCEA;
 
+  /// 黄色2 #FCF9CA
+  static const int yellow2 = 0xFFFCF9CA;
+
   /// 黄色6 #F0C003
   static const int yellow6 = 0xFFF0C003;
+
+  /// 黄色9 #784E00
+  static const int yellow9 = 0xFF784E00;
 
   // ============== 红色系 (Error) ==============
   /// 错误浅色 #FDF1ED
@@ -314,8 +329,14 @@ class AppColorsDark {
   /// 柠檬绿1 #33A5D42C
   static const int lime1 = 0x33A5D42C;
 
+  /// 柠檬绿2 #476500
+  static const int lime2 = 0xFF476500;
+
   /// 柠檬绿6 #A5D42C
   static const int lime6 = 0xFFA5D42C;
+
+  /// 柠檬绿9 #E2F4C4
+  static const int lime9 = 0xFFE2F4C4;
 
   /// 绿色 #97C944
   static const int green = 0xFF97C944;
@@ -336,11 +357,20 @@ class AppColorsDark {
   /// 警告正常色 #F5A033
   static const int warning6Normal = 0xFFF5A033;
 
+  /// 警告9 #FCEBCB
+  static const int warning9 = 0xFFFCEBCB;
+
   /// 黄色1 #33F3D333
   static const int yellow1 = 0x33F3D333;
 
+  /// 黄色2 #784E00
+  static const int yellow2 = 0xFF784E00;
+
   /// 黄色6 #F3D333
   static const int yellow6 = 0xFFF3D333;
+
+  /// 黄色9 #FCF9CA
+  static const int yellow9 = 0xFFFCF9CA;
 
   // ============== 红色系 (Error) - 暗色模式 ==============
   /// 错误浅色 #33F2624B
