@@ -288,9 +288,12 @@ class _FloorListItem extends ConsumerWidget {
 
   Widget _buildStatusBadges(BuildContext context, List<RoomModel> rooms) {
     final Map<WifiSpeedLevel?, int> counts = rooms.speedLevelCounts;
+    final hasRecords = (counts[WifiSpeedLevel.good] ?? 0) > 0 ||
+        (counts[WifiSpeedLevel.moderate] ?? 0) > 0 ||
+        (counts[WifiSpeedLevel.weak] ?? 0) > 0;
 
     final List<({WifiSpeedLevel? level, String icon, Color bg, Color fg})>
-    configs = [
+        configs = [
       (
         level: WifiSpeedLevel.good,
         icon: 'good.png',
@@ -316,6 +319,16 @@ class _FloorListItem extends ConsumerWidget {
         fg: context.appColors.fontGy2with60Opacity,
       ),
     ];
+    if (!hasRecords) {
+      final noResultConfig =
+          configs.firstWhere((config) => config.level == null);
+      return RoomStatusBadge(
+        count: counts[null] ?? 0,
+        iconPath: noResultConfig.icon,
+        backgroundColor: noResultConfig.bg,
+        foregroundColor: noResultConfig.fg,
+      );
+    }
 
     return Wrap(
       spacing: AppSpacing.gap8.w,
