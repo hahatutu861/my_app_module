@@ -512,10 +512,16 @@ abstract class AppLocalizations {
   /// **'Good'**
   String get wifiSpeedGood;
 
+  /// No description provided for @wifiSpeedGoodRange.
+  ///
+  /// In en, this message translates to:
+  /// **'50 Mbps or higher'**
+  String get wifiSpeedGoodRange;
+
   /// No description provided for @wifiSpeedGoodDescription.
   ///
   /// In en, this message translates to:
-  /// **': This zone has a good Wi-Fi coverage. Your devices should have a stable Wi-Fi connection for any content/usage.'**
+  /// **'This zone has a good Wi-Fi coverage. Your devices should have a stable Wi-Fi connection for any content/usage.'**
   String get wifiSpeedGoodDescription;
 
   /// No description provided for @wifiSpeedModerate.
@@ -524,10 +530,16 @@ abstract class AppLocalizations {
   /// **'Moderate'**
   String get wifiSpeedModerate;
 
+  /// No description provided for @wifiSpeedModerateRange.
+  ///
+  /// In en, this message translates to:
+  /// **'10–49 Mbps'**
+  String get wifiSpeedModerateRange;
+
   /// No description provided for @wifiSpeedModerateDescription.
   ///
   /// In en, this message translates to:
-  /// **': This zone\'s Wi-Fi connection should be still be fine but that is the limit of a good signal. Beyond that zone, an extender would be required.'**
+  /// **'This zone\'s Wi-Fi connection should be still be fine but that is the limit of a good signal. Beyond that zone, an extender would be required.'**
   String get wifiSpeedModerateDescription;
 
   /// No description provided for @wifiSpeedWeak.
@@ -536,10 +548,16 @@ abstract class AppLocalizations {
   /// **'Weak'**
   String get wifiSpeedWeak;
 
+  /// No description provided for @wifiSpeedWeakRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Below 10 Mbps'**
+  String get wifiSpeedWeakRange;
+
   /// No description provided for @wifiSpeedWeakDescription.
   ///
   /// In en, this message translates to:
-  /// **': Your devices may experiment some problems. To improve this zone, you will need to bring your Wi-Fi equipment closer to this zone/room or add an extender close by*.'**
+  /// **'Your devices may experiment some problems. To improve this zone, you will need to bring your Wi-Fi equipment closer to this zone/room or add an extender close by.'**
   String get wifiSpeedWeakDescription;
 
   /// No description provided for @wifiSpeedExtenderHint.

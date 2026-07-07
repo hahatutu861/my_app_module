@@ -351,6 +351,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
                     isGateway: state.isGateway,
                     createdAt: existingRoom?.createdAt ?? DateTime.now(),
                     updatedAt: DateTime.now(),
+                    records: existingRoom?.records ?? [],
                   );
                   ref.read(floorViewModelProvider.notifier).updateRoom(index!, room);
                   Navigator.of(context).pop(true);

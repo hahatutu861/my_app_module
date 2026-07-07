@@ -239,11 +239,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wifiSpeedGood => 'Bon';
 
   @override
+  String get wifiSpeedGoodRange => '50 Mbps ou plus';
+
+  @override
   String get wifiSpeedGoodDescription =>
       'Cette zone a une bonne couverture Wi-Fi. Vos appareils devraient avoir une connexion Wi-Fi stable pour tout contenu/utilisation.';
 
   @override
   String get wifiSpeedModerate => 'Modéré';
+
+  @override
+  String get wifiSpeedModerateRange => '10–49 Mbps';
 
   @override
   String get wifiSpeedModerateDescription =>
@@ -253,8 +259,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get wifiSpeedWeak => 'Faible';
 
   @override
+  String get wifiSpeedWeakRange => 'Moins de 10 Mbps';
+
+  @override
   String get wifiSpeedWeakDescription =>
-      'Vos appareils peuvent rencontrer des problèmes. Pour améliorer cette zone, vous devrez rapprocher votre équipement Wi-Fi de cette zone/pièce ou ajouter un extender à proximité*.';
+      'Vos appareils peuvent rencontrer des problèmes. Pour améliorer cette zone, vous devrez rapprocher votre équipement Wi-Fi de cette zone/pièce ou ajouter un extender à proximité.';
 
   @override
   String get wifiSpeedExtenderHint =>

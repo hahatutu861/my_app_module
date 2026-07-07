@@ -43,6 +43,7 @@ class WifiSpeedDialog extends StatelessWidget {
                     _buildTitleSection(context),
                     SizedBox(height: 12.w),
                     _buildSignalLevels(context),
+                    SizedBox(height: 24.w),
                   ],
                 ),
               ),
@@ -59,7 +60,12 @@ class WifiSpeedDialog extends StatelessWidget {
       alignment: Alignment.centerRight,
       child: GestureDetector(
         onTap: () => Navigator.of(context).pop(),
-        child: AppImage('close.png', width: 24.w, height: 24.w),
+        child: AppImage(
+          'close.png',
+          width: 24.w,
+          height: 24.w,
+          color: context.appColors.fontGy1with90Opacity,
+        ),
       ),
     );
   }
@@ -90,6 +96,7 @@ class WifiSpeedDialog extends StatelessWidget {
           icon: 'good.png',
           label: context.l10n.wifiSpeedGood,
           color: context.appColors.lime6,
+          range: context.l10n.wifiSpeedGoodRange,
           description: context.l10n.wifiSpeedGoodDescription,
         ),
         SizedBox(height: 12.w),
@@ -98,6 +105,7 @@ class WifiSpeedDialog extends StatelessWidget {
           icon: 'warning.png',
           label: context.l10n.wifiSpeedModerate,
           color: context.appColors.yellow6,
+          range: context.l10n.wifiSpeedModerateRange,
           description: context.l10n.wifiSpeedModerateDescription,
         ),
         SizedBox(height: 12.w),
@@ -106,9 +114,10 @@ class WifiSpeedDialog extends StatelessWidget {
           icon: 'weak.png',
           label: context.l10n.wifiSpeedWeak,
           color: context.appColors.warning6Normal,
+          range: context.l10n.wifiSpeedWeakRange,
           description: context.l10n.wifiSpeedWeakDescription,
         ),
-        SizedBox(height: 12.w),
+        SizedBox(height: 24.w),
         _buildExtenderHint(context),
       ],
     );
@@ -119,27 +128,36 @@ class WifiSpeedDialog extends StatelessWidget {
     required String icon,
     required String label,
     required Color color,
+    required String range,
     required String description,
   }) {
-    return RichText(
-      text: TextSpan(
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 4.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WidgetSpan(
-            child: Padding(
-              padding: EdgeInsets.only(right: 4.w, bottom: 2.h),
-              child: AppImage(icon, width: 16.w, height: 16.w, color: color),
-            ),
+          Row(
+            children: [
+              AppImage(icon, width: 16.w, height: 16.w, color: color),
+              SizedBox(width: 4.w),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  color: color,
+                ),
+              ),
+            ],
           ),
-          TextSpan(
-            text: label,
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: color,
-            ),
+          SizedBox(height: 4.w),
+          Text(
+            range,
+            style: context.appTextStyles.subtitleWith60Opacity,
           ),
-          TextSpan(
-            text: description,
+          SizedBox(height: 12.w),
+          Text(
+            description,
             style: context.appTextStyles.subtitleWith60Opacity,
           ),
         ],

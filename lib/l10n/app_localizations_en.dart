@@ -236,22 +236,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get wifiSpeedGood => 'Good';
 
   @override
+  String get wifiSpeedGoodRange => '50 Mbps or higher';
+
+  @override
   String get wifiSpeedGoodDescription =>
-      ': This zone has a good Wi-Fi coverage. Your devices should have a stable Wi-Fi connection for any content/usage.';
+      'This zone has a good Wi-Fi coverage. Your devices should have a stable Wi-Fi connection for any content/usage.';
 
   @override
   String get wifiSpeedModerate => 'Moderate';
 
   @override
+  String get wifiSpeedModerateRange => '10–49 Mbps';
+
+  @override
   String get wifiSpeedModerateDescription =>
-      ': This zone\'s Wi-Fi connection should be still be fine but that is the limit of a good signal. Beyond that zone, an extender would be required.';
+      'This zone\'s Wi-Fi connection should be still be fine but that is the limit of a good signal. Beyond that zone, an extender would be required.';
 
   @override
   String get wifiSpeedWeak => 'Weak';
 
   @override
+  String get wifiSpeedWeakRange => 'Below 10 Mbps';
+
+  @override
   String get wifiSpeedWeakDescription =>
-      ': Your devices may experiment some problems. To improve this zone, you will need to bring your Wi-Fi equipment closer to this zone/room or add an extender close by*.';
+      'Your devices may experiment some problems. To improve this zone, you will need to bring your Wi-Fi equipment closer to this zone/room or add an extender close by.';
 
   @override
   String get wifiSpeedExtenderHint =>
