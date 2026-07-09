@@ -1,48 +1,67 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 class LoggingInterceptor extends Interceptor {
   static const String _tag = '[HTTP]';
+  static const int _kMaxPrintChars = 800;
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    final log = StringBuffer()
-      ..writeln('$_tag ╔══════════ REQUEST ═══════════')
-      ..writeln('$_tag ║ ${options.method} ${options.uri}')
-      ..writeln('$_tag ║ Headers: ${_formatHeaders(options.headers)}')
-      ..writeln('$_tag ║ Query:  ${options.queryParameters}');
-    if (options.data != null) {
-      log.writeln('$_tag ║ Body:   ${options.data}');
-    }
-    log.writeln('$_tag ╚═══════════════════════════════');
-    debugPrint(log.toString());
+    _logBlock('REQUEST', () {
+      _logLine('║ ${options.method} ${options.uri}');
+      _logLine('║ Headers: ${_formatHeaders(options.headers)}');
+      _logLine('║ Query:  ${options.queryParameters}');
+      if (options.data != null) {
+        _logLine('║ Body:   ${options.data}');
+      }
+    });
     super.onRequest(options, handler);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    final log = StringBuffer()
-      ..writeln('$_tag ╔══════════ RESPONSE ══════════')
-      ..writeln('$_tag ║ ${response.statusCode} ${response.requestOptions.uri}')
-      ..writeln('$_tag ║ Data:   ${response.data}')
-      ..writeln('$_tag ╚═══════════════════════════════');
-    debugPrint(log.toString());
+    _logBlock('RESPONSE', () {
+      _logLine('║ ${response.statusCode} ${response.requestOptions.uri}');
+      _logLine('║ Data:   ${response.data}');
+    });
     super.onResponse(response, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    final log = StringBuffer()
-      ..writeln('$_tag ╔══════════ ERROR ═════════════')
-      ..writeln('$_tag ║ ${err.response?.statusCode} ${err.requestOptions.uri}')
-      ..writeln('$_tag ║ Type:    ${err.type}')
-      ..writeln('$_tag ║ Message: ${err.message}');
-    if (err.response?.data != null) {
-      log.writeln('$_tag ║ Data:    ${err.response?.data}');
-    }
-    log.writeln('$_tag ╚═══════════════════════════════');
-    debugPrint(log.toString());
+    _logBlock('ERROR', () {
+      _logLine('║ ${err.response?.statusCode} ${err.requestOptions.uri}');
+      _logLine('║ Type:    ${err.type}');
+      _logLine('║ Message: ${err.message}');
+      if (err.response?.data != null) {
+        _logLine('║ Data:    ${err.response?.data}');
+      }
+    });
     super.onError(err, handler);
+  }
+
+  void _logBlock(String title, VoidCallback body) {
+    _logLine('╔══════════ $title ${'═' * (16 - title.length)}');
+    body();
+    _logLine('╚══════════════════════════════');
+  }
+
+  void _logLine(String text) {
+    final full = '$_tag $text';
+    if (full.length <= _kMaxPrintChars) {
+      debugPrint(full);
+      return;
+    }
+    final prefix = '$_tag ║ ... ';
+    final chunkLen = _kMaxPrintChars - prefix.length;
+    debugPrint(full.substring(0, _kMaxPrintChars));
+    var offset = _kMaxPrintChars;
+    while (offset < full.length) {
+      debugPrint(prefix + full.substring(offset, min(offset + chunkLen, full.length)));
+      offset += chunkLen;
+    }
   }
 
   String _formatHeaders(Map<String, dynamic> headers) {
