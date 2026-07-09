@@ -4,6 +4,7 @@ import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/services/network/error_interceptor.dart';
+import 'package:my_app_module/services/network/interceptors/logging_interceptor.dart';
 
 final dioClientProvider = Provider<Dio>((ref) {
   final dio = Dio(
@@ -18,7 +19,7 @@ final dioClientProvider = Provider<Dio>((ref) {
       },
     ),
   );
-
+  dio.transformer = BackgroundTransformer();
   _setupProxy(dio);
 
   dio.interceptors.add(
@@ -32,15 +33,7 @@ final dioClientProvider = Provider<Dio>((ref) {
   );
 
   dio.interceptors.add(ErrorInterceptor());
-
-  dio.interceptors.add(
-    LogInterceptor(
-      requestBody: true,
-      responseBody: true,
-      requestHeader: true,
-      responseHeader: false,
-    ),
-  );
+  dio.interceptors.add(LoggingInterceptor());
 
   return dio;
 });

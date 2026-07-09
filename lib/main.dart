@@ -9,6 +9,7 @@ import 'routes/app_router.dart';
 import 'shared/ui/theme/app_theme.dart';
 import 'providers/theme_provider.dart';
 import 'providers/shared_preferences_provider.dart';
+import 'providers/device_id_provider.dart';
 import 'services/database/database_service.dart';
 import 'shared/bridges/pigeon_generated.dart';
 
@@ -17,12 +18,15 @@ import 'shared/bridges/pigeon_generated.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   ThemeMode initialThemeMode;
+  String deviceId;
   try {
     final nativeApi = NativeApi();
     final modeEnum = await nativeApi.getThemeMode();
     initialThemeMode = convertToThemeMode(modeEnum);
+    deviceId = await nativeApi.getDeviceId();
   } catch (e) {
     initialThemeMode = ThemeMode.system;
+    deviceId = '';
   }
   final prefs = await SharedPreferences.getInstance();
   await DatabaseService.instance.database;
@@ -31,6 +35,7 @@ void main() async {
       overrides: [
         sharedPreferencesProvider.overrideWithValue(prefs),
         themeModeProvider.overrideWith(() => ThemeModeNotifier(initialMode: initialThemeMode)),
+        deviceIdProvider.overrideWithValue(deviceId),
       ],
       child: MyAppModule(),
     ),

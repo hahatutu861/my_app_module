@@ -27,6 +27,8 @@ import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/room_status_badge.dart';
 import 'package:my_app_module/widgets/wifi_map_dialog.dart';
 
+import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
+
 import '../../utils/design/app_media_query_extension.dart';
 
 extension SegmentedBarColorX on SegmentedBarColor {
@@ -70,6 +72,7 @@ class WifiMapPage extends HookConsumerWidget {
     ref.watch(floorViewModelProvider);
     final floorViewModel = ref.read(floorViewModelProvider.notifier);
     ref.watch(allFloorsProvider);
+    ref.watch(wifiMapViewModelProvider);
 
     useEffect(() {
       _checkAndShowDialog(context, ref);

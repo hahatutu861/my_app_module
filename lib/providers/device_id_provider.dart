@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 
-final deviceIdProvider = FutureProvider<String>((ref) async {
-  return NativeApi().getDeviceId();
+final deviceIdProvider = Provider<String>((ref) {
+  throw UnimplementedError('deviceIdProvider 需要在 main.dart 中 overrideWithValue 注入实际值');
 });
