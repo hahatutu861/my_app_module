@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/host_model.dart';
-import 'package:my_app_module/providers/device_id_provider.dart';
+import 'package:my_app_module/providers/app_runtime_config.dart';
 import 'package:my_app_module/services/network/dio_client.dart';
 import 'package:my_app_module/services/network/api/host_api_client.dart';
 

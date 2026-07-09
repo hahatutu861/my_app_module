@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_app_module/providers/app_runtime_config.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/services/network/error_interceptor.dart';
 import 'package:my_app_module/services/network/interceptors/logging_interceptor.dart';
@@ -24,10 +25,9 @@ final dioClientProvider = Provider<Dio>((ref) {
 
   dio.interceptors.add(
     InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        final token = await NativeApi().getAccessToken();
-        options.headers['authorization'] = token;
-        return handler.next(options);
+      onRequest: (options, handler) {
+        options.headers['authorization'] = ref.read(tokenProvider);
+        handler.next(options);
       },
     ),
   );
