@@ -50,12 +50,18 @@ class AppRuntimeConfig {
   String accessToken;
   /// 当前连接设备的名称，未连接时为 null
   String? connectedDeviceName;
+  /// 应用语言代码（如 en、fr），不依赖系统语言
+  String language;
+  /// 是否启用日志打印，Debug 模式为 true，Release 模式为 false
+  bool enableLog;
 
   AppRuntimeConfig({
     required this.themeMode,
     required this.deviceId,
     required this.accessToken,
     this.connectedDeviceName,
+    required this.language,
+    required this.enableLog,
   });
 }
 
@@ -63,7 +69,7 @@ class AppRuntimeConfig {
 /// 由原生端实现，Flutter 端调用
 @HostApi()
 abstract class NativeApi {
-  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称）
+  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称、应用语言、日志开关）
   AppRuntimeConfig getAppRuntimeConfig();
 
   /// 关闭 Flutter Activity

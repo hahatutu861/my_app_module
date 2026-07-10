@@ -11,3 +11,13 @@ final tokenProvider = Provider<String>((ref) {
 final connectedDeviceNameProvider = Provider<String?>((ref) {
   throw UnimplementedError('需要在 main.dart 中 overrideWithValue 注入');
 });
+
+/// 应用语言代码（如 en、fr），不依赖系统语言，从原生 AppRuntimeConfig 获取
+final languageProvider = Provider<String>((ref) {
+  throw UnimplementedError('需要在 main.dart 中 overrideWithValue 注入');
+});
+
+/// 是否启用日志打印，从原生 AppRuntimeConfig 获取
+final enableLogProvider = Provider<bool>((ref) {
+  throw UnimplementedError('需要在 main.dart 中 overrideWithValue 注入');
+});

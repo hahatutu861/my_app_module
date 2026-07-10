@@ -21,17 +21,23 @@ void main() async {
   String deviceId;
   String token;
   String? connectedDeviceName;
+  String language;
+  bool enableLog;
   try {
     final config = await NativeApi().getAppRuntimeConfig();
     initialThemeMode = convertToThemeMode(config.themeMode);
     deviceId = config.deviceId;
     token = config.accessToken;
     connectedDeviceName = config.connectedDeviceName;
+    language = config.language;
+    enableLog = config.enableLog;
   } catch (e) {
     initialThemeMode = ThemeMode.system;
     deviceId = '';
     token = '';
     connectedDeviceName = null;
+    language = 'en';
+    enableLog = false;
   }
   final prefs = await SharedPreferences.getInstance();
   await DatabaseService.instance.database;
@@ -43,6 +49,8 @@ void main() async {
         deviceIdProvider.overrideWithValue(deviceId),
         tokenProvider.overrideWithValue(token),
         connectedDeviceNameProvider.overrideWithValue(connectedDeviceName),
+        languageProvider.overrideWithValue(language),
+        enableLogProvider.overrideWithValue(enableLog),
       ],
       child: MyAppModule(),
     ),
@@ -57,6 +65,8 @@ class MyAppModule extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
     final themeMode = ref.watch(themeModeProvider);
+    final appLanguage = ref.watch(languageProvider);
+    final appLocale = Locale(appLanguage);
 
     return MaterialApp.router(
       title: 'Clean Architecture Demo',
@@ -64,6 +74,7 @@ class MyAppModule extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
+      locale: appLocale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

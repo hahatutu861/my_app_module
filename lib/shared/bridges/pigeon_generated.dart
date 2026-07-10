@@ -230,6 +230,8 @@ class AppRuntimeConfig {
     required this.deviceId,
     required this.accessToken,
     this.connectedDeviceName,
+    required this.language,
+    required this.enableLog,
   });
 
   /// 主题模式
@@ -244,12 +246,20 @@ class AppRuntimeConfig {
   /// 当前连接设备的名称，未连接时为 null
   String? connectedDeviceName;
 
+  /// 应用语言代码（如 en、fr），不依赖系统语言
+  String language;
+
+  /// 是否启用日志打印，Debug 模式为 true，Release 模式为 false
+  bool enableLog;
+
   List<Object?> _toList() {
     return <Object?>[
       themeMode,
       deviceId,
       accessToken,
       connectedDeviceName,
+      language,
+      enableLog,
     ];
   }
 
@@ -263,6 +273,8 @@ class AppRuntimeConfig {
       deviceId: result[1]! as String,
       accessToken: result[2]! as String,
       connectedDeviceName: result[3] as String?,
+      language: result[4]! as String,
+      enableLog: result[5]! as bool,
     );
   }
 
@@ -275,7 +287,7 @@ class AppRuntimeConfig {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(themeMode, other.themeMode) && _deepEquals(deviceId, other.deviceId) && _deepEquals(accessToken, other.accessToken) && _deepEquals(connectedDeviceName, other.connectedDeviceName);
+    return _deepEquals(themeMode, other.themeMode) && _deepEquals(deviceId, other.deviceId) && _deepEquals(accessToken, other.accessToken) && _deepEquals(connectedDeviceName, other.connectedDeviceName) && _deepEquals(language, other.language) && _deepEquals(enableLog, other.enableLog);
   }
 
   @override
@@ -341,7 +353,7 @@ class NativeApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称）
+  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称、应用语言、日志开关）
   Future<AppRuntimeConfig> getAppRuntimeConfig() async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getAppRuntimeConfig$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
