@@ -12,6 +12,7 @@ import 'providers/shared_preferences_provider.dart';
 import 'providers/app_runtime_config.dart';
 import 'services/database/database_service.dart';
 import 'shared/bridges/pigeon_generated.dart';
+import 'utils/app_logger.dart';
 
 /// Flutter Module 主入口
 /// 用于嵌入到原生应用中
@@ -31,6 +32,7 @@ void main() async {
     connectedDeviceName = config.connectedDeviceName;
     language = config.language;
     enableLog = config.enableLog;
+    AppLogger.init(enableLog);
   } catch (e) {
     initialThemeMode = ThemeMode.system;
     deviceId = '';

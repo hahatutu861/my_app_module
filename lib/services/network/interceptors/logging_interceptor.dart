@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../utils/app_logger.dart';
+
 class LoggingInterceptor extends Interceptor {
   static const String _tag = '[HTTP]';
   static const int _kMaxPrintChars = 800;
@@ -51,15 +53,15 @@ class LoggingInterceptor extends Interceptor {
   void _logLine(String text) {
     final full = '$_tag $text';
     if (full.length <= _kMaxPrintChars) {
-      debugPrint(full);
+      AppLogger.d(full);
       return;
     }
     final prefix = '$_tag ║ ... ';
     final chunkLen = _kMaxPrintChars - prefix.length;
-    debugPrint(full.substring(0, _kMaxPrintChars));
+    AppLogger.d(full.substring(0, _kMaxPrintChars));
     var offset = _kMaxPrintChars;
     while (offset < full.length) {
-      debugPrint(prefix + full.substring(offset, min(offset + chunkLen, full.length)));
+      AppLogger.d(prefix + full.substring(offset, min(offset + chunkLen, full.length)));
       offset += chunkLen;
     }
   }
