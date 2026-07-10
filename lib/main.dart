@@ -24,6 +24,7 @@ void main() async {
   String? connectedDeviceName;
   String language;
   bool enableLog;
+  String environment;
   try {
     final config = await NativeApi().getAppRuntimeConfig();
     initialThemeMode = convertToThemeMode(config.themeMode);
@@ -32,6 +33,7 @@ void main() async {
     connectedDeviceName = config.connectedDeviceName;
     language = config.language;
     enableLog = config.enableLog;
+    environment = config.environment;
     AppLogger.init(enableLog);
   } catch (e) {
     initialThemeMode = ThemeMode.system;
@@ -40,6 +42,7 @@ void main() async {
     connectedDeviceName = null;
     language = 'en';
     enableLog = false;
+    environment = 'com';
   }
   final prefs = await SharedPreferences.getInstance();
   await DatabaseService.instance.database;
@@ -53,6 +56,7 @@ void main() async {
         connectedDeviceNameProvider.overrideWithValue(connectedDeviceName),
         languageProvider.overrideWithValue(language),
         enableLogProvider.overrideWithValue(enableLog),
+        environmentProvider.overrideWithValue(environment),
       ],
       child: MyAppModule(),
     ),

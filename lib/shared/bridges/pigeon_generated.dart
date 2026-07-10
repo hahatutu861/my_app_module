@@ -232,6 +232,7 @@ class AppRuntimeConfig {
     this.connectedDeviceName,
     required this.language,
     required this.enableLog,
+    required this.environment,
   });
 
   /// 主题模式
@@ -252,6 +253,9 @@ class AppRuntimeConfig {
   /// 是否启用日志打印，Debug 模式为 true，Release 模式为 false
   bool enableLog;
 
+  /// API 环境标识，net 或 com，用于切换 baseUrl
+  String environment;
+
   List<Object?> _toList() {
     return <Object?>[
       themeMode,
@@ -260,6 +264,7 @@ class AppRuntimeConfig {
       connectedDeviceName,
       language,
       enableLog,
+      environment,
     ];
   }
 
@@ -275,6 +280,7 @@ class AppRuntimeConfig {
       connectedDeviceName: result[3] as String?,
       language: result[4]! as String,
       enableLog: result[5]! as bool,
+      environment: result[6]! as String,
     );
   }
 
@@ -287,7 +293,7 @@ class AppRuntimeConfig {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(themeMode, other.themeMode) && _deepEquals(deviceId, other.deviceId) && _deepEquals(accessToken, other.accessToken) && _deepEquals(connectedDeviceName, other.connectedDeviceName) && _deepEquals(language, other.language) && _deepEquals(enableLog, other.enableLog);
+    return _deepEquals(themeMode, other.themeMode) && _deepEquals(deviceId, other.deviceId) && _deepEquals(accessToken, other.accessToken) && _deepEquals(connectedDeviceName, other.connectedDeviceName) && _deepEquals(language, other.language) && _deepEquals(enableLog, other.enableLog) && _deepEquals(environment, other.environment);
   }
 
   @override

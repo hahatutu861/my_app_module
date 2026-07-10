@@ -21,3 +21,8 @@ final languageProvider = Provider<String>((ref) {
 final enableLogProvider = Provider<bool>((ref) {
   throw UnimplementedError('需要在 main.dart 中 overrideWithValue 注入');
 });
+
+/// API 环境标识（net 或 com），从原生 AppRuntimeConfig 获取
+final environmentProvider = Provider<String>((ref) {
+  throw UnimplementedError('需要在 main.dart 中 overrideWithValue 注入');
+});

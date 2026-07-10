@@ -7,10 +7,21 @@ import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/services/network/error_interceptor.dart';
 import 'package:my_app_module/services/network/interceptors/logging_interceptor.dart';
 
+String _baseUrlFor(String environment) {
+  switch (environment) {
+    case 'net':
+      return 'https://api.hitroncloud.net';
+    case 'com':
+    default:
+      return 'https://api.hitroncloud.com';
+  }
+}
+
 final dioClientProvider = Provider<Dio>((ref) {
+  final environment = ref.watch(environmentProvider);
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'https://api.hitroncloud.com',
+      baseUrl: _baseUrlFor(environment),
       connectTimeout: const Duration(seconds: 30),
       receiveTimeout: const Duration(seconds: 30),
       sendTimeout: const Duration(seconds: 30),

@@ -54,6 +54,8 @@ class AppRuntimeConfig {
   String language;
   /// 是否启用日志打印，Debug 模式为 true，Release 模式为 false
   bool enableLog;
+  /// API 环境标识，net 或 com，用于切换 baseUrl
+  String environment;
 
   AppRuntimeConfig({
     required this.themeMode,
@@ -62,6 +64,7 @@ class AppRuntimeConfig {
     this.connectedDeviceName,
     required this.language,
     required this.enableLog,
+    required this.environment,
   });
 }
 
