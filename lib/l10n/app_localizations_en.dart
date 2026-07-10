@@ -9,25 +9,9 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get counterPage => 'Counter Page';
-
-  @override
-  String get youHavePushedButton =>
-      'You have pushed the button this many times:';
-
-  @override
   String error(String error) {
     return 'Error: $error';
   }
-
-  @override
-  String get increment => 'Increment';
-
-  @override
-  String get decrement => 'Decrement';
-
-  @override
-  String get reset => 'Reset';
 
   @override
   String get installationCompleted => 'Installation completed';

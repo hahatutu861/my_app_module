@@ -98,41 +98,11 @@ abstract class AppLocalizations {
     Locale('fr'),
   ];
 
-  /// No description provided for @counterPage.
-  ///
-  /// In en, this message translates to:
-  /// **'Counter Page'**
-  String get counterPage;
-
-  /// No description provided for @youHavePushedButton.
-  ///
-  /// In en, this message translates to:
-  /// **'You have pushed the button this many times:'**
-  String get youHavePushedButton;
-
   /// No description provided for @error.
   ///
   /// In en, this message translates to:
   /// **'Error: {error}'**
   String error(String error);
-
-  /// No description provided for @increment.
-  ///
-  /// In en, this message translates to:
-  /// **'Increment'**
-  String get increment;
-
-  /// No description provided for @decrement.
-  ///
-  /// In en, this message translates to:
-  /// **'Decrement'**
-  String get decrement;
-
-  /// No description provided for @reset.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset'**
-  String get reset;
 
   /// No description provided for @installationCompleted.
   ///
