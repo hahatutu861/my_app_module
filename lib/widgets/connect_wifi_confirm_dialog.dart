@@ -16,6 +16,7 @@ class ConnectWifiConfirmDialog extends StatelessWidget {
   static Future<bool?> show(BuildContext context, {String? wifiName}) {
     return showDialog<bool>(
       context: context,
+      barrierDismissible: false,
       builder: (context) => ConnectWifiConfirmDialog(wifiName: wifiName),
     );
   }

@@ -23,25 +23,6 @@ class WifiSpeedResult {
   });
 }
 
-/// 主 WiFi (Primary WiFi) 信息
-class PrimaryWifiInfo {
-  /// WiFi 名称
-  String name;
-  /// WiFi 密码
-  String password;
-  /// 频段 (2.4G, 5G, 6G)
-  String band;
-  /// 是否为 5G WiFi
-  bool is5G;
-
-  PrimaryWifiInfo({
-    required this.name,
-    required this.password,
-    required this.band,
-    required this.is5G,
-  });
-}
-
 /// 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
 /// 仅承载原生采集的原始值，展示格式（如 "5GHz (Ch 6, -42 dBm)"）由 Flutter 端拼接
 class WifiConnectionInfo {
@@ -104,10 +85,10 @@ abstract class NativeApi {
   /// 返回 true 表示当前连接到设备 WiFi，false 表示未连接或连接的是其他 WiFi
   bool isConnectedToDeviceWifi();
 
-  /// 获取主 WiFi (Primary WiFi) 信息
-  /// 优先返回 5G 主 WiFi，如果没有 5G 则返回第一个主 WiFi
+  /// 获取主 WiFi (Primary WiFi) 名称
+  /// 优先返回 5G 主 WiFi 的 SSID，如果没有 5G 则返回第一个主 WiFi 的 SSID
   /// 返回 null 表示获取失败
-  PrimaryWifiInfo? getPrimaryWifi();
+  String? getPrimaryWifi();
 
   /// 打开手机 WiFi 设置页面
   void openWifiSettings();

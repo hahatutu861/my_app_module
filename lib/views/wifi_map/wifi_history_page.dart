@@ -195,6 +195,7 @@ class _HistoryListItem extends ConsumerWidget {
             onPressed: (context) async {
               final confirmed = await showDialog<bool>(
                 context: context,
+                barrierDismissible: false,
                 builder: (context) => DeleteConfirmDialog(
                   itemName:
                       '${_formatSpeed(record.speed)} '

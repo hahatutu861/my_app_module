@@ -168,66 +168,6 @@ class WifiSpeedResult {
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
 
-/// 主 WiFi (Primary WiFi) 信息
-class PrimaryWifiInfo {
-  PrimaryWifiInfo({
-    required this.name,
-    required this.password,
-    required this.band,
-    required this.is5G,
-  });
-
-  /// WiFi 名称
-  String name;
-
-  /// WiFi 密码
-  String password;
-
-  /// 频段 (2.4G, 5G, 6G)
-  String band;
-
-  /// 是否为 5G WiFi
-  bool is5G;
-
-  List<Object?> _toList() {
-    return <Object?>[
-      name,
-      password,
-      band,
-      is5G,
-    ];
-  }
-
-  Object encode() {
-    return _toList();  }
-
-  static PrimaryWifiInfo decode(Object result) {
-    result as List<Object?>;
-    return PrimaryWifiInfo(
-      name: result[0]! as String,
-      password: result[1]! as String,
-      band: result[2]! as String,
-      is5G: result[3]! as bool,
-    );
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  bool operator ==(Object other) {
-    if (other is! PrimaryWifiInfo || other.runtimeType != runtimeType) {
-      return false;
-    }
-    if (identical(this, other)) {
-      return true;
-    }
-    return _deepEquals(name, other.name) && _deepEquals(password, other.password) && _deepEquals(band, other.band) && _deepEquals(is5G, other.is5G);
-  }
-
-  @override
-  // ignore: avoid_equals_and_hash_code_on_mutable_classes
-  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
-}
-
 /// 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
 /// 仅承载原生采集的原始值，展示格式（如 "5GHz (Ch 6, -42 dBm)"）由 Flutter 端拼接
 class WifiConnectionInfo {
@@ -357,14 +297,11 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is WifiSpeedResult) {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
-    }    else if (value is PrimaryWifiInfo) {
+    }    else if (value is WifiConnectionInfo) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
-    }    else if (value is WifiConnectionInfo) {
-      buffer.putUint8(132);
-      writeValue(buffer, value.encode());
     }    else if (value is AppRuntimeConfig) {
-      buffer.putUint8(133);
+      buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -380,10 +317,8 @@ class _PigeonCodec extends StandardMessageCodec {
       case 130:
         return WifiSpeedResult.decode(readValue(buffer)!);
       case 131:
-        return PrimaryWifiInfo.decode(readValue(buffer)!);
-      case 132:
         return WifiConnectionInfo.decode(readValue(buffer)!);
-      case 133:
+      case 132:
         return AppRuntimeConfig.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -527,10 +462,10 @@ class NativeApi {
     return pigeonVar_replyValue! as bool;
   }
 
-  /// 获取主 WiFi (Primary WiFi) 信息
-  /// 优先返回 5G 主 WiFi，如果没有 5G 则返回第一个主 WiFi
+  /// 获取主 WiFi (Primary WiFi) 名称
+  /// 优先返回 5G 主 WiFi 的 SSID，如果没有 5G 则返回第一个主 WiFi 的 SSID
   /// 返回 null 表示获取失败
-  Future<PrimaryWifiInfo?> getPrimaryWifi() async {
+  Future<String?> getPrimaryWifi() async {
     final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getPrimaryWifi$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
@@ -546,7 +481,7 @@ class NativeApi {
         isNullValid: true,
     )
     ;
-    return pigeonVar_replyValue as PrimaryWifiInfo?;
+    return pigeonVar_replyValue as String?;
   }
 
   /// 打开手机 WiFi 设置页面

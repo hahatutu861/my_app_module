@@ -258,60 +258,6 @@ data class WifiSpeedResult (
 }
 
 /**
- * 主 WiFi (Primary WiFi) 信息
- *
- * Generated class from Pigeon that represents data sent in messages.
- */
-data class PrimaryWifiInfo (
-  /** WiFi 名称 */
-  val name: String,
-  /** WiFi 密码 */
-  val password: String,
-  /** 频段 (2.4G, 5G, 6G) */
-  val band: String,
-  /** 是否为 5G WiFi */
-  val is5G: Boolean
-)
- {
-  companion object {
-    fun fromList(pigeonVar_list: List<Any?>): PrimaryWifiInfo {
-      val name = pigeonVar_list[0] as String
-      val password = pigeonVar_list[1] as String
-      val band = pigeonVar_list[2] as String
-      val is5G = pigeonVar_list[3] as Boolean
-      return PrimaryWifiInfo(name, password, band, is5G)
-    }
-  }
-  fun toList(): List<Any?> {
-    return listOf(
-      name,
-      password,
-      band,
-      is5G,
-    )
-  }
-  override fun equals(other: Any?): Boolean {
-    if (other == null || other.javaClass != javaClass) {
-      return false
-    }
-    if (this === other) {
-      return true
-    }
-    val other = other as PrimaryWifiInfo
-    return PigeonGeneratedPigeonUtils.deepEquals(this.name, other.name) && PigeonGeneratedPigeonUtils.deepEquals(this.password, other.password) && PigeonGeneratedPigeonUtils.deepEquals(this.band, other.band) && PigeonGeneratedPigeonUtils.deepEquals(this.is5G, other.is5G)
-  }
-
-  override fun hashCode(): Int {
-    var result = javaClass.hashCode()
-    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.name)
-    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.password)
-    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.band)
-    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.is5G)
-    return result
-  }
-}
-
-/**
  * 当前连接 WiFi 的链路信息（频段 / 信道 / 信号强度）
  * 仅承载原生采集的原始值，展示格式（如 "5GHz (Ch 6, -42 dBm)"）由 Flutter 端拼接
  *
@@ -360,6 +306,60 @@ data class WifiConnectionInfo (
     return result
   }
 }
+
+/**
+ * 应用运行时配置（启动时从原生一次性获取）
+ *
+ * Generated class from Pigeon that represents data sent in messages.
+ */
+data class AppRuntimeConfig (
+  /** 主题模式 */
+  val themeMode: ThemeModeEnum,
+  /** 设备ID */
+  val deviceId: String,
+  /** 访问令牌 */
+  val accessToken: String,
+  /** 当前连接设备的名称，未连接时为 null */
+  val connectedDeviceName: String? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AppRuntimeConfig {
+      val themeMode = pigeonVar_list[0] as ThemeModeEnum
+      val deviceId = pigeonVar_list[1] as String
+      val accessToken = pigeonVar_list[2] as String
+      val connectedDeviceName = pigeonVar_list[3] as String?
+      return AppRuntimeConfig(themeMode, deviceId, accessToken, connectedDeviceName)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      themeMode,
+      deviceId,
+      accessToken,
+      connectedDeviceName,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AppRuntimeConfig
+    return PigeonGeneratedPigeonUtils.deepEquals(this.themeMode, other.themeMode) && PigeonGeneratedPigeonUtils.deepEquals(this.deviceId, other.deviceId) && PigeonGeneratedPigeonUtils.deepEquals(this.accessToken, other.accessToken) && PigeonGeneratedPigeonUtils.deepEquals(this.connectedDeviceName, other.connectedDeviceName)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.themeMode)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.deviceId)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.accessToken)
+    result = 31 * result + PigeonGeneratedPigeonUtils.deepHash(this.connectedDeviceName)
+    return result
+  }
+}
 private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -375,12 +375,12 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
       }
       131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          PrimaryWifiInfo.fromList(it)
+          WifiConnectionInfo.fromList(it)
         }
       }
       132.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          WifiConnectionInfo.fromList(it)
+          AppRuntimeConfig.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -396,11 +396,11 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
         stream.write(130)
         writeValue(stream, value.toList())
       }
-      is PrimaryWifiInfo -> {
+      is WifiConnectionInfo -> {
         stream.write(131)
         writeValue(stream, value.toList())
       }
-      is WifiConnectionInfo -> {
+      is AppRuntimeConfig -> {
         stream.write(132)
         writeValue(stream, value.toList())
       }
@@ -416,7 +416,10 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
  * Generated interface from Pigeon that represents a handler of messages from Flutter.
  */
 interface NativeApi {
+  /** 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称） */
+  fun getAppRuntimeConfig(): AppRuntimeConfig
   /** 关闭 Flutter Activity */
+  fun closeFlutterActivity()
   /**
    * 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
    * 返回空字符串表示不使用代理
@@ -436,11 +439,11 @@ interface NativeApi {
    */
   fun isConnectedToDeviceWifi(): Boolean
   /**
-   * 获取主 WiFi (Primary WiFi) 信息
-   * 优先返回 5G 主 WiFi，如果没有 5G 则返回第一个主 WiFi
+   * 获取主 WiFi (Primary WiFi) 名称
+   * 优先返回 5G 主 WiFi 的 SSID，如果没有 5G 则返回第一个主 WiFi 的 SSID
    * 返回 null 表示获取失败
    */
-  fun getPrimaryWifi(): PrimaryWifiInfo?
+  fun getPrimaryWifi(): String?
   /** 打开手机 WiFi 设置页面 */
   fun openWifiSettings()
   /**
@@ -448,11 +451,6 @@ interface NativeApi {
    * 返回 null 表示未连接 WiFi 或获取失败
    */
   fun getCurrentWifiConnectionInfo(): WifiConnectionInfo?
-  /**
-   * 获取当前连接设备的硬件型号 (hwModel)
-   * 返回 null 表示未连接设备或获取失败
-   */
-  fun getConnectedHwModel(): String?
 
   companion object {
     /** The codec used by NativeApi. */
@@ -463,6 +461,21 @@ interface NativeApi {
     @JvmOverloads
     fun setUp(binaryMessenger: BinaryMessenger, api: NativeApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getAppRuntimeConfig$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            val wrapped: List<Any?> = try {
+              listOf(api.getAppRuntimeConfig())
+            } catch (exception: Throwable) {
+              PigeonGeneratedPigeonUtils.wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
       run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.closeFlutterActivity$separatedMessageChannelSuffix", codec)
         if (api != null) {
@@ -578,21 +591,6 @@ interface NativeApi {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               listOf(api.getCurrentWifiConnectionInfo())
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getConnectedHwModel$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getConnectedHwModel())
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }

@@ -92,6 +92,7 @@ class EditRoomBottomSheetViewModel
 
     final confirmed = await showDialog<bool>(
       context: context,
+      barrierDismissible: false,
       builder: (context) => DeleteConfirmDialog(
         itemName: roomName,
       ),

@@ -170,11 +170,11 @@ class WifiSpeedTestButton extends ConsumerWidget {
     final action = await viewModel.checkAndPrepareSpeedTest();
     if (!context.mounted) return;
     if (action == SpeedTestAction.showWifiDialog) {
-      final primaryWifi = await NativeApi().getPrimaryWifi();
+      final primaryWifiName = await NativeApi().getPrimaryWifi();
       if (!context.mounted) return;
       final result = await ConnectWifiConfirmDialog.show(
         context,
-        wifiName: primaryWifi?.name,
+        wifiName: primaryWifiName,
       );
       if (result == true) {
         if (!context.mounted) return;
