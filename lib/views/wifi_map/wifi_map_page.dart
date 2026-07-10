@@ -10,7 +10,6 @@ import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/date_utils.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
-import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
@@ -511,7 +510,7 @@ class WifiMapPage extends HookConsumerWidget {
                     color: context.appColors.fontGy1with90Opacity,
                   ),
                 ),
-                Spacing.h2,
+                SizedBox(width: AppSpacing.s2.w),
                 EditButton(),
               ],
             ),
@@ -585,7 +584,7 @@ class WifiMapPage extends HookConsumerWidget {
             height: AppSpacing.icon24.w,
             color: context.appColors.fontGy1with90Opacity,
           ),
-          Spacing.h8,
+          SizedBox(width: AppSpacing.s8.w),
           Text(
             context.l10n.back,
             style: context.appTextStyles.bodyLargeWith90Opacity,

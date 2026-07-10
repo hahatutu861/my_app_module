@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'app_color_extension.dart';
-
 /// 对话框按钮样式工具类
 class AppDialogButtonStyle {
   AppDialogButtonStyle._();
@@ -18,9 +16,7 @@ class AppDialogButtonStyle {
       padding: WidgetStateProperty.all(
         padding ?? const EdgeInsets.symmetric(vertical: 16),
       ),
-      backgroundColor: WidgetStateProperty.all(
-        Colors.transparent,
-      ),
+      backgroundColor: WidgetStateProperty.all(Colors.transparent),
       overlayColor: WidgetStateProperty.all(Colors.transparent),
       elevation: WidgetStateProperty.all(0),
       shadowColor: WidgetStateProperty.all(Colors.transparent),

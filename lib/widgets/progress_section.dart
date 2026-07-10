@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
-import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 
 class ProgressSection extends StatelessWidget {
@@ -15,7 +14,7 @@ class ProgressSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _ProgressBar(),
-          Spacing.v24,
+          SizedBox(height: AppSpacing.s24.h),
           Text(
             context.l10n.networkReady,
             style: TextStyle(

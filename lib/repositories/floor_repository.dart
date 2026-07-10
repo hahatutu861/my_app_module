@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
@@ -9,8 +8,7 @@ import 'package:my_app_module/services/database/database_service.dart';
 import 'package:my_app_module/providers/app_runtime_config.dart';
 
 final floorRepositoryProvider = Provider<FloorRepository>((ref) {
-  debugPrint('=== floorRepositoryProvider ===');
-  return FloorRepository(ref);
+return FloorRepository(ref);
 });
 
 class FloorRepository {
@@ -29,7 +27,7 @@ class FloorRepository {
     try {
       deviceId = _ref.read(deviceIdProvider);
     } catch (e) {
-      debugPrint('getDeviceId failed: $e');
+      // deviceId 获取失败时使用 null
     }
     final floor = FloorModel(
       id: const Uuid().v4(),
@@ -40,12 +38,8 @@ class FloorRepository {
     );
 
     try {
-      final result = await db.insert(_table, _toDbMap(floor));
-      debugPrint('Insert result (row id): $result');
-      debugPrint('Insert successful!');
-    } catch (e, stackTrace) {
-      debugPrint('Insert failed: $e');
-      debugPrint('StackTrace: $stackTrace');
+      await db.insert(_table, _toDbMap(floor));
+    } catch (e) {
       rethrow;
     }
 
@@ -69,7 +63,7 @@ class FloorRepository {
     try {
       deviceId = _ref.read(deviceIdProvider);
     } catch (e) {
-      debugPrint('getDeviceId failed: $e');
+      // deviceId 获取失败时使用 null
     }
     final results = await db.query(
       _table,

@@ -19,10 +19,6 @@ class DatabaseService {
   Future<Database> _initDatabase() async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, 'my_app.db');
-
-    debugPrint('=== DatabaseService._initDatabase ===');
-    debugPrint('Database path: $path');
-
     return await openDatabase(
       path,
       version: 1,
@@ -31,9 +27,6 @@ class DatabaseService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    debugPrint('=== DatabaseService._onCreate ===');
-    debugPrint('Creating tables...');
-
     await db.execute('''
       CREATE TABLE floors (
         id TEXT PRIMARY KEY,
@@ -45,7 +38,5 @@ class DatabaseService {
         device_id TEXT
       )
     ''');
-
-    debugPrint('Tables created successfully');
   }
 }

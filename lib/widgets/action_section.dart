@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_spacing.dart';
-import 'package:my_app_module/utils/design/app_spacing_extension.dart';
 import 'package:my_app_module/utils/build_context_extension.dart';
 
 class ActionSection extends StatelessWidget {
@@ -20,7 +19,7 @@ class ActionSection extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _buildCompletionButton(context),
-          Spacing.v12,
+          SizedBox(height: AppSpacing.s12.h),
           _buildAddDeviceText(context),
         ],
       ),
