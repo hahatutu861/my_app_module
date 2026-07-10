@@ -6,15 +6,19 @@ import 'package:uuid/uuid.dart';
 import 'package:my_app_module/models/floor_model.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/services/database/database_service.dart';
-import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
+import 'package:my_app_module/providers/app_runtime_config.dart';
 
 final floorRepositoryProvider = Provider<FloorRepository>((ref) {
   debugPrint('=== floorRepositoryProvider ===');
-  return FloorRepository();
+  return FloorRepository(ref);
 });
 
 class FloorRepository {
   static const String _table = 'floors';
+  final Ref _ref;
+
+  FloorRepository(this._ref);
+
   Future<Database> get _database async {
     return DatabaseService.instance.database;
   }
@@ -23,7 +27,7 @@ class FloorRepository {
     final db = await _database;
     String? deviceId;
     try {
-      deviceId = await NativeApi().getDeviceId();
+      deviceId = _ref.read(deviceIdProvider);
     } catch (e) {
       debugPrint('getDeviceId failed: $e');
     }
@@ -63,7 +67,7 @@ class FloorRepository {
     final db = await _database;
     String? deviceId;
     try {
-      deviceId = await NativeApi().getDeviceId();
+      deviceId = _ref.read(deviceIdProvider);
     } catch (e) {
       debugPrint('getDeviceId failed: $e');
     }

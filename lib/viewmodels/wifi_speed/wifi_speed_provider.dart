@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_app_module/models/speed_test_record.dart';
+import 'package:my_app_module/providers/app_runtime_config.dart';
 import 'package:my_app_module/shared/bridges/pigeon_generated.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
@@ -15,13 +16,6 @@ final wifiSpeedViewModelProvider =
 final wifiConnectionInfoProvider =
     FutureProvider.autoDispose<WifiConnectionInfo?>((ref) async {
   return NativeApi().getCurrentWifiConnectionInfo();
-});
-
-/// 当前连接设备的名称 (deviceName)
-/// 反映手机实时连接状态，随房间栏展示时拉取，隐藏后自动释放
-final connectedDeviceNameProvider =
-    FutureProvider.autoDispose<String?>((ref) async {
-  return NativeApi().getConnectedDeviceName();
 });
 
 /// 将原生原始值拼接为展示字符串，例如 "5GHz (Ch 6, -42 dBm)"
@@ -149,12 +143,8 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
     }
     final sortedSamples = [...state.samples]..sort();
     final medianSpeed = sortedSamples[sortedSamples.length ~/ 2];
-    final results = await Future.wait([
-      NativeApi().getCurrentWifiConnectionInfo(),
-      NativeApi().getConnectedDeviceName(),
-    ]);
-    final wifiInfo = results[0] as WifiConnectionInfo?;
-    final deviceName = results[1] as String?;
+    final wifiInfo = await NativeApi().getCurrentWifiConnectionInfo();
+    final deviceName = ref.read(connectedDeviceNameProvider);
     final record = SpeedTestRecord(
       speed: medianSpeed,
       band: wifiInfo?.band,

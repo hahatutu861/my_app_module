@@ -416,14 +416,7 @@ private open class PigeonGeneratedPigeonCodec : StandardMessageCodec() {
  * Generated interface from Pigeon that represents a handler of messages from Flutter.
  */
 interface NativeApi {
-  /** 获取当前主题模式 */
-  fun getThemeMode(): ThemeModeEnum
   /** 关闭 Flutter Activity */
-  fun closeFlutterActivity()
-  /** 获取访问令牌 */
-  fun getAccessToken(): String
-  /** 获取设备ID */
-  fun getDeviceId(): String
   /**
    * 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
    * 返回空字符串表示不使用代理
@@ -471,57 +464,12 @@ interface NativeApi {
     fun setUp(binaryMessenger: BinaryMessenger, api: NativeApi?, messageChannelSuffix: String = "") {
       val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
       run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getThemeMode$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getThemeMode())
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
         val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.closeFlutterActivity$separatedMessageChannelSuffix", codec)
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             val wrapped: List<Any?> = try {
               api.closeFlutterActivity()
               listOf(null)
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getAccessToken$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getAccessToken())
-            } catch (exception: Throwable) {
-              PigeonGeneratedPigeonUtils.wrapError(exception)
-            }
-            reply.reply(wrapped)
-          }
-        } else {
-          channel.setMessageHandler(null)
-        }
-      }
-      run {
-        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.my_app_module.NativeApi.getDeviceId$separatedMessageChannelSuffix", codec)
-        if (api != null) {
-          channel.setMessageHandler { _, reply ->
-            val wrapped: List<Any?> = try {
-              listOf(api.getDeviceId())
             } catch (exception: Throwable) {
               PigeonGeneratedPigeonUtils.wrapError(exception)
             }

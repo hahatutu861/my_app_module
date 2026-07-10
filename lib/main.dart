@@ -20,16 +20,18 @@ void main() async {
   ThemeMode initialThemeMode;
   String deviceId;
   String token;
+  String? connectedDeviceName;
   try {
-    final nativeApi = NativeApi();
-    final modeEnum = await nativeApi.getThemeMode();
-    initialThemeMode = convertToThemeMode(modeEnum);
-    deviceId = await nativeApi.getDeviceId();
-    token = await nativeApi.getAccessToken();
+    final config = await NativeApi().getAppRuntimeConfig();
+    initialThemeMode = convertToThemeMode(config.themeMode);
+    deviceId = config.deviceId;
+    token = config.accessToken;
+    connectedDeviceName = config.connectedDeviceName;
   } catch (e) {
     initialThemeMode = ThemeMode.system;
     deviceId = '';
     token = '';
+    connectedDeviceName = null;
   }
   final prefs = await SharedPreferences.getInstance();
   await DatabaseService.instance.database;
@@ -40,6 +42,7 @@ void main() async {
         themeModeProvider.overrideWith(() => ThemeModeNotifier(initialMode: initialThemeMode)),
         deviceIdProvider.overrideWithValue(deviceId),
         tokenProvider.overrideWithValue(token),
+        connectedDeviceNameProvider.overrideWithValue(connectedDeviceName),
       ],
       child: MyAppModule(),
     ),

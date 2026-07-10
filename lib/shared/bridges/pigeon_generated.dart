@@ -283,6 +283,66 @@ class WifiConnectionInfo {
   int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
 }
 
+/// 应用运行时配置（启动时从原生一次性获取）
+class AppRuntimeConfig {
+  AppRuntimeConfig({
+    required this.themeMode,
+    required this.deviceId,
+    required this.accessToken,
+    this.connectedDeviceName,
+  });
+
+  /// 主题模式
+  ThemeModeEnum themeMode;
+
+  /// 设备ID
+  String deviceId;
+
+  /// 访问令牌
+  String accessToken;
+
+  /// 当前连接设备的名称，未连接时为 null
+  String? connectedDeviceName;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      themeMode,
+      deviceId,
+      accessToken,
+      connectedDeviceName,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppRuntimeConfig decode(Object result) {
+    result as List<Object?>;
+    return AppRuntimeConfig(
+      themeMode: result[0]! as ThemeModeEnum,
+      deviceId: result[1]! as String,
+      accessToken: result[2]! as String,
+      connectedDeviceName: result[3] as String?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppRuntimeConfig || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(themeMode, other.themeMode) && _deepEquals(deviceId, other.deviceId) && _deepEquals(accessToken, other.accessToken) && _deepEquals(connectedDeviceName, other.connectedDeviceName);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -303,6 +363,9 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is WifiConnectionInfo) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
+    }    else if (value is AppRuntimeConfig) {
+      buffer.putUint8(133);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -320,6 +383,8 @@ class _PigeonCodec extends StandardMessageCodec {
         return PrimaryWifiInfo.decode(readValue(buffer)!);
       case 132:
         return WifiConnectionInfo.decode(readValue(buffer)!);
+      case 133:
+        return AppRuntimeConfig.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -341,9 +406,9 @@ class NativeApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  /// 获取当前主题模式
-  Future<ThemeModeEnum> getThemeMode() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getThemeMode$pigeonVar_messageChannelSuffix';
+  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称）
+  Future<AppRuntimeConfig> getAppRuntimeConfig() async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getAppRuntimeConfig$pigeonVar_messageChannelSuffix';
     final pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -358,7 +423,7 @@ class NativeApi {
         isNullValid: false,
     )
     ;
-    return pigeonVar_replyValue! as ThemeModeEnum;
+    return pigeonVar_replyValue! as AppRuntimeConfig;
   }
 
   /// 关闭 Flutter Activity
@@ -378,46 +443,6 @@ class NativeApi {
         isNullValid: true,
     )
     ;
-  }
-
-  /// 获取访问令牌
-  Future<String> getAccessToken() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getAccessToken$pigeonVar_messageChannelSuffix';
-    final pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
-
-    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
-    return pigeonVar_replyValue! as String;
-  }
-
-  /// 获取设备ID
-  Future<String> getDeviceId() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getDeviceId$pigeonVar_messageChannelSuffix';
-    final pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
-
-    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: false,
-    )
-    ;
-    return pigeonVar_replyValue! as String;
   }
 
   /// 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
@@ -562,27 +587,6 @@ class NativeApi {
     )
     ;
     return pigeonVar_replyValue as WifiConnectionInfo?;
-  }
-
-  /// 获取当前连接设备的名称 (deviceName)
-  /// 返回 null 表示未连接设备或获取失败
-  Future<String?> getConnectedDeviceName() async {
-    final pigeonVar_channelName = 'dev.flutter.pigeon.my_app_module.NativeApi.getConnectedDeviceName$pigeonVar_messageChannelSuffix';
-    final pigeonVar_channel = BasicMessageChannel<Object?>(
-      pigeonVar_channelName,
-      pigeonChannelCodec,
-      binaryMessenger: pigeonVar_binaryMessenger,
-    );
-    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(null);
-    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
-
-    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
-        pigeonVar_replyList,
-        pigeonVar_channelName,
-        isNullValid: true,
-    )
-    ;
-    return pigeonVar_replyValue as String?;
   }
 }
 

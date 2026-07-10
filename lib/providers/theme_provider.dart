@@ -31,8 +31,8 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
 
   Future<void> _loadThemeMode(NativeApi nativeApi) async {
     try {
-      final modeEnum = await nativeApi.getThemeMode();
-      state = convertToThemeMode(modeEnum);
+      final config = await nativeApi.getAppRuntimeConfig();
+      state = convertToThemeMode(config.themeMode);
     } catch (e) {
       state = ThemeMode.system;
       debugPrint('加载主题模式失败: $e，使用系统主题');

@@ -59,21 +59,34 @@ class WifiConnectionInfo {
   });
 }
 
+/// 应用运行时配置（启动时从原生一次性获取）
+class AppRuntimeConfig {
+  /// 主题模式
+  ThemeModeEnum themeMode;
+  /// 设备ID
+  String deviceId;
+  /// 访问令牌
+  String accessToken;
+  /// 当前连接设备的名称，未连接时为 null
+  String? connectedDeviceName;
+
+  AppRuntimeConfig({
+    required this.themeMode,
+    required this.deviceId,
+    required this.accessToken,
+    this.connectedDeviceName,
+  });
+}
+
 /// 原生平台 API
 /// 由原生端实现，Flutter 端调用
 @HostApi()
 abstract class NativeApi {
-  /// 获取当前主题模式
-  ThemeModeEnum getThemeMode();
+  /// 获取应用运行时配置（主题模式、设备ID、访问令牌、连接设备名称）
+  AppRuntimeConfig getAppRuntimeConfig();
 
   /// 关闭 Flutter Activity
   void closeFlutterActivity();
-
-  /// 获取访问令牌
-  String getAccessToken();
-
-  /// 获取设备ID
-  String getDeviceId();
 
   /// 获取代理地址 (格式: ip:端口，例如 "192.168.1.100:8888")
   /// 返回空字符串表示不使用代理
@@ -102,10 +115,6 @@ abstract class NativeApi {
   /// 获取当前连接 WiFi 的链路信息（频段、信道、信号强度）
   /// 返回 null 表示未连接 WiFi 或获取失败
   WifiConnectionInfo? getCurrentWifiConnectionInfo();
-
-  /// 获取当前连接设备的名称 (deviceName)
-  /// 返回 null 表示未连接设备或获取失败
-  String? getConnectedDeviceName();
 }
 
 /// Flutter 回调 API
