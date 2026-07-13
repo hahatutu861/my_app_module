@@ -288,7 +288,7 @@ class WifiMapPage extends HookConsumerWidget {
     RoomModel room,
     bool isSelected,
   ) {
-    final roomType = room.roomTypeEnum;
+    final roomType = room.roomType;
     return Container(
       decoration: BoxDecoration(
         color: context.appColors.gray4,
@@ -368,7 +368,7 @@ class WifiMapPage extends HookConsumerWidget {
     WifiSpeedLevel speedLevel,
     WifiViewMode viewMode,
   ) {
-    final roomType = room.roomTypeEnum;
+    final roomType = room.roomType;
     final backgroundColor = switch (speedLevel) {
       WifiSpeedLevel.good => context.appColors.lime6,
       WifiSpeedLevel.moderate => context.appColors.yellow6,
@@ -693,7 +693,7 @@ class WifiMapPage extends HookConsumerWidget {
     int index,
     FloorViewModel floorViewModel,
   ) {
-    final roomType = room.roomTypeEnum;
+    final roomType = room.roomType;
     final displayTime = room.updatedAt ?? room.createdAt;
     final timeText = displayTime != null ? formatDateTime(displayTime) : '';
 

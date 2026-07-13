@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RoomModel {
 
- int get index; String get roomType; String get roomName; bool? get isGateway; DateTime? get createdAt; DateTime? get updatedAt; List<SpeedTestRecord> get records;
+ int get index; RoomType get roomType; String get roomName; bool? get isGateway; DateTime? get createdAt; DateTime? get updatedAt; List<SpeedTestRecord> get records;
 /// Create a copy of RoomModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $RoomModelCopyWith<$Res>  {
   factory $RoomModelCopyWith(RoomModel value, $Res Function(RoomModel) _then) = _$RoomModelCopyWithImpl;
 @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
+ int index, RoomType roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
 });
 
 
@@ -69,7 +69,7 @@ class _$RoomModelCopyWithImpl<$Res>
   return _then(_self.copyWith(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
-as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
+as RoomType,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
 as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int index,  RoomType roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
 return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
@@ -180,7 +180,7 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int index,  RoomType roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel():
 return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
@@ -200,7 +200,7 @@ return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  String roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int index,  RoomType roomType,  String roomName,  bool? isGateway,  DateTime? createdAt,  DateTime? updatedAt,  List<SpeedTestRecord> records)?  $default,) {final _that = this;
 switch (_that) {
 case _RoomModel() when $default != null:
 return $default(_that.index,_that.roomType,_that.roomName,_that.isGateway,_that.createdAt,_that.updatedAt,_that.records);case _:
@@ -219,7 +219,7 @@ class _RoomModel implements RoomModel {
   factory _RoomModel.fromJson(Map<String, dynamic> json) => _$RoomModelFromJson(json);
 
 @override final  int index;
-@override final  String roomType;
+@override final  RoomType roomType;
 @override final  String roomName;
 @override final  bool? isGateway;
 @override final  DateTime? createdAt;
@@ -265,7 +265,7 @@ abstract mixin class _$RoomModelCopyWith<$Res> implements $RoomModelCopyWith<$Re
   factory _$RoomModelCopyWith(_RoomModel value, $Res Function(_RoomModel) _then) = __$RoomModelCopyWithImpl;
 @override @useResult
 $Res call({
- int index, String roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
+ int index, RoomType roomType, String roomName, bool? isGateway, DateTime? createdAt, DateTime? updatedAt, List<SpeedTestRecord> records
 });
 
 
@@ -286,7 +286,7 @@ class __$RoomModelCopyWithImpl<$Res>
   return _then(_RoomModel(
 index: null == index ? _self.index : index // ignore: cast_nullable_to_non_nullable
 as int,roomType: null == roomType ? _self.roomType : roomType // ignore: cast_nullable_to_non_nullable
-as String,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
+as RoomType,roomName: null == roomName ? _self.roomName : roomName // ignore: cast_nullable_to_non_nullable
 as String,isGateway: freezed == isGateway ? _self.isGateway : isGateway // ignore: cast_nullable_to_non_nullable
 as bool?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable

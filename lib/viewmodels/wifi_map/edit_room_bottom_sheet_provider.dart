@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_app_module/utils/design/room_types.dart';
+import 'package:my_app_module/models/room_type.dart';
+import 'package:my_app_module/utils/design/room_type_ui_ext.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
@@ -50,12 +51,7 @@ class EditRoomBottomSheetViewModel
       );
       return;
     }
-
-    final roomType = RoomType.values.firstWhere(
-      (e) => e.name == room.roomType,
-      orElse: () => RoomType.values.first,
-    );
-
+    final roomType = room.roomType;
     state = EditRoomBottomSheetState(
       selectedRoom: roomType,
       isGateway: room.isGateway,

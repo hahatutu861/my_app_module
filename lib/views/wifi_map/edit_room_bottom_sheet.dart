@@ -6,7 +6,8 @@ import 'package:my_app_module/utils/design/app_spacing.dart';
 import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/utils/design/app_text_styles.dart';
-import 'package:my_app_module/utils/design/room_types.dart';
+import 'package:my_app_module/models/room_type.dart';
+import 'package:my_app_module/utils/design/room_type_ui_ext.dart';
 import 'package:my_app_module/widgets/hint_text_field.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/viewmodels/wifi_map/edit_room_bottom_sheet_provider.dart';
@@ -14,7 +15,7 @@ import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/models/room_model.dart';
 
-import '../../utils/build_context_extension.dart';
+import 'package:my_app_module/utils/build_context_extension.dart';
 
 class EditRoomBottomSheet extends HookConsumerWidget {
   final int? index;
@@ -346,7 +347,7 @@ class EditRoomBottomSheet extends HookConsumerWidget {
                   };
                   final room = RoomModel(
                     index: index!,
-                    roomType: state.selectedRoom!.name,
+                    roomType: state.selectedRoom!,
                     roomName: roomName,
                     isGateway: state.isGateway,
                     createdAt: existingRoom?.createdAt ?? DateTime.now(),
