@@ -17,9 +17,9 @@ import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
-import 'package:my_app_module/views/wifi_map/wifi_speed_test_button.dart';
+import 'package:my_app_module/widgets/wifi_speed_test_button.dart';
 import 'package:my_app_module/widgets/app_image.dart';
-import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
+import 'package:my_app_module/widgets/dialogs/delete_floor_confirm_dialog.dart';
 
 class WifiHistoryPage extends HookConsumerWidget {
   final int? roomIndex;

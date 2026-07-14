@@ -5,7 +5,7 @@ import 'package:my_app_module/utils/design/room_type_ui_ext.dart';
 import 'package:my_app_module/models/room_model.dart';
 import 'package:my_app_module/viewmodels/floor/floor_state.dart';
 import 'package:my_app_module/viewmodels/floor/floor_viewmodel_provider.dart';
-import 'package:my_app_module/widgets/delete_floor_confirm_dialog.dart';
+import 'package:my_app_module/widgets/dialogs/delete_floor_confirm_dialog.dart';
 
 final editRoomBottomSheetProvider =
     NotifierProvider<EditRoomBottomSheetViewModel,

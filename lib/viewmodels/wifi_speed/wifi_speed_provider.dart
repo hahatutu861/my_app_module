@@ -33,8 +33,7 @@ String formatWifiConnectionInfo(WifiConnectionInfo? info) {
 
 enum SpeedTestAction {
   startTest,
-  showWifiDialog,
-  closeApp,
+  showWifiDialog
 }
 
 enum SegmentedBarColor { gray3, yellow6, lime6, warning6Normal }
@@ -59,10 +58,6 @@ class WifiSpeedViewModel extends Notifier<WifiSpeedState> {
 
   Future<bool> checkWifiConnection() async {
     return NativeApi().isConnectedToDeviceWifi();
-  }
-
-  Future<void> closeFlutterActivity() async {
-    await NativeApi().closeFlutterActivity();
   }
 
   Future<void> openWifiSettings() async {

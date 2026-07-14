@@ -7,7 +7,7 @@ import 'package:my_app_module/utils/design/app_color_extension.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_provider.dart';
 import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/widgets/app_image.dart';
-import 'package:my_app_module/widgets/connect_wifi_confirm_dialog.dart';
+import 'package:my_app_module/widgets/dialogs/connect_wifi_confirm_dialog.dart';
 
 class WifiSpeedTestButton extends ConsumerWidget {
   final double? width;

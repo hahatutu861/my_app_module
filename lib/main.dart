@@ -102,19 +102,12 @@ class MyAppModule extends ConsumerWidget {
               final brightness = Theme.of(context).brightness;
               final isDark = brightness == Brightness.dark;
               return AnnotatedRegion<SystemUiOverlayStyle>(
-                value: isDark
-                    ? const SystemUiOverlayStyle(
-                        statusBarColor: Colors.transparent,
-                        statusBarIconBrightness: Brightness.light,
-                        systemNavigationBarColor: Color(0xFF1C1C1E),
-                        systemNavigationBarIconBrightness: Brightness.light,
-                      )
-                    : const SystemUiOverlayStyle(
-                        statusBarColor: Colors.transparent,
-                        statusBarIconBrightness: Brightness.dark,
-                        systemNavigationBarColor: Colors.white,
-                        systemNavigationBarIconBrightness: Brightness.dark,
-                      ),
+                value: SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                  systemNavigationBarColor: Colors.transparent,
+                  systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+                ),
                 child: child!,
               );
             },

@@ -18,13 +18,13 @@ import 'package:my_app_module/viewmodels/wifi_speed/wifi_speed_state.dart';
 import 'package:my_app_module/views/wifi_map/edit_room_bottom_sheet.dart';
 import 'package:my_app_module/views/wifi_map/wifi_speed_dialog.dart';
 import 'package:my_app_module/views/wifi_map/display_settings_dialog.dart';
-import 'package:my_app_module/views/wifi_map/wifi_speed_test_button.dart';
+import 'package:my_app_module/widgets/wifi_speed_test_button.dart';
 import 'package:my_app_module/widgets/app_image.dart';
 import 'package:my_app_module/widgets/badge.dart';
 import 'package:my_app_module/widgets/edit_button.dart';
-import 'package:my_app_module/widgets/edit_floor_name_dialog.dart';
+import 'package:my_app_module/widgets/dialogs/edit_floor_name_dialog.dart';
 import 'package:my_app_module/widgets/room_status_badge.dart';
-import 'package:my_app_module/widgets/wifi_map_dialog.dart';
+import 'package:my_app_module/views/wifi_map/wifi_map_dialog.dart';
 
 import 'package:my_app_module/viewmodels/wifi_map/wifi_map_viewmodel_provider.dart';
 

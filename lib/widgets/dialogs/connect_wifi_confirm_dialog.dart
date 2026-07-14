@@ -6,7 +6,7 @@ import 'package:my_app_module/utils/build_context_extension.dart';
 import 'package:my_app_module/utils/design/app_button_style.dart';
 import 'package:my_app_module/utils/design/app_color_extension.dart';
 
-import '../utils/design/app_media_query_extension.dart';
+import 'package:my_app_module/utils/design/app_media_query_extension.dart';
 
 class ConnectWifiConfirmDialog extends StatelessWidget {
   final String? wifiName;
